@@ -1,0 +1,2064 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.2647088248020388 0.3370220793963285 0.9035183208276955 1.431192900061368
+  position -0.15405378162731087 -1.249495725656177 0.9227578882900336
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF Hexa Robot {
+  translation 5.074673006119738e-07 6.905299540131922e-06 0.09102715672108637
+  rotation 0.7745860789038269 0.44724068777510484 0.447204845196075 1.823424331732345
+  children [
+    InertialUnit {
+      translation 0 0.03 0
+      rotation 0 1 0 -1.0471996938995747
+      name "inertialunit1"
+    }
+    DEF forward Solid {
+      translation 0.052 0.035 0.09
+      rotation 0 1 0 0.5235996938995747
+      children [
+        Shape {
+          geometry Cone {
+            bottomRadius 0.02
+            height 0.05
+          }
+        }
+      ]
+      name "solid(2)"
+    }
+    DEF Body Group {
+      children [
+        DEF Trunk Group {
+          children [
+            DEF L0 Solid {
+              translation 0.104 0.012 0.06
+              rotation 0 1 0 1.047
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(3)"
+              boundingObject USE L0
+            }
+            DEF L1 Solid {
+              translation 0.104 0.012 -0.06
+              rotation 0 1 0 20.94
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(8)"
+              boundingObject USE L0
+            }
+            DEF L2 Solid {
+              translation 0 0.012 -0.119
+              rotation 0 1 0 3.141
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(9)"
+              boundingObject USE L0
+            }
+            DEF R0 Solid {
+              translation 0 0.012 0.12
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(1)"
+              boundingObject USE L0
+            }
+            DEF R1 Solid {
+              translation -0.104 0.012 0.06
+              rotation 0 1 0 5.235
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(6)"
+              boundingObject USE L0
+            }
+            DEF R2 Solid {
+              translation -0.104 0.012 -0.06
+              rotation 0 1 0 4.188
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(10)"
+              boundingObject USE L0
+            }
+            DEF Main1 Solid {
+              translation 0 0.036 0
+              rotation 1 0 0 1.5707996938995747
+              children [
+                DEF Main Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Cylinder {
+                    height 0.001
+                    radius 0.105
+                  }
+                }
+              ]
+              boundingObject USE Main
+              physics Physics {
+                density 15000
+              }
+            }
+            DEF Main2 Solid {
+              translation 0 -0.015000000000000001 0
+              rotation 1 0 0 1.5707996938995747
+              children [
+                DEF Main Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Cylinder {
+                    height 0.001
+                    radius 0.105
+                  }
+                }
+              ]
+              name "solid(7)"
+              boundingObject USE Main
+              physics Physics {
+                density 15000
+              }
+            }
+          ]
+        }
+      ]
+    }
+    DEF Legs Group {
+      children [
+        DEF L0 HingeJoint {
+          jointParameters HingeJointParameters {
+            position -6.229704105772172e-07
+            axis 0 1 0
+            anchor 0.104 0.012 0.06
+          }
+          device [
+            DEF L00 RotationalMotor {
+              name "L00"
+              minPosition -0.7
+              maxPosition 0.7
+              maxTorque 25
+            }
+          ]
+          endPoint Solid {
+            translation 0.10799995242265861 7.148087179033313e-06 0.06199998944709046
+            rotation -4.3743825526672094e-07 -0.9999999999990942 1.2728810200450523e-06 0.5764006930083989
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics DEF STANDARD_PHYSICS Physics {
+                }
+              }
+              DEF Seat_1 Solid {
+                translation 0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF L01 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position -2.7569754023356143e-07
+                  axis 0 0 -1
+                  anchor 0.024 0.0195 -0.004
+                }
+                device [
+                  DEF L01 RotationalMotor {
+                    name "L01"
+                    minPosition -0.7
+                    maxPosition 0.7
+                    maxTorque 25
+                  }
+                ]
+                endPoint Solid {
+                  translation 0.024 0.0195 -7.806255641895632e-18
+                  rotation 0.9999999999999811 1.378487700971529e-07 1.3784826375618258e-07 1.570800000000017
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation 0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation 0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF L02 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -4.731808372585092e-10
+                        axis 0 1 0
+                        anchor 0.056 0 0
+                      }
+                      device [
+                        DEF L02 RotationalMotor {
+                          name "L02"
+                          minPosition -0.7
+                          maxPosition 0.7
+                          maxTorque 25
+                        }
+                      ]
+                      endPoint Solid {
+                        translation 0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                        linearVelocity 1.6498022903525676e-07 -5.087100239802511e-08 6.657578518462206e-08
+                        angularVelocity -4.27797031293722e-07 7.420396922943853e-08 -6.313231706407511e-06
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                  linearVelocity 1.6156975877960712e-07 2.3303276460970724e-08 1.193772844784545e-08
+                  angularVelocity -4.403764408101232e-07 5.996377583272132e-08 -6.313140981983802e-06
+                }
+              }
+            ]
+            name "(7)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+            linearVelocity 2.0737289059159506e-07 1.1617461906227274e-07 -3.49198918907169e-08
+            angularVelocity -4.423385945378943e-07 2.5330868902930823e-08 -6.321831699383509e-06
+          }
+        }
+        DEF L1 HingeJoint {
+          jointParameters HingeJointParameters {
+            position 6.760166274462841e-07
+            axis 0 1 0
+            anchor 0.104 0.012 -0.06
+          }
+          device [
+            DEF L10 RotationalMotor {
+              name "L10"
+              minPosition -0.7
+              maxPosition 0.7
+              maxTorque 25
+            }
+          ]
+          endPoint Solid {
+            translation 0.1129999608441993 -4.160309811769569e-06 -0.06700002610473864
+            rotation -1.4020085521725588e-07 0.999999999999924 -3.643310987433632e-07 0.5708004184038599
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation 0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF L11 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position -2.9958550974499275e-07
+                  axis 0 0 -1
+                  anchor 0.024 0.0195 -0.004
+                }
+                device [
+                  DEF L11 RotationalMotor {
+                    name "L11"
+                    minPosition -0.7
+                    maxPosition 0.7
+                    maxTorque 25
+                  }
+                ]
+                endPoint Solid {
+                  translation 0.024 0.0195 -3.122502256758253e-17
+                  rotation 0.9999999999999776 1.4979275485286798e-07 1.4979220459511433e-07 1.5708000000000202
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation 0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation 0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF L12 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -2.7689069610203345e-10
+                        axis 0 1 0
+                        anchor 0.056 0 0
+                      }
+                      device [
+                        DEF L12 RotationalMotor {
+                          name "L12"
+                          minPosition -0.7
+                          maxPosition 0.7
+                          maxTorque 25
+                        }
+                      ]
+                      endPoint Solid {
+                        translation 0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                        linearVelocity -8.361824749693858e-08 4.6417287531606983e-08 1.3979597590523661e-08
+                        angularVelocity -6.643905463707439e-07 -2.2725351970748187e-08 6.708511510153147e-06
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                  linearVelocity 5.6198202417222995e-08 7.134847700901068e-08 -2.8609979231541478e-08
+                  angularVelocity -6.667703173611038e-07 -1.2088702619782333e-08 6.708483719650432e-06
+                }
+              }
+            ]
+            name "(8)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+            linearVelocity 2.0771981738939437e-07 1.1053151176812998e-08 -6.207734058322686e-08
+            angularVelocity -4.498976519821427e-07 9.123132349764571e-09 6.713704279095758e-06
+          }
+        }
+        DEF L2 HingeJoint {
+          jointParameters HingeJointParameters {
+            position 7.157836841910851e-07
+            axis 0 1 0
+            anchor 0 0.012 -0.119
+          }
+          device [
+            DEF L20 RotationalMotor {
+              name "L20"
+              minPosition -0.7
+              maxPosition 0.7
+              maxTorque 25
+            }
+          ]
+          endPoint Solid {
+            translation -0.0020000210030191334 7.339718930238562e-06 -0.14099995017545855
+            rotation 4.41874634127137e-07 0.999999999999797 4.5878164639442346e-07 1.5871021309891138
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation 0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF L21 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position -1.8797833096144475e-07
+                  axis 0 0 -1
+                  anchor 0.024 0.0195 -0.004
+                }
+                device [
+                  DEF L21 RotationalMotor {
+                    name "L21"
+                    minPosition -0.7
+                    maxPosition 0.7
+                    maxTorque 25
+                  }
+                ]
+                endPoint Solid {
+                  translation 0.024 0.0195 -1.6479873021779667e-17
+                  rotation 0.9999999999999912 9.398916555432099e-08 9.398881991604312e-08 1.5708000000000042
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation 0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation 0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF L22 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -1.022232119736328e-10
+                        axis 0 1 0
+                        anchor 0.056 0 0
+                      }
+                      device [
+                        DEF L22 RotationalMotor {
+                          name "L22"
+                          minPosition -0.7000011749085783
+                          maxPosition 0.7
+                          maxTorque 25
+                        }
+                      ]
+                      endPoint Solid {
+                        translation 0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation -1 0 0 -5.307179586466759e-06
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                        linearVelocity -2.555984622646308e-08 -1.0445799528204202e-07 6.675356128626355e-08
+                        angularVelocity -4.7086173075762253e-07 -1.1029686746205964e-07 7.140422111961861e-06
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                  linearVelocity 5.711624339923356e-08 -3.085514774320415e-08 1.2788285001883728e-08
+                  angularVelocity -4.897061466295751e-07 -1.088680980540491e-07 7.140294896578459e-06
+                }
+              }
+            ]
+            name "(9)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+            linearVelocity 2.0632194634076308e-07 3.1359324009465666e-11 -2.7811335889094725e-08
+            angularVelocity -4.370358154665282e-07 2.166610154367752e-08 7.148438230391662e-06
+          }
+        }
+        DEF R0 HingeJoint {
+          jointParameters HingeJointParameters {
+            position 6.726786992268804e-07
+            axis 0 1 0
+            anchor 0 0.012 0.12
+          }
+          device [
+            DEF R00 RotationalMotor {
+              name "R00"
+              minPosition -0.7
+              maxPosition 0.7
+              maxTorque 25
+            }
+          ]
+          endPoint Solid {
+            translation 3.241182459313523e-09 2.720766029560423e-06 0.13000005846837687
+            rotation -2.165922039103521e-07 0.9999999999999578 -1.940602827477988e-07 1.5535997197274125
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation -0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF R01 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 2.083255885368794e-07
+                  axis 0 0 -1
+                  anchor -0.024 0.0195 -0.004
+                }
+                device [
+                  DEF R01 RotationalMotor {
+                    name "R01"
+                    minPosition -0.7
+                    maxPosition 0.7
+                    maxTorque 25
+                  }
+                ]
+                endPoint Solid {
+                  translation -0.024 0.0195 -3.382710778154774e-17
+                  rotation 0.9999999999993873 -9.942527942575467e-07 -4.867564117038953e-07 1.570800000000565
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation -0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation -0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF R02 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -2.2420728477316617e-08
+                        axis 0 1 0
+                        anchor -0.056 0 0
+                      }
+                      device [
+                        DEF R02 RotationalMotor {
+                          name "R02"
+                          minPosition -0.7
+                          maxPosition 0.7
+                          maxTorque 25
+                        }
+                      ]
+                      endPoint Solid {
+                        translation -0.056 0 0
+                        rotation 0 -1 0 2.9802322387695313e-08
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation -1 0 0 -5.307179586466759e-06
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                        linearVelocity 1.7643126458080324e-07 1.3236444255591878e-07 1.421475221366112e-07
+                        angularVelocity -4.223283220536105e-07 1.8174559733705464e-07 6.082728154203862e-06
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                  linearVelocity 1.721706620661518e-07 9.166563872818061e-08 8.209679938072822e-08
+                  angularVelocity -2.930194111636532e-07 3.6096130524653015e-07 6.082640812059114e-06
+                }
+              }
+            ]
+            name "(10)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+            linearVelocity 2.1087741986862546e-07 -2.7162857852084202e-09 3.2121634768941146e-08
+            angularVelocity -4.7228518741644043e-07 2.673501339124873e-08 6.091871291255165e-06
+          }
+        }
+        DEF R1 HingeJoint {
+          jointParameters HingeJointParameters {
+            position -6.857852382169538e-07
+            axis 0 1 0
+            anchor -0.104 0.012 0.06
+          }
+          device [
+            DEF R10 RotationalMotor {
+              name "R10"
+              minPosition -0.7
+              maxPosition 0.7
+              maxTorque 25
+            }
+          ]
+          endPoint Solid {
+            translation -0.12000007597976065 1.6059746439298084e-07 0.06999997672210569
+            rotation -1.3081486354801904e-07 0.9999999999999412 -3.1742373839705543e-07 0.5363985336499838
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation -0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF R11 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 2.1810843253992063e-07
+                  axis 0 0 -1
+                  anchor -0.024 0.0195 -0.004
+                }
+                device [
+                  DEF R11 RotationalMotor {
+                    name "R11"
+                    minPosition -0.7
+                    maxPosition 0.7
+                    maxTorque 25
+                  }
+                ]
+                endPoint Solid {
+                  translation -0.024 0.0195 -2.688821387764051e-17
+                  rotation 0.9999999999999881 -1.0905421623070719e-07 -1.0905381565295895e-07 1.5708000000000066
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation -0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation -0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF R12 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position 9.847120367158047e-11
+                        axis 0 1 0
+                        anchor -0.056 0 0
+                      }
+                      device [
+                        DEF R12 RotationalMotor {
+                          name "R12"
+                          minPosition -0.7
+                          maxPosition 0.700000000109297
+                          maxTorque 25
+                        }
+                      ]
+                      endPoint Solid {
+                        translation -0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                        linearVelocity -1.0728875899600428e-07 1.602231696191389e-08 1.8882370599906044e-07
+                        angularVelocity 3.309640671361238e-08 -1.4310801107346134e-08 -6.953317210049887e-06
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                  linearVelocity 2.1315134455365633e-08 1.565484666204718e-08 1.261207575151065e-07
+                  angularVelocity 3.5843013689545176e-08 -1.262222934451174e-09 -6.953279258710345e-06
+                }
+              }
+            ]
+            name "(11)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+            linearVelocity 1.5789679708805202e-07 7.447515019388931e-08 6.720725764807141e-08
+            angularVelocity -4.6412925168248086e-07 5.560493301403697e-09 -6.959609826689545e-06
+          }
+        }
+        DEF R2 HingeJoint {
+          jointParameters HingeJointParameters {
+            position -6.767923191851292e-07
+            axis 0 1 0
+            anchor -0.104 0.012 -0.06
+          }
+          device [
+            DEF R20 RotationalMotor {
+              name "R20"
+              minPosition -0.7
+              maxPosition 0.7
+              maxTorque 25
+            }
+          ]
+          endPoint Solid {
+            translation -0.11800006436853114 2.5159537327592435e-06 -0.06900002087047641
+            rotation 1.5157633297271797e-07 -0.9999999999996895 -7.732717387232176e-07 0.5208001042892042
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation -0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF R21 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 2.3442005119502635e-07
+                  axis 0 0 -1
+                  anchor -0.024 0.0195 -0.004
+                }
+                device [
+                  DEF R21 RotationalMotor {
+                    name "R21"
+                    minPosition -0.7
+                    maxPosition 0.7000004359517266
+                    maxTorque 25
+                  }
+                ]
+                endPoint Solid {
+                  translation -0.024 0.0195 -2.688821387764051e-17
+                  rotation 0.9999999999999862 -1.1721002563678349e-07 -1.1720959498332476e-07 1.570800000000012
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation -0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation -0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF R22 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -1.9754726008985218e-10
+                        axis 0 1 0
+                        anchor -0.056 0 0
+                      }
+                      device [
+                        DEF R22 RotationalMotor {
+                          name "R22"
+                          minPosition -0.7
+                          maxPosition 0.7
+                          maxTorque 25
+                        }
+                      ]
+                      endPoint Solid {
+                        translation -0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                        linearVelocity -5.1012345980468974e-08 1.6005498182054419e-07 1.3321507912235488e-07
+                        angularVelocity -1.8024908363402444e-07 -5.516311037860558e-07 -6.801628633731833e-06
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                  linearVelocity 3.817655637609739e-08 1.0773575531810467e-07 8.4040347160732e-08
+                  angularVelocity -1.6233774028882512e-07 -5.508271242192548e-07 -6.801472699786257e-06
+                }
+              }
+            ]
+            name ""
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+            linearVelocity 1.9812664013298235e-07 6.875013941276748e-08 3.2700759144939866e-08
+            angularVelocity -4.7655504294744954e-07 2.1958333048755753e-08 -6.808937862130759e-06
+          }
+        }
+      ]
+    }
+    DEF sensor_body1 DistanceSensor {
+      translation -0.034377840426420475 0.043 -0.05594222833965361
+      rotation 0 -1 0 4.188793946718347
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 1 0 0
+              emissiveColor 1 0.501961 0.501961
+              specularColor 1 0 0
+            }
+            textureTransform TextureTransform {
+              center 0.24 0
+              translation 0 0.24
+            }
+          }
+          geometry Sphere {
+            radius 0.004
+          }
+        }
+      ]
+      name "sensor_body1"
+      lookupTable [
+        0 1000 0
+        0.1 1000 0.1
+        0.45 525 0
+        0.8 50 0.1
+        0.81 50 0
+      ]
+    }
+  ]
+  physics USE STANDARD_PHYSICS
+  controller "my_controller"
+  supervisor TRUE
+  linearVelocity 2.394590529572452e-07 5.356092370622506e-08 -4.111456413070487e-08
+  angularVelocity -4.5695743571085625e-07 1.8387170952804783e-08 -4.5755918584146845e-08
+}
+DEF Rough_Terrain Solid {
+  translation -5 -5 0
+  children [
+    DEF Rough_Terrain Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "../../../../AppData/Local/Programs/Webots/projects/default/worlds/textures/grid.png"
+          ]
+        }
+        roughness 1
+      }
+      geometry ElevationGrid {
+        height [
+          0.019, 0.037, 0.021, 0.046, 0.016, 0.036, 0.022, 0.048, 0.002, 0.017, 0.03, 0.029, 0.013, 0.045, 0.05, 0.012, 0.038, 0.029, 0.043, 0.01, 0.022, 0.032, 0.002, 0.044, 0.034, 0.01, 0.026, 0.022, 0.016, 0.049, 0.006, 0.019, 0.017, 0.002, 0.018, 0.012, 0.004, 0.042, 0.041, 0.029, 0.01, 0.009, 0.032, 0.028, 0.036, 0.004, 0.021, 0.011, 0.018, 0.041, 0.015, 0.046, 0.037, 0.015, 0.032, 0.024, 0.04, 0.047, 0.032, 0.042, 0.013, 0.005, 0.007, 0.035, 0.047, 0.006, 0.025, 0.047, 0.035, 0.043, 0.032, 0.02, 0.031, 0.048, 0.022, 0.046, 0.037, 0.032, 0.041, 0.044, 0.006, 0.026, 0.027, 0.013, 0.029, 0.011, 0.049, 0.022, 0.023, 0.004, 0.048, 0.03, 0.038, 0.011, 0.028, 0.002, 0.005, 0.048, 0.025, 0.018, 0.023, 0.032, 0.015, 0.014, 0.035, 0.003, 0.028, 0.046, 0.011, 0.008, 0.024, 0.015, 0.042, 0.022, 0.002, 0.04, 0.047, 0.029, 0.009, 0.041, 0.013, 0.022, 0.002, 0.018, 0.028, 0.008, 0.026, 0.006, 0.024, 0.017, 0.014, 0.002, 0.049, 0.009, 0.038, 0.049, 0.042, 0.042, 0.019, 0.001, 0.008, 0.043, 0.035, 0.026, 0.007, 0.038, 0.002, 0.007, 0.026, 0.049, 0.008, 0.019, 0.001, 0.043, 0.028, 0.023, 0.006, 0.027, 0.043, 0.019, 0.024, 0.011, 0.022, 0.029, 0.015, 0.037, 0.034, 0.014, 0.011, 0.016, 0.007, 0.028, 0.041, 0.013, 0.007, 0.048, 0.01, 0.013, 0.041, 0.006, 0.006, 0.008, 0.028, 0.018, 0.021, 0.026, 0.022, 0.023, 0.032, 0.005, 0.003, 0.005, 0.043, 0.008, 0.02, 0.028, 0.005, 0.029, 0.014, 0.013, 0.029, 0.006, 0.036, 0.044, 0.019, 0.03, 0.017, 0.027, 0.04, 0.014, 0.048, 0.048, 0.009, 0.048, 0.026, 0.049, 0.039, 0.038, 0.046, 0.014, 0.046, 0.039, 0.019, 0.007, 0.01, 0.002, 0.014, 0.012, 0.05, 0.016, 0.004, 0.005, 0.036, 0.026, 0.038, 0.05, 0.033, 0.008, 0.013, 0.014, 0.021, 0.013, 0.026, 0.031, 0.002, 0.029, 0.029, 0.028, 0.049, 0.034, 0.021, 0.017, 0.025, 0.05, 0.047, 0.049, 0.001, 0.033, 0.035, 0.039, 0.014, 0.013, 0.005, 0.018, 0.02, 0.023, 0.028, 0.022, 0.002, 0.003, 0.026, 0.006, 0.033, 0.005, 0.048, 0.021, 0.008, 0.035, 0.021, 0.03, 0.04, 0.007, 0.023, 0.017, 0.015, 0.022, 0.034, 0.049, 0.02, 0.033, 0.01, 0.009, 0.006, 0.012, 0.006, 0.037, 0.042, 0.047, 0.036, 0.005, 0.007, 0.028, 0.009, 0.013, 0.028, 0.019, 0.016, 0.033, 0.002, 0.027, 0.034, 0.033, 0.007, 0.011, 0.041, 0.034, 0.035, 0.025, 0.005, 0.013, 0.043, 0.033, 0.03, 0.023, 0.034, 0.021, 0.02, 0.049, 0.021, 0.005, 0.041, 0.016, 0.03, 0.003, 0.025, 0.01, 0.045, 0.013, 0.031, 0.007, 0.004, 0.046, 0.006, 0.03, 0.036, 0.018, 0.047, 0.04, 0.05, 0.03, 0.008, 0.018, 0.017, 0.048, 0.02, 0.011, 0.002, 0.012, 0.012, 0, 0.017, 0.041, 0.004, 0.017, 0.004, 0.029, 0.016, 0.045, 0.016, 0.012, 0.004, 0.046, 0.031, 0.036, 0.001, 0.001, 0.026, 0.01, 0.022, 0.013, 0.026, 0.004, 0.007, 0.001, 0.018, 0.037, 0.002, 0.034, 0.001, 0.002, 0.032, 0.01, 0.032, 0.009, 0.005, 0.024, 0.046, 0.046, 0.002, 0.046, 0.032, 0.021, 0.036, 0.014, 0.011, 0.023, 0.003, 0.041, 0.018, 0.016, 0.04, 0.018, 0.048, 0.039, 0.035, 0.041, 0.037, 0.025, 0.007, 0.001, 0.016, 0.019, 0.041, 0.041, 0.039, 0.02, 0.011, 0.023, 0.013, 0.046, 0.006, 0.032, 0.031, 0.013, 0.015, 0.041, 0.008, 0.029, 0.008, 0.039, 0.019, 0.025, 0.049, 0.041, 0.001, 0.024, 0.007, 0.047, 0.029, 0.042, 0.002, 0.016, 0.005, 0.037, 0.035, 0.01, 0.013, 0.006, 0.031, 0.049, 0.044, 0.013, 0.016, 0.004, 0.012, 0.022, 0.017, 0.045, 0.047, 0.036, 0.034, 0.007, 0.04, 0.031, 0.01, 0.02, 0.049, 0.036, 0.032, 0.033, 0.02, 0.046, 0.027, 0.002, 0.032, 0.046, 0.005, 0.036, 0.023, 0.017, 0.012, 0.02, 0.034, 0.028, 0.049, 0.032, 0.017, 0.005, 0.04, 0.023, 0.043, 0.047, 0.012, 0.003, 0.035, 0.047, 0.024, 0.044, 0.017, 0.023, 0.048, 0.019, 0.021, 0.021, 0.035, 0.048, 0.009, 0.041, 0.029, 0.007, 0.039, 0.012, 0.029, 0.04, 0.039, 0.004, 0, 0.001, 0.016, 0.048, 0.02, 0.034, 0.018, 0.007, 0.026, 0.03, 0.033, 0.043, 0.05, 0.029, 0.001, 0.022, 0.015, 0.024, 0.031, 0.015, 0.011, 0.019, 0.037, 0.011, 0.044, 0.03, 0.012, 0.031, 0.035, 0.02, 0.039, 0.045, 0.003, 0.046, 0.042, 0.037, 0.022, 0.007, 0.03, 0.045, 0.018, 0.022, 0.024, 0.031, 0.014, 0.029, 0.038, 0.022, 0.039, 0.011, 0.042, 0.021, 0.003, 0.006, 0, 0.031, 0.038, 0.021, 0.005, 0.003, 0.008, 0.012, 0.047, 0.047, 0.029, 0.035, 0.044, 0.001, 0.025, 0.041, 0.006, 0.011, 0.015, 0.008, 0.038, 0.007, 0.03, 0.044, 0.028, 0.029, 0.031, 0.002, 0.014, 0.049, 0.009, 0.048, 0.009, 0.028, 0.033, 0.012, 0.002, 0.006, 0.036, 0.032, 0.008, 0.024, 0.033, 0.019, 0.046, 0.043, 0.014, 0.049, 0.022, 0.033, 0.038, 0.018, 0.025, 0.016, 0.024, 0.048, 0.032, 0.028, 0.037, 0.029, 0.022, 0.028, 0.039, 0.023, 0.031, 0.005, 0, 0.017, 0.036, 0.015, 0.019, 0.032, 0.026, 0.027, 0.018, 0.045, 0.038, 0.047, 0.008, 0.015, 0.038, 0.023, 0.03, 0.028, 0.014, 0.015, 0.032, 0.007, 0.018, 0.042, 0.019, 0.008, 0.046, 0.043, 0.039, 0.012, 0.041, 0.024, 0.025, 0.022, 0.021, 0.028, 0.02, 0.004, 0.049, 0.012, 0.04, 0.043, 0.026, 0.033, 0.001, 0.043, 0.008, 0.014, 0.005, 0.047, 0.045, 0.014, 0.014, 0.043, 0.023, 0.034, 0.025, 0.026, 0.032, 0.004, 0.031, 0.031, 0.044, 0.034, 0.024, 0.03, 0.018, 0.03, 0.004, 0.021, 0.022, 0.031, 0.008, 0.016, 0.009, 0.028, 0.026, 0.042, 0.023, 0.015, 0.036, 0.01, 0.043, 0.044, 0.039, 0.041, 0.047, 0.034, 0.016, 0.006, 0.042, 0.03, 0.018, 0.03, 0.027, 0.037, 0.022, 0.04, 0.011, 0.05, 0.039, 0.008, 0.027, 0.031, 0.002, 0.015, 0.026, 0.01, 0.009, 0.049, 0.016, 0.014, 0.016, 0.032, 0.043, 0.005, 0.026, 0.009, 0.037, 0.009, 0.012, 0.026, 0.024, 0.031, 0.042, 0.04, 0.023, 0.037, 0.03, 0.012, 0.022, 0.021, 0.023, 0.027, 0.028, 0.043, 0.048, 0.018, 0.018, 0.016, 0.009, 0.011, 0.003, 0.047, 0.023, 0, 0.034, 0.012, 0.022, 0.001, 0.036, 0.046, 0.045, 0.048, 0.046, 0.013, 0.015, 0.034, 0.011, 0.032, 0.042, 0.011, 0.037, 0.046, 0.014, 0.05, 0.005, 0.017, 0.032, 0.038, 0.041, 0.037, 0.028, 0.045, 0.038, 0.02, 0.014, 0.036, 0.043, 0.03, 0.026, 0.005, 0.008, 0.044, 0.025, 0.001, 0.006, 0.005, 0.015, 0.023, 0.045, 0.028, 0.043, 0.009, 0.032, 0.049, 0.014, 0.041, 0.021, 0.018, 0.027, 0.04, 0.047, 0.043, 0.015, 0.031, 0.04, 0.043, 0.022, 0.048, 0.033, 0.046, 0.021, 0.043, 0.012, 0.022, 0.042, 0.019, 0.009, 0.019, 0.047, 0.039, 0.033, 0.009, 0.026, 0.007, 0.023, 0.04, 0.012, 0.025, 0.024, 0.026, 0.034, 0.011, 0.032, 0.008, 0.047, 0.041, 0.026, 0.045, 0.005, 0.048, 0.028, 0.013, 0.002, 0.012, 0.013, 0.027, 0.039, 0.048, 0.012, 0.028, 0.043, 0.032, 0.007, 0.031, 0.032, 0.037, 0.025, 0.041, 0.038, 0.044, 0.04, 0.036, 0.04, 0.034, 0.049, 0.019, 0.049, 0.01, 0.006, 0.038, 0.009, 0.032, 0.049, 0.026, 0.03, 0.048, 0.028, 0.012, 0.049, 0.001, 0.015, 0.02, 0.017, 0.021, 0.032, 0.002, 0.002, 0.036, 0.025, 0.016, 0.029, 0.039, 0.01, 0.016, 0.02, 0.02, 0.033, 0.032, 0.005, 0.008, 0.049, 0.035, 0.049, 0.009, 0.044, 0.011, 0.02, 0.016, 0.015, 0.046, 0.018, 0.007, 0.03, 0.013, 0.048, 0.012, 0.009, 0.047, 0.039, 0.008, 0.042, 0.041, 0.05, 0.045, 0.017, 0.035, 0.017, 0.037, 0.05, 0.019, 0.04, 0.026, 0.032, 0.016, 0.01, 0.047, 0.036, 0.04, 0.007, 0.031, 0.034, 0.024, 0.046, 0, 0.038, 0.032, 0.002, 0.048, 0.012, 0.044, 0.05, 0.012, 0.038, 0.008, 0.014, 0.003, 0.026, 0.042, 0.009, 0.046, 0.003, 0.05, 0.01, 0.003, 0.023, 0.004, 0.021, 0.039, 0.028, 0.038, 0.008, 0.032, 0.009, 0.032, 0.03, 0.039, 0.034, 0.038, 0.046, 0.027, 0.024, 0.037, 0.048, 0.008, 0.015, 0.04, 0.01, 0.019, 0.001, 0.003, 0.024, 0.049, 0.015, 0.037, 0.036, 0.043, 0.028, 0.046, 0.037, 0.016, 0.036, 0.045, 0.035, 0.004, 0.008, 0.019, 0.019, 0.046, 0.008, 0.017, 0.049, 0.049, 0.049, 0.022, 0.003, 0.049, 0.005, 0.029, 0.031, 0.036, 0.006, 0.032, 0.038, 0.044, 0.013, 0.038, 0.016, 0.039, 0.017, 0.042, 0.002, 0.034, 0.013, 0.01, 0.04, 0.012, 0.012, 0.05, 0.003, 0.05, 0.008, 0.018, 0.011, 0.014, 0.024, 0.028, 0.019, 0.046, 0.004, 0.005, 0.011, 0.001, 0.037, 0.038, 0.021, 0.036, 0.036, 0.01, 0.007, 0.048, 0.011, 0.037, 0.039, 0.028, 0.014, 0.026, 0.041, 0.014, 0.017, 0.011, 0.011, 0.032, 0.03, 0.035, 0.044, 0.03, 0.007, 0.006, 0.016, 0.003, 0.032, 0.017, 0.018, 0.019, 0.016, 0.04, 0.032, 0.019, 0.037, 0.003, 0.049, 0.012, 0.008, 0.046, 0.049, 0.015, 0.012, 0.032, 0.009, 0.014, 0.001, 0.04, 0.035, 0.003, 0.007, 0.016, 0.012, 0.034, 0.03, 0.032, 0.001, 0.023, 0.027, 0.05, 0.048, 0.008, 0.02, 0.041, 0.001, 0.038, 0.017, 0.025, 0.022, 0.05, 0.008, 0.042, 0.005, 0.006, 0.023, 0.047, 0.006, 0.044, 0.034, 0.042, 0.024, 0.008, 0.038, 0.05, 0.029, 0.009, 0.004, 0, 0.026, 0.006, 0.025, 0.048, 0.021, 0.019, 0.046, 0.041, 0.047, 0.01, 0.041, 0.008, 0.025, 0.029, 0.024, 0.047, 0.03, 0.002, 0.001, 0.049, 0.034, 0.034, 0.013, 0.028, 0.017, 0.048, 0.048, 0.006, 0.021, 0.042, 0.02, 0.044, 0.007, 0.003, 0.034, 0.015, 0.026, 0.004, 0.043, 0.05, 0.025, 0.029, 0.043, 0.039, 0.033, 0.045, 0.045, 0.044, 0.05, 0.003, 0.047, 0.012, 0.034, 0.021, 0.025, 0.017, 0.004, 0.025, 0.002, 0.009, 0.028, 0.007, 0.004, 0.016, 0.028, 0.028, 0.003, 0.008, 0.024, 0.005, 0.043, 0.007, 0.021, 0.012, 0.031, 0.039, 0.037, 0.018, 0.005, 0.048, 0.014, 0.027, 0.005, 0.038, 0.004, 0.008, 0.01, 0.007, 0.021, 0.023, 0.033, 0.044, 0.037, 0.037, 0.045, 0.021, 0.034, 0.018, 0.045, 0.049, 0.036, 0.032, 0.036, 0.037, 0.043, 0.033, 0.012, 0.034, 0.006, 0.038, 0.023, 0.049, 0.04, 0.014, 0.045, 0.038, 0.011, 0.046, 0.043, 0.001, 0.004, 0.002, 0.011, 0.02, 0.003, 0.042, 0.029, 0.017, 0.03, 0.001, 0.022, 0.04, 0.043, 0.006, 0.037, 0.048, 0.047, 0.01, 0.001, 0.03, 0.013, 0.021, 0.031, 0.013, 0.009, 0.011, 0.036, 0.004, 0.027, 0.004, 0.032, 0.014, 0.033, 0.035, 0.009, 0.014, 0.03, 0.022, 0.034, 0.011, 0.009, 0.046, 0.022, 0, 0.027, 0.019, 0.008, 0.005, 0.003, 0.013, 0.035, 0.024, 0.044, 0.04, 0.004, 0.04, 0.04, 0.044, 0, 0.003, 0.021, 0.014, 0.008, 0.045, 0.003, 0.044, 0.031, 0.002, 0.026, 0.014, 0.017, 0.001, 0.049, 0.032, 0.01, 0.006, 0.046, 0.027, 0.003, 0.044, 0.017, 0.027, 0.017, 0.009, 0.047, 0.001, 0.041, 0.007, 0.013, 0.031, 0.016, 0.038, 0.011, 0.028, 0.047, 0.024, 0.016, 0.036, 0.039, 0.002, 0.004, 0.012, 0.011, 0.004, 0.001, 0.031, 0.036, 0.038, 0.042, 0.035, 0.002, 0.015, 0.048, 0.04, 0.031, 0.023, 0.037, 0.004, 0.039, 0.014, 0.042, 0.007, 0.017, 0.017, 0.017, 0.005, 0.04, 0.032, 0.012, 0.016, 0.048, 0.029, 0.003, 0.025, 0.035, 0.025, 0.015, 0.044, 0.002, 0.003, 0.027, 0.018, 0.001, 0.041, 0.041, 0.044, 0.037, 0.014, 0.026, 0.038, 0.013, 0.03, 0.001, 0.016, 0.02, 0.013, 0.044, 0.049, 0.029, 0.018, 0.031, 0.034, 0.032, 0.013, 0.03, 0.037, 0.036, 0.043, 0.034, 0.033, 0.012, 0.016, 0.023, 0.045, 0.041, 0.04, 0.037, 0.024, 0.01, 0.044, 0.028, 0.027, 0.041, 0.025, 0.019, 0.015, 0.026, 0.021, 0.016, 0.045, 0.033, 0.034, 0.005, 0.025, 0.022, 0.004, 0.011, 0.011, 0.029, 0.002, 0.022, 0.036, 0.043, 0.049, 0.048, 0.016, 0.041, 0.016, 0.041, 0.039, 0.025, 0.048, 0.027, 0.049, 0.005, 0.01, 0.001, 0.045, 0.008, 0.003, 0.042, 0.049, 0.042, 0.032, 0.004, 0.033, 0.019, 0.022, 0.044, 0.018, 0.001, 0.003, 0.043, 0.032, 0.028, 0.016, 0.049, 0.024, 0.013, 0.011, 0.045, 0.012, 0.037, 0.017, 0.042, 0.022, 0.033, 0.043, 0.022, 0.014, 0.014, 0, 0.002, 0.048, 0.006, 0.024, 0.015, 0.044, 0.022, 0.042, 0.001, 0.001, 0.028, 0.042, 0.037, 0.018, 0.036, 0.042, 0.026, 0.044, 0.041, 0.005, 0.016, 0.012, 0.045, 0.047, 0.032, 0.032, 0.007, 0.012, 0.01, 0.041, 0.05, 0.003, 0.01, 0.029, 0.006, 0.033, 0.029, 0.003, 0.016, 0.009, 0.016, 0.023, 0.047, 0.02, 0.032, 0.035, 0.044, 0.031, 0.049, 0.016, 0.024, 0.009, 0.031, 0.008, 0.001, 0.028, 0.008, 0.041, 0.041, 0.04, 0.025, 0.026, 0.028, 0.037, 0.011, 0.002, 0.035, 0.014, 0.008, 0.006, 0.008, 0.018, 0.021, 0.037, 0.038, 0.045, 0.044, 0.024, 0.002, 0.049, 0.026, 0.048, 0.036, 0.038, 0.037, 0.011, 0.02, 0.001, 0.014, 0.008, 0.026, 0.018, 0.041, 0.02, 0.013, 0.032, 0.033, 0.021, 0.031, 0.01, 0.001, 0.019, 0.018, 0.047, 0.041, 0.049, 0.036, 0.004, 0.031, 0.008, 0.031, 0.002, 0.047, 0.04, 0.006, 0.033, 0.012, 0.037, 0.027, 0.008, 0.021, 0.049, 0.023, 0.036, 0.036, 0.019, 0.008, 0.029, 0.048, 0.015, 0.017, 0.035, 0.009, 0.021, 0.044, 0.028, 0.012, 0.019, 0.014, 0.016, 0.023, 0.006, 0.002, 0.05, 0.032, 0.048, 0.024, 0.032, 0.014, 0.023, 0.049, 0.009, 0.001, 0.034, 0.041, 0.036, 0.031, 0.007, 0.032, 0.033, 0.016, 0.002, 0.046, 0.043, 0.02, 0.021, 0.026, 0.016, 0.009, 0.036, 0.048, 0.046, 0.046, 0.019, 0.04, 0.028, 0.036, 0.016, 0.037, 0.005, 0.031, 0.018, 0.05, 0.011, 0.027, 0.01, 0.036, 0.02, 0.026, 0.007, 0.008, 0.04, 0.033, 0.04, 0.001, 0.047, 0.009, 0.048, 0.001, 0.003, 0.036, 0.015, 0.027, 0.008, 0.024, 0.049, 0.028, 0.04, 0.018, 0.014, 0.048, 0.001, 0.039, 0.043, 0.023, 0.007, 0.034, 0.024, 0.011, 0.028, 0.044, 0.042, 0.035, 0.02, 0.043, 0.024, 0.025, 0.037, 0.001, 0.043, 0.023, 0.031, 0.008, 0, 0.024, 0.026, 0.011, 0.048, 0.032, 0.002, 0.011, 0.021, 0.041, 0.046, 0.003, 0.001, 0.005, 0.041, 0.045, 0.014, 0.027, 0.048, 0.008, 0.021, 0.049, 0.017, 0.006, 0.007, 0.016, 0.025, 0.027, 0.023, 0.019, 0.045, 0.022, 0.035, 0.003, 0.041, 0.047, 0.05, 0.032, 0.036, 0.024, 0.043, 0.043, 0.025, 0.017, 0.024, 0.008, 0.038, 0.049, 0.032, 0.038, 0.023, 0.01, 0.044, 0.042, 0.037, 0.039, 0.048, 0.022, 0.006, 0.038, 0.019, 0.006, 0.026, 0.002, 0.009, 0.038, 0.032, 0.015, 0.007, 0.049, 0.013, 0.02, 0.041, 0.033, 0.034, 0.035, 0.005, 0.049, 0.014, 0.042, 0.018, 0.019, 0.008, 0.043, 0.036, 0.037, 0.046, 0.039, 0.037, 0.013, 0, 0.029, 0.035, 0.042, 0.003, 0.005, 0.03, 0.021, 0.046, 0.017, 0.007, 0.006, 0.043, 0.025, 0.016, 0.049, 0.031, 0, 0.041, 0.023, 0.011, 0.019, 0.048, 0.01, 0.013, 0.045, 0.039, 0.047, 0.035, 0.022, 0.009, 0.031, 0.011, 0.042, 0.011, 0.04, 0.046, 0.041, 0.048, 0.043, 0.023, 0.03, 0.007, 0.011, 0.013, 0.045, 0.014, 0.046, 0.014, 0.001, 0.046, 0.033, 0.025, 0.028, 0.003, 0.05, 0.039, 0.012, 0.048, 0.017, 0.01, 0.049, 0.039, 0.012, 0.034, 0.001, 0.019, 0.006, 0.044, 0.005, 0.034, 0.011, 0.008, 0.029, 0.046, 0.012, 0.017, 0.002, 0.022, 0.012, 0.015, 0.036, 0.041, 0.001, 0.039, 0.046, 0.012, 0.023, 0.005, 0.024, 0.033, 0.018, 0.024, 0.035, 0.048, 0.036, 0.024, 0.017, 0.026, 0.016, 0.019, 0.02, 0.048, 0.036, 0.04, 0.032, 0.02, 0.042, 0.006, 0.006, 0.045, 0.007, 0.006, 0.018, 0.031, 0.038, 0.036, 0.046, 0.02, 0.047, 0.03, 0.028, 0.042, 0.007, 0.027, 0.045, 0.022, 0.017, 0.016, 0.029, 0.036, 0.048, 0.005, 0.035, 0.045, 0.041, 0.041, 0.004, 0.026, 0.037, 0.008, 0.026, 0.031, 0.043, 0.036, 0.003, 0.019, 0.045, 0.022, 0.007, 0.031, 0.037, 0.044, 0.022, 0.029, 0.002, 0.016, 0.015, 0.026, 0.036, 0.038, 0.018, 0.035, 0.03, 0.014, 0.022, 0.033, 0.031, 0.004, 0.035, 0.043, 0.03, 0.039, 0.048, 0.047, 0.037, 0.042, 0.046, 0.048, 0.008, 0.009, 0.032, 0.031, 0.002, 0.034, 0.042, 0.006, 0.026, 0.015, 0.006, 0.037, 0.011, 0.006, 0.001, 0.033, 0.018, 0.011, 0.005, 0.004, 0.013, 0.028, 0.023, 0.011, 0.036, 0.041, 0.029, 0.023, 0.032, 0.001, 0.047, 0.005, 0.019, 0.012, 0.027, 0.03, 0.049, 0.043, 0.039, 0.047, 0.019, 0.008, 0.045, 0.022, 0.018, 0.018, 0.005, 0.046, 0.008, 0.002, 0.038, 0.005, 0.007, 0, 0.01, 0.031, 0.016, 0.005, 0.016, 0.008, 0.037, 0.009, 0.04, 0.049, 0.034, 0.042, 0.018, 0.045, 0.024, 0, 0.031, 0.04, 0.003, 0.016, 0.047, 0.04, 0.001, 0.017, 0.035, 0.02, 0.008, 0.032, 0.042, 0.049, 0.046, 0.021, 0.017, 0.013, 0.023, 0.03, 0.017, 0.002, 0.045, 0.038, 0.012, 0.029, 0.008, 0.028, 0.003, 0.03, 0.024, 0.017, 0.046, 0.046, 0.043, 0.045, 0.002, 0.017, 0.02, 0.041, 0.027, 0.043, 0.021, 0.03, 0.03, 0.043, 0.028, 0.011, 0.049, 0.048, 0.029, 0.027, 0.018, 0.033, 0.027, 0.009, 0.021, 0.045, 0.021, 0.032, 0.026, 0.03, 0, 0.013, 0.012, 0.004, 0.005, 0.044, 0.047, 0.042, 0.005, 0.039, 0.001, 0.035, 0.014, 0.006, 0.025, 0.049, 0.037, 0.012, 0.042, 0.013, 0.029, 0.044, 0.046, 0.049, 0.022, 0.038, 0.03, 0.014, 0.03, 0.002, 0.036, 0.015, 0.025, 0.045, 0, 0.041, 0.016, 0.018, 0.002, 0.05, 0.047, 0.041, 0.049, 0.012, 0.033, 0.021, 0.042, 0.011, 0.033, 0.017, 0.015, 0.013, 0.05, 0.009, 0.047, 0.007, 0.037, 0.034, 0.049, 0.049, 0.044, 0.007, 0.023, 0.018, 0.005, 0, 0.044, 0.048, 0.011, 0.011, 0.03, 0.037, 0.023, 0.016, 0.047, 0.016, 0.017, 0.042, 0.009, 0.04, 0.043, 0.014, 0.04, 0.033, 0.009, 0.03, 0.03, 0.016, 0.007, 0.008, 0.037, 0.011, 0.032, 0.03, 0.002, 0.04, 0.043, 0.023, 0.045, 0.049, 0.026, 0.04, 0.018, 0.022, 0.038, 0.046, 0.031, 0.013, 0.049, 0.018, 0.02, 0.015, 0.015, 0.005, 0.015, 0, 0.03, 0.014, 0.01, 0.042, 0.047, 0.002, 0.036, 0.017, 0.045, 0.016, 0.012, 0, 0.036, 0.034, 0.025, 0.05, 0.006, 0.011, 0.003, 0.044, 0.033, 0.049, 0.002, 0.024, 0.025, 0.043, 0.014, 0.02, 0.005, 0.007, 0.03, 0.003, 0.023, 0.048, 0.005, 0.042, 0.034, 0.007, 0.033, 0.021, 0.026, 0.038, 0.017, 0.05, 0.044, 0.037, 0.05, 0.021, 0.045, 0, 0.026, 0.044, 0.03, 0.004, 0.039, 0.039, 0.018, 0.001, 0.025, 0.041, 0.037, 0.008, 0.047, 0.009, 0.006, 0.003, 0.05, 0.027, 0.033, 0.043, 0.035, 0.046, 0.024, 0.033, 0.028, 0.005, 0.019, 0.049, 0.022, 0.049, 0.006, 0.018, 0.004, 0.024, 0.042, 0.016, 0.038, 0.046, 0.039, 0.007, 0.047, 0.036, 0.016, 0.018, 0.017, 0.015, 0.028, 0.027, 0.021, 0.045, 0.014, 0.006, 0.046, 0.005, 0.04, 0.049, 0.031, 0.013, 0.01, 0.018, 0.021, 0.024, 0.022, 0.015, 0.029, 0.033, 0.012, 0.032, 0.031, 0.024, 0.031, 0.038, 0.033, 0.004, 0.025, 0.015, 0.03, 0.012, 0.028, 0.029, 0.024, 0.033, 0.035, 0.004, 0.02, 0.001, 0.049, 0.027, 0.003, 0.005, 0.015, 0.026, 0.008, 0.003, 0.023, 0.014, 0.036, 0.003, 0.003, 0.035, 0.022, 0.046, 0.031, 0.001, 0.043, 0.018, 0.005, 0.011, 0.012, 0.037, 0.008, 0.042, 0.012, 0.05, 0.048, 0.024, 0.035, 0.04, 0.021, 0.016, 0.013, 0.022, 0.034, 0.024, 0.032, 0.037, 0.021, 0.028, 0.016, 0.044, 0.027, 0.027, 0.01, 0.045, 0.046, 0.007, 0.011, 0.005, 0.015, 0.003, 0.033, 0.006, 0.015, 0.047, 0.013, 0.003, 0.015, 0.019, 0, 0.016, 0.008, 0.03, 0.014, 0.033, 0.027, 0.006, 0.046, 0.014, 0.01, 0.015, 0.037, 0.005, 0.003, 0.017, 0.002, 0.02, 0.034, 0.043, 0.026, 0.025, 0.016, 0.005, 0.033, 0.004, 0.04, 0.003, 0.019, 0.015, 0.021, 0.024, 0.027, 0.013, 0.018, 0.012, 0.018, 0.012, 0.001, 0.025, 0.003, 0.049, 0.032, 0.048, 0.024, 0.037, 0.027, 0.006, 0.01, 0.034, 0.031, 0.026, 0.005, 0.035, 0.014, 0.035, 0.034, 0.009, 0.047, 0.036, 0.027, 0.028, 0.005, 0.012, 0.043, 0.035, 0.001, 0.033, 0.016, 0.018, 0.036, 0.032, 0.019, 0.046, 0.016, 0.049, 0.043, 0.042, 0.02, 0.023, 0.045, 0.049, 0.001, 0.014, 0.043, 0.028, 0.002, 0.033, 0.016, 0.017, 0.018, 0.039, 0.012, 0.003, 0.007, 0.05, 0.026, 0.027, 0.012, 0.001, 0.031, 0.028, 0.02, 0.033, 0.014, 0.01, 0.041, 0.028, 0.031, 0.048, 0.014, 0.034, 0.017, 0.048, 0.005, 0.007, 0.018, 0.01, 0.033, 0.01, 0.022, 0.02, 0.005, 0.009, 0.032, 0.023, 0.001, 0.042, 0.05, 0.001, 0.025, 0.038, 0.026, 0.036, 0.049, 0.003, 0.043, 0.024, 0.013, 0.004, 0.041, 0.005, 0.019, 0.033, 0.018, 0.013, 0.002, 0.049, 0.042, 0.012, 0.047, 0.019, 0.021, 0.022, 0.026, 0.002, 0.008, 0.023, 0.008, 0.037, 0.042, 0.029, 0.024, 0, 0.023, 0.044, 0.006, 0.013, 0.026, 0.033, 0.049, 0.021, 0.006, 0.021, 0.024, 0.006, 0.026, 0.003, 0.046, 0.015, 0.049, 0.02, 0.035, 0.026, 0.031, 0.03, 0.028, 0.018, 0.008, 0.045, 0.037, 0.023, 0.002, 0.004, 0.029, 0.03, 0.014, 0.026, 0.029, 0.035, 0.035, 0.032, 0.043, 0.036, 0.047, 0.038, 0.001, 0.038, 0.002, 0.004, 0.008, 0.034, 0.016, 0.015, 0.012, 0.009, 0.043, 0.04, 0.001, 0.005, 0.016, 0.046, 0.006, 0.002, 0.027, 0.037, 0.036, 0.029, 0.011, 0.006, 0.004, 0.013, 0.033, 0.028, 0.033, 0.018, 0.026, 0.018, 0.009, 0.02, 0.019, 0.049, 0.011, 0.049, 0.022, 0.049, 0.05, 0.047, 0.008, 0.015, 0.004, 0.05, 0.02, 0.033, 0.008, 0.007, 0.005, 0.007, 0.033, 0.006, 0.047, 0.005, 0.029, 0.023, 0.033, 0.045, 0.02, 0.014, 0.03, 0.047, 0.033, 0, 0.016, 0.007, 0.006, 0.008, 0.022, 0.046, 0.027, 0.044, 0.029, 0.027, 0.006, 0.033, 0.044, 0.039, 0.018, 0.047, 0.014, 0.022, 0.034, 0.039, 0.019, 0.04, 0.003, 0.036, 0.046, 0.014, 0.049, 0.034, 0.036, 0.041, 0.029, 0.035, 0.003, 0.044, 0.035, 0.005, 0.048, 0.02, 0.019, 0.003, 0.035, 0.038, 0.043, 0.05, 0.04, 0.04, 0.024, 0.028, 0.012, 0.038, 0.006, 0.048, 0.004, 0.018, 0.044, 0.033, 0.016, 0.05, 0.006, 0.002, 0.004, 0.018, 0.017, 0.01, 0.043, 0.013, 0.042, 0.003, 0.006, 0.01, 0.015, 0.046, 0.049, 0.005, 0, 0.008, 0.036, 0.014, 0.022, 0.03, 0.031, 0.001, 0.014, 0, 0.03, 0.026, 0.014, 0.039, 0.03, 0.012, 0.05, 0.043, 0.048, 0.036, 0.049, 0.03, 0.036, 0.023, 0.015, 0.012, 0.018, 0.01, 0.004, 0.04, 0.005, 0.003, 0.049, 0, 0.002, 0.018, 0.033, 0.015, 0.036, 0.041, 0.036, 0.034, 0.03, 0.011, 0.045, 0.038, 0.027, 0.016, 0.033, 0.017, 0.008, 0.008, 0.007, 0.043, 0.02, 0.006, 0.041, 0.025, 0.05, 0.012, 0.021, 0.045, 0.032, 0.041, 0.028, 0.045, 0.019, 0.049, 0.034, 0.02, 0.026, 0.025, 0.009, 0.045, 0.044, 0.016, 0.006, 0.028, 0.013, 0, 0, 0.019, 0.011, 0.005, 0.025, 0.028, 0.001, 0.033, 0.048, 0.043, 0.029, 0.005, 0.031, 0.023, 0.048, 0.042, 0.049, 0.017, 0.004, 0.03, 0.026, 0.038, 0.029, 0.002, 0.018, 0.003, 0.043, 0.048, 0.044, 0.015, 0.032, 0.044, 0.022, 0.005, 0.028, 0.013, 0.039, 0.037, 0.006, 0.033, 0.021, 0.041, 0.01, 0.015, 0.011, 0.038, 0.023, 0.013, 0.001, 0.006, 0.032, 0.016, 0.035, 0.021, 0.014, 0.027, 0.043, 0.035, 0.029, 0.025, 0.021, 0.012, 0.02, 0.023, 0.022, 0.025, 0.029, 0.014, 0.03, 0.039, 0.047, 0.044, 0.022, 0.017, 0.03, 0.039, 0.03, 0.029, 0.01, 0.037, 0.05, 0.047, 0.015, 0.012, 0.049, 0.021, 0.03, 0.029, 0.046, 0.002, 0.029, 0.047, 0.036, 0.037, 0.013, 0.002, 0.026, 0.011, 0.041, 0.015, 0.036, 0.044, 0.04, 0.004, 0.003, 0.025, 0.048, 0.025, 0.038, 0.014, 0.046, 0.043, 0, 0.03, 0.033, 0.029, 0.01, 0.046, 0.045, 0.043, 0.047, 0.023, 0.018, 0.032, 0.031, 0.019, 0.028, 0.002, 0.001, 0.004, 0.041, 0.01, 0.032, 0.014, 0.017, 0.015, 0.029, 0.024, 0.027, 0.045, 0.009, 0.013, 0.045, 0.003, 0.001, 0.039, 0.011, 0.047, 0.028, 0.015, 0.027, 0.046, 0.033, 0.043, 0.022, 0.014, 0.004, 0.013, 0.004, 0.001, 0.003, 0.036, 0.043, 0.026, 0.006, 0.007, 0.01, 0.011, 0.049, 0.037, 0.046, 0.017, 0.025, 0.006, 0.002, 0.05, 0.043, 0.034, 0.021, 0.018, 0, 0.005, 0.015, 0.035, 0.018, 0.031, 0.025, 0.027, 0.019, 0.028, 0.038, 0.02, 0.008, 0.01, 0.019, 0.049, 0.023, 0.041, 0.044, 0.027, 0.036, 0.037, 0.049, 0.016, 0.034, 0.004, 0.026, 0.035, 0.018, 0.018, 0.045, 0.008, 0.042, 0.042, 0.046, 0.036, 0.049, 0.019, 0.008, 0.036, 0.022, 0.037, 0.027, 0.042, 0.036, 0.024, 0.038, 0.023, 0.042, 0.032, 0.004, 0.009, 0.01, 0.048, 0.033, 0.026, 0.031, 0.006, 0.005, 0.025, 0.006, 0.04, 0.007, 0.038, 0.001, 0.025, 0.031, 0.034, 0.012, 0.001, 0.048, 0.029, 0.001, 0.003, 0.048, 0.037, 0.032, 0.011, 0.022, 0.048, 0.031, 0.021, 0.03, 0.046, 0.036, 0.018, 0.044, 0.021, 0.019, 0.025, 0.043, 0.04, 0.039, 0.011, 0.031, 0.034, 0.044, 0.041, 0.003, 0.039, 0.027, 0.014, 0.023, 0.027, 0.014, 0.044, 0.034, 0.046, 0.048, 0.027, 0.019, 0.012, 0.023, 0.028, 0.049, 0.022, 0.034, 0.025, 0.019, 0.005, 0.037, 0.018, 0.023, 0.046, 0.003, 0.016, 0.003, 0.045, 0.023, 0.01, 0.027, 0.044, 0.02, 0.039, 0.048, 0.002, 0.037, 0.031, 0.001, 0.01, 0.012, 0.041, 0.04, 0.033, 0.027, 0.018, 0.005, 0.006, 0.002, 0.025, 0.048, 0.041, 0.035, 0.041, 0.017, 0.039, 0.041, 0.004, 0.004, 0.037, 0.002, 0.042, 0.029, 0.01, 0.012, 0.028, 0.003, 0.019, 0.004, 0.044, 0.018, 0.049, 0.008, 0.015, 0.005, 0.006, 0.047, 0.023, 0.041, 0.001, 0.05, 0.02, 0.04, 0.041, 0.007, 0.017, 0.022, 0.028, 0.043, 0.039, 0.033, 0.035, 0.039, 0.016, 0.021, 0.028, 0.034, 0.038, 0.022, 0.044, 0.01, 0.036, 0.034, 0.031, 0.031, 0.035, 0.017, 0.023, 0.006, 0.01, 0.014, 0.004, 0.011, 0.001, 0.03, 0.012, 0.028, 0.017, 0.017, 0.022, 0.037, 0.034, 0.027, 0.021, 0.028, 0.009, 0.002, 0, 0.005, 0.025, 0.032, 0.026, 0.012, 0.047, 0.041, 0.01, 0.017, 0.04, 0.049, 0.017, 0.042, 0.035, 0.018, 0.04, 0.002, 0.011, 0.005, 0.032, 0.007, 0.031, 0.033, 0.039, 0.038, 0.003, 0.014, 0.02, 0.015, 0.002, 0.013, 0.008, 0.004, 0.049, 0.046, 0.037, 0.011, 0.003, 0.029, 0.023, 0.038, 0.012, 0.027, 0.023, 0.038, 0.039, 0.034, 0.013, 0.041, 0.015, 0.031, 0.016, 0.026, 0.04, 0.005, 0.014, 0.044, 0.008, 0.045, 0.038, 0.038, 0.009, 0.022, 0.009, 0, 0.038, 0.022, 0.012, 0.02, 0.031, 0.038, 0.048, 0.023, 0.029, 0.027, 0.005, 0.048, 0.017, 0.033, 0.035, 0.002, 0.05, 0.027, 0.045, 0.035, 0.04, 0.022, 0.002, 0.009, 0.042, 0.019, 0.047, 0.021, 0.028, 0.003, 0.047, 0.044, 0.037, 0.004, 0.007, 0.022, 0.048, 0.018, 0.022, 0, 0.038, 0.015, 0.045, 0.001, 0.01, 0.008, 0.011, 0.022, 0.003, 0.001, 0.045, 0.013, 0.033, 0.03, 0.018, 0.001, 0.048, 0.016, 0.019, 0.005, 0.002, 0.029, 0.019, 0.041, 0.002, 0.038, 0.02, 0.047, 0.011, 0.031, 0.045, 0.022, 0.019, 0.012, 0.016, 0.041, 0.047, 0.021, 0.048, 0.029, 0.033, 0.02, 0.046, 0.008, 0.018, 0.038, 0.003, 0.033, 0.041, 0.033, 0.006, 0.01, 0.04, 0.025, 0.038, 0.043, 0.021, 0.014, 0.019, 0.039, 0.047, 0.006, 0.024, 0.036, 0.013, 0.04, 0.012, 0, 0, 0.034, 0.039, 0.031, 0.006, 0.021, 0.049, 0.042, 0.007, 0, 0.031, 0.035, 0.024, 0.015, 0.03, 0.013, 0.01, 0.033, 0.011, 0.033, 0.009, 0.038, 0.034, 0.039, 0.034, 0.002, 0.029, 0.037, 0.018, 0.039, 0.021, 0.01, 0.017, 0.047, 0.043, 0.039, 0.041, 0.034, 0.04, 0.034, 0.024, 0.028, 0.019, 0.049, 0.022, 0.013, 0, 0.023, 0.043, 0.021, 0.014, 0.026, 0.01, 0.046, 0.001, 0.04, 0.003, 0.047, 0.043, 0.05, 0.029, 0.001, 0.023, 0.047, 0.025, 0.027, 0.033, 0.04, 0.025, 0.018, 0.025, 0.044, 0.009, 0.004, 0.023, 0.025, 0.03, 0.024, 0.013, 0.036, 0.004, 0, 0.02, 0.011, 0.011, 0.019, 0.016, 0.023, 0.022, 0.034, 0.021, 0.04, 0.002, 0.023, 0.006, 0.018, 0.035, 0.027, 0.016, 0.03, 0.003, 0.046, 0.025, 0.044, 0.011, 0.028, 0.022, 0.019, 0.047, 0.047, 0.018, 0.041, 0.026, 0.023, 0.002, 0.047, 0.022, 0.038, 0.007, 0.047, 0.028, 0.03, 0.044, 0.027, 0.004, 0.046, 0.022, 0.018, 0.029, 0.02, 0.019, 0.01, 0.012, 0.024, 0.049, 0.012, 0.002, 0.019, 0.021, 0.026, 0.018, 0.007, 0.007, 0.01, 0.013, 0.012, 0.05, 0.014, 0.027, 0.009, 0.033, 0.035, 0.026, 0.019, 0.008, 0.002, 0.033, 0.028, 0.002, 0.001, 0.044, 0.029, 0.02, 0.012, 0.02, 0.038, 0.036, 0.028, 0.048, 0.048, 0.015, 0.022, 0.017, 0.031, 0.033, 0.018, 0.02, 0.032, 0.048, 0.013, 0.002, 0.039, 0.043, 0.025, 0.027, 0.022, 0.004, 0.036, 0.046, 0.007, 0.007, 0.026, 0.039, 0.035, 0.026, 0.021, 0.018, 0.005, 0.047, 0.01, 0.039, 0.003, 0.038, 0.024, 0.022, 0.002, 0.05, 0.018, 0, 0.041, 0.047, 0.05, 0.036, 0.024, 0.036, 0.024, 0.015, 0.05, 0, 0.006, 0.003, 0.035, 0.036, 0.004, 0.016, 0.03, 0.028, 0.011, 0.049, 0.028, 0.049, 0.043, 0.023, 0.017, 0.05, 0.012, 0.038, 0.031, 0.018, 0.036, 0.005, 0.033, 0.002, 0.012, 0.001, 0.013, 0.039, 0.002, 0.043, 0.026, 0.021, 0.011, 0.017, 0.025, 0.017, 0.049, 0.014, 0.015, 0.048, 0.01, 0.031, 0.022, 0.031, 0.014, 0.028, 0.042, 0.025, 0.002, 0.021, 0.002, 0.021, 0.001, 0.032, 0.024, 0.03, 0.036, 0.002, 0.03, 0.002, 0.04, 0.009, 0.042, 0.043, 0.021, 0.047, 0.016, 0.047, 0.046, 0.028, 0.011, 0.011, 0.022, 0.007, 0.015, 0.002, 0.009, 0.041, 0.028, 0.025, 0.021, 0.037, 0.02, 0.002, 0.029, 0.05, 0.008, 0.043, 0.018, 0.033, 0.008, 0.04, 0.013, 0.046, 0.029, 0.017, 0.032, 0.019, 0.002, 0.05, 0.012, 0.004, 0.026, 0.031, 0.044, 0.001, 0.003, 0.004, 0.01, 0.02, 0.014, 0.017, 0.042, 0.043, 0.01, 0.032, 0.041, 0.027, 0.006, 0.004, 0.033, 0.02, 0.013, 0.014, 0.007, 0.006, 0.015, 0.037, 0.045, 0.047, 0.004, 0.026, 0.03, 0.04, 0.002, 0.035, 0.036, 0.01, 0.022, 0.018, 0.044, 0.005, 0.031, 0.042, 0.047, 0.022, 0.043, 0.034, 0.017, 0.002, 0.037, 0.048, 0.035, 0.041, 0.031, 0.007, 0.044, 0.045, 0.015, 0.043, 0.014, 0.029, 0.038, 0.014, 0.04, 0.02, 0.001, 0.047, 0.014, 0.034, 0.003, 0.032, 0.003, 0.04, 0.043, 0.045, 0.002, 0.019, 0.01, 0.041, 0.048, 0.025, 0.032, 0.046, 0.026, 0.016, 0.034, 0.017, 0.02, 0.023, 0.007, 0.014, 0.03, 0.008, 0.017, 0.006, 0.024, 0.034, 0.041, 0.035, 0.001, 0.037, 0.022, 0.048, 0.002, 0.046, 0.02, 0.016, 0.002, 0.041, 0.026, 0.008, 0.018, 0.048, 0.026, 0.007, 0.025, 0.026, 0.034, 0.045, 0.006, 0.036, 0.044, 0.039, 0.049, 0.033, 0.035, 0.045, 0.023, 0.027, 0.015, 0.017, 0.045, 0.033, 0.041, 0.018, 0.031, 0.006, 0.001, 0.025, 0.017, 0.023, 0.023, 0.036, 0.037, 0.005, 0.042, 0.023, 0.018, 0.041, 0.047, 0.048, 0.04, 0.032, 0.024, 0.019, 0.006, 0.019, 0.01, 0.025, 0.04, 0.007, 0, 0.014, 0.004, 0.02, 0.026, 0.008, 0.039, 0.026, 0.044, 0.035, 0.012, 0.019, 0.028, 0.034, 0.01, 0.012, 0.006, 0.015, 0.01, 0.014, 0.035, 0.012, 0.001, 0.035, 0.028, 0.023, 0.021, 0.023, 0.004, 0.038, 0.041, 0.033, 0.039, 0.004, 0.045, 0.023, 0.038, 0.043, 0.006, 0.044, 0.007, 0.001, 0.014, 0.03, 0.048, 0.026, 0.01, 0.005, 0.03, 0.032, 0.024, 0.039, 0.032, 0.016, 0.03, 0.019, 0.021, 0.046, 0.043, 0.039, 0.02, 0.014, 0.039, 0.041, 0.01, 0.042, 0.036, 0.034, 0.015, 0.037, 0.013, 0.028, 0, 0.022, 0.046, 0.018, 0.03, 0.026, 0.038, 0.015, 0.047, 0.042, 0.003, 0.011, 0.039, 0.021, 0, 0.029, 0.041, 0.043, 0.001, 0.024, 0.006, 0.018, 0.044, 0.013, 0.019, 0.036, 0.01, 0.034, 0.024, 0.026, 0.045, 0.031, 0.01, 0.007, 0.015, 0.031, 0.007, 0.028, 0.021, 0.013, 0.003, 0.037, 0.046, 0.044, 0.009, 0.042, 0.042, 0.018, 0.044, 0.006, 0.003, 0.026, 0.02, 0.02, 0.018, 0.042, 0.04, 0.037, 0.016, 0.016, 0.013, 0.042, 0.01, 0.02, 0.023, 0.039, 0.01, 0.038, 0.035, 0.026, 0.03, 0.046, 0.031, 0.035, 0.016, 0.039, 0.014, 0.045, 0.02, 0.02, 0.03, 0.026, 0.041, 0.05, 0.001, 0.042, 0.029, 0.045, 0.05, 0.016, 0.031, 0.04, 0.001, 0.033, 0.035, 0.006, 0.025, 0.034, 0.018, 0.003, 0.014, 0.023, 0.049, 0.05, 0.049, 0.02, 0.004, 0.022, 0.045, 0.03, 0.006, 0.023, 0.042, 0.005, 0.008, 0.003, 0.046, 0.032, 0.005, 0.044, 0.046, 0.047, 0.033, 0.021, 0.011, 0.013, 0.044, 0.037, 0.017, 0.021, 0.016, 0.046, 0.01, 0.004, 0.031, 0.023, 0.01, 0.023, 0.006, 0.001, 0.031, 0.005, 0.043, 0.019, 0.04, 0.041, 0.038, 0.04, 0.017, 0.003, 0.036, 0.009, 0.012, 0.015, 0.022, 0.022, 0.019, 0.036, 0.034, 0.022, 0.022, 0.047, 0.033, 0.016, 0.007, 0.041, 0.045, 0.029, 0.029, 0.04, 0.035, 0.023, 0.036, 0.036, 0.006, 0.026, 0.012, 0.022, 0.009, 0, 0.012, 0.019, 0.049, 0.005, 0.013, 0.029, 0.05, 0.043, 0.02, 0.016, 0.05, 0.019, 0.005, 0.019, 0.049, 0.006, 0.048, 0.044, 0.012, 0.018, 0.033, 0.024, 0.009, 0.005, 0.003, 0.008, 0.039, 0.04, 0.002, 0.01, 0.001, 0.044, 0.018, 0.001, 0.034, 0.003, 0.004, 0.031, 0.02, 0.031, 0.047, 0.049, 0.049, 0.043, 0.013, 0.02, 0.042, 0.05, 0.033, 0.034, 0.013, 0.034, 0.039, 0.022, 0.018, 0.036, 0, 0.04, 0.039, 0.024, 0.023, 0.009, 0.012, 0.035, 0.009, 0.016, 0.029, 0.022, 0.006, 0.021, 0.018, 0.044, 0.047, 0.042, 0.023, 0.015, 0.036, 0.034, 0.023, 0.01, 0.043, 0.035, 0.037, 0.019, 0.028, 0.037, 0.014, 0.038, 0.015, 0.047, 0.037, 0.023, 0.046, 0.031, 0.014, 0.041, 0.047, 0.03, 0.023, 0.035, 0.01, 0.032, 0.02, 0.05, 0.03, 0.021, 0.009, 0.044, 0.037, 0.039, 0.028, 0.008, 0.028, 0.02, 0.025, 0.045, 0.039, 0.011, 0.014, 0.018, 0.017, 0.037, 0.042, 0.048, 0.034, 0.002, 0.033, 0.022, 0.011, 0.05, 0.012, 0.015, 0.039, 0.044, 0.024, 0.001, 0.003, 0.019, 0.011, 0.018, 0.02, 0.01, 0.014, 0.041, 0.019, 0.008, 0.005, 0.004, 0.021, 0.025, 0.039, 0.038, 0.045, 0.015, 0.031, 0.032, 0.019, 0.032, 0.025, 0.03, 0.018, 0.002, 0.041, 0.044, 0.046, 0.029, 0.011, 0.016, 0.031, 0, 0.029, 0.011, 0.009, 0.035, 0.027, 0.023, 0.027, 0.018, 0.037, 0.022, 0.011, 0.018, 0.023, 0.029, 0.049, 0.043, 0.024, 0.008, 0.026, 0.001, 0.031, 0.043, 0.04, 0.036, 0.047, 0.017, 0.012, 0.027, 0.039, 0.034, 0.026, 0.043, 0.048, 0.043, 0.042, 0.031, 0.001, 0.038, 0.036, 0.015, 0.016, 0.028, 0.037, 0.049, 0.025, 0.004, 0.006, 0.039, 0.036, 0.041, 0.026, 0.048, 0.028, 0.047, 0.033, 0.032, 0.035, 0.001, 0.014, 0.011, 0.03, 0.023, 0.014, 0.015, 0.038, 0.029, 0.018, 0.042, 0.041, 0.001, 0.021, 0.027, 0.046, 0.024, 0.018, 0.026, 0.014, 0.014, 0.024, 0.018, 0.038, 0.011, 0.031, 0.011, 0.03, 0.048, 0.001, 0.021, 0.024, 0.006, 0.033, 0.012, 0.047, 0.002, 0.003, 0.042, 0.016, 0.043, 0.047, 0.048, 0.019, 0.027, 0.014, 0.025, 0.02, 0.013, 0.037, 0.009, 0.025, 0.03, 0.029, 0.047, 0.013, 0.045, 0.012, 0.007, 0.033, 0.032, 0.011, 0.032, 0.017, 0.043, 0.018, 0.027, 0.026, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.009, 0.044, 0.032, 0.018, 0.016, 0.026, 0.004, 0.017, 0.019, 0.029, 0.042, 0.011, 0.024, 0.007, 0.041, 0.012, 0.045, 0.008, 0.022, 0.043, 0.035, 0.018, 0.023, 0.038, 0.032, 0.046, 0.025, 0.022, 0.043, 0.018, 0.015, 0.032, 0.008, 0.044, 0.033, 0.042, 0.011, 0.036, 0.035, 0.01, 0.049, 0.047, 0.017, 0.036, 0.014, 0.001, 0.007, 0.004, 0.047, 0.031, 0.028, 0.003, 0.045, 0.005, 0.003, 0.008, 0.002, 0.034, 0.032, 0.003, 0.004, 0.014, 0.032, 0.037, 0.034, 0.03, 0.023, 0.011, 0.032, 0.039, 0.028, 0.032, 0.01, 0.023, 0.009, 0.022, 0.045, 0.023, 0.025, 0.04, 0.042, 0.019, 0.005, 0.034, 0.001, 0.033, 0.021, 0.02, 0.007, 0.017, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.003, 0.013, 0.035, 0.043, 0.048, 0.011, 0.004, 0.046, 0.01, 0.025, 0.023, 0.022, 0.049, 0.014, 0.045, 0.048, 0.008, 0.03, 0.034, 0.036, 0.023, 0.022, 0, 0.015, 0.024, 0.035, 0.012, 0.002, 0.021, 0.027, 0.012, 0.015, 0.045, 0.003, 0.045, 0.017, 0.028, 0.029, 0.003, 0.045, 0.017, 0.029, 0.043, 0.008, 0.046, 0.048, 0.011, 0.049, 0.045, 0.044, 0.014, 0.002, 0.017, 0.017, 0.033, 0.024, 0.04, 0.012, 0.014, 0.016, 0.019, 0.005, 0.03, 0.041, 0.003, 0.025, 0.016, 0.009, 0.028, 0, 0.016, 0.028, 0.018, 0.044, 0.033, 0.027, 0.044, 0.032, 0.018, 0.033, 0.03, 0.016, 0.017, 0.047, 0.027, 0, 0.014, 0.027, 0.037, 0.029, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.016, 0.048, 0.005, 0.023, 0.022, 0.02, 0.046, 0.039, 0.009, 0.017, 0.021, 0.018, 0.041, 0.004, 0.016, 0.04, 0.032, 0.019, 0.038, 0.037, 0.027, 0.029, 0.032, 0.037, 0.024, 0.031, 0.044, 0.046, 0.009, 0.014, 0.022, 0.037, 0.01, 0.028, 0.021, 0.016, 0.034, 0.035, 0.014, 0.013, 0.023, 0.014, 0.011, 0.045, 0.041, 0.009, 0.011, 0.012, 0.001, 0.029, 0.048, 0.02, 0.025, 0.049, 0.005, 0.046, 0.037, 0.03, 0.022, 0.028, 0.043, 0.001, 0.035, 0.007, 0.014, 0.032, 0.033, 0.012, 0.032, 0.018, 0.015, 0.003, 0.02, 0.02, 0.024, 0.039, 0.02, 0.004, 0.003, 0.023, 0, 0.023, 0.024, 0.036, 0.005, 0.003, 0.036, 0.023, 0.007, 0.005, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.004, 0.027, 0.007, 0.028, 0.05, 0.012, 0.007, 0.032, 0.036, 0.008, 0.045, 0.008, 0.01, 0.002, 0.007, 0.018, 0.034, 0.025, 0.048, 0.037, 0.02, 0.041, 0.019, 0.05, 0.026, 0.014, 0.017, 0.046, 0.033, 0.009, 0.006, 0.046, 0.034, 0.034, 0.009, 0.038, 0.024, 0.018, 0.049, 0.018, 0.04, 0.032, 0.017, 0.034, 0.006, 0.003, 0.008, 0.01, 0.05, 0.014, 0.048, 0.031, 0.027, 0.042, 0.039, 0.044, 0.05, 0.008, 0.011, 0.042, 0.008, 0.008, 0.031, 0.024, 0.035, 0.016, 0.014, 0.034, 0.023, 0.039, 0.014, 0.029, 0.05, 0.029, 0.01, 0.007, 0.027, 0.031, 0.022, 0.029, 0.038, 0.035, 0.019, 0.004, 0.03, 0.002, 0.011, 0.042, 0.046, 0.038, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.028, 0.012, 0.045, 0.001, 0.015, 0.026, 0.044, 0.016, 0.005, 0.001, 0.02, 0.009, 0.019, 0.014, 0.006, 0.04, 0.01, 0.018, 0.021, 0.028, 0.029, 0.033, 0.004, 0.014, 0.024, 0.036, 0, 0.031, 0.042, 0.023, 0.013, 0.026, 0.012, 0.04, 0.026, 0.042, 0.029, 0.026, 0.006, 0.007, 0.014, 0.017, 0.034, 0.026, 0.036, 0.027, 0.024, 0.014, 0.004, 0.012, 0.033, 0.013, 0.009, 0.047, 0.039, 0.037, 0.024, 0.048, 0.043, 0.047, 0.019, 0.009, 0.002, 0.026, 0.04, 0.032, 0.006, 0.019, 0.01, 0.002, 0.027, 0.024, 0.047, 0.044, 0.024, 0.035, 0.018, 0.04, 0.036, 0.048, 0.019, 0.014, 0.031, 0.029, 0.036, 0.04, 0.032, 0.013, 0.026, 0.026, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.042, 0.007, 0.002, 0.004, 0.002, 0.02, 0.007, 0.024, 0.04, 0.044, 0.024, 0.037, 0.013, 0.002, 0.023, 0.025, 0.005, 0.027, 0.04, 0.002, 0.048, 0.008, 0.005, 0.009, 0.011, 0.036, 0.043, 0.035, 0.016, 0.035, 0.001, 0.049, 0.046, 0.023, 0.028, 0.005, 0.031, 0.009, 0.016, 0.027, 0.034, 0.02, 0.012, 0.038, 0.006, 0.041, 0.038, 0.006, 0.046, 0.025, 0.044, 0.045, 0.035, 0.023, 0.015, 0.015, 0.014, 0.013, 0.028, 0.024, 0.045, 0.043, 0.019, 0.048, 0.007, 0.025, 0.046, 0.037, 0.048, 0.034, 0.038, 0.04, 0.037, 0.028, 0.048, 0.014, 0.047, 0.023, 0.006, 0.016, 0.022, 0.016, 0.038, 0.034, 0.028, 0.005, 0.02, 0.003, 0.041, 0.044, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02, 0.03, 0.037, 0.001, 0.014, 0.015, 0.032, 0.01, 0.025, 0.042, 0, 0.042, 0.003, 0.028, 0.006, 0.046, 0.007, 0.038, 0.028, 0.046, 0.028, 0.015, 0.016, 0.014, 0.025, 0.016, 0.044, 0.03, 0.025, 0.024, 0.036, 0.023, 0.043, 0.05, 0.04, 0.042, 0.041, 0.048, 0.02, 0.033, 0.036, 0.02, 0.001, 0.045, 0.004, 0.023, 0.037, 0.027, 0.028, 0.034, 0.01, 0.003, 0.032, 0.038, 0.049, 0.043, 0.03, 0.009, 0.022, 0.007, 0.039, 0.035, 0.001, 0.007, 0.025, 0.006, 0.039, 0.049, 0.017, 0.032, 0.021, 0.019, 0.05, 0.028, 0.034, 0.005, 0.017, 0.046, 0.04, 0.042, 0.002, 0.011, 0.04, 0.045, 0.011, 0.003, 0.016, 0.031, 0.014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.019, 0.044, 0.043, 0.012, 0.006, 0.031, 0.029, 0.002, 0.041, 0.046, 0.026, 0.035, 0.046, 0.044, 0.007, 0.048, 0.014, 0, 0.019, 0.034, 0.041, 0.007, 0.02, 0.048, 0.017, 0.026, 0.007, 0.05, 0.039, 0.047, 0.038, 0.017, 0.042, 0.01, 0.038, 0.049, 0.006, 0.02, 0.04, 0.022, 0.005, 0.014, 0.049, 0.003, 0.043, 0.009, 0.023, 0.038, 0.035, 0.03, 0.042, 0.048, 0.008, 0.038, 0.014, 0.037, 0.045, 0.012, 0.014, 0.029, 0.002, 0.042, 0.02, 0.024, 0.042, 0.011, 0.044, 0.048, 0.007, 0.03, 0.034, 0.038, 0.004, 0.044, 0.005, 0.017, 0.009, 0.05, 0.042, 0.05, 0.006, 0.044, 0.013, 0.011, 0.031, 0.037, 0.028, 0.005, 0.033, 0.011, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.047, 0.002, 0.013, 0.014, 0.016, 0.043, 0.018, 0.017, 0.003, 0.027, 0.024, 0.002, 0.048, 0.026, 0.029, 0.026, 0.03, 0.039, 0.009, 0.001, 0.023, 0.042, 0.014, 0.039, 0.02, 0.006, 0.039, 0.048, 0.018, 0.043, 0.031, 0.021, 0.008, 0, 0.027, 0.039, 0.017, 0.02, 0.019, 0.021, 0.015, 0.043, 0.034, 0.008, 0, 0.026, 0.03, 0.008, 0.038, 0.017, 0.028, 0.01, 0.009, 0.048, 0.01, 0.011, 0.024, 0.001, 0.001, 0.026, 0.031, 0.021, 0.013, 0.021, 0.047, 0.003, 0.007, 0.023, 0.034, 0.014, 0.044, 0.008, 0.045, 0.034, 0.009, 0.003, 0.038, 0.005, 0.026, 0.05, 0.01, 0.021, 0.027, 0.019, 0.006, 0.031, 0.022, 0.033, 0.032, 0.046, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.045, 0.039, 0.036, 0.005, 0.013, 0.012, 0.015, 0.009, 0.029, 0.009, 0.028, 0.005, 0.014, 0.003, 0.002, 0.007, 0.049, 0.034, 0.047, 0.039, 0.041, 0.007, 0.03, 0.022, 0.016, 0.027, 0.007, 0.011, 0.007, 0.018, 0.025, 0.004, 0.034, 0.018, 0.013, 0.039, 0, 0.006, 0.01, 0.036, 0.017, 0.026, 0.049, 0.03, 0.03, 0.021, 0.043, 0.004, 0.012, 0.046, 0.025, 0.016, 0.038, 0.038, 0.003, 0.012, 0.004, 0.024, 0.019, 0.037, 0.019, 0.021, 0.006, 0.001, 0.038, 0.026, 0.016, 0.04, 0.042, 0.035, 0.014, 0.02, 0.009, 0.036, 0.033, 0.016, 0.04, 0.022, 0.029, 0.027, 0.037, 0.037, 0.021, 0.008, 0.038, 0.003, 0.045, 0.022, 0.038, 0.029, 0.018, 0.045, 0.045, 0.006, 0.04, 0.026, 0.007, 0.036, 0.023, 0.027, 0.039, 0.013, 0.036, 0.016, 0.012, 0.022, 0.012, 0.04, 0.036, 0.017, 0.037, 0.015, 0.046, 0.01, 0.01, 0.018, 0.031, 0.044, 0.021, 0.025, 0.03, 0.009, 0.044, 0.022, 0.007, 0.009, 0.013, 0.028, 0.045, 0.004, 0.024, 0.035, 0.019, 0.038, 0.027, 0.024, 0.006, 0.027, 0.048, 0.029, 0.007, 0.049, 0.048, 0.007, 0.012, 0.014, 0.004, 0.042, 0.014, 0.042, 0.027, 0.011, 0.03, 0.04, 0.035, 0.021, 0.027, 0.018, 0.032, 0.026, 0.013, 0.016, 0.003, 0.034, 0.012, 0.032, 0.032, 0.004, 0.047, 0.04, 0.025, 0.05, 0.042, 0.005, 0.041, 0.048, 0.015, 0.023, 0.044, 0.017, 0.003, 0.016, 0.023, 0.045, 0.028, 0.027, 0.003, 0.032, 0.048, 0.041, 0.001, 0.011, 0.037, 0.025, 0.044, 0.008, 0.03, 0.036, 0.031, 0.03, 0.026, 0.028, 0.017, 0.031, 0.028, 0.039, 0.028, 0.015, 0.033, 0.048, 0.026, 0.023, 0.013, 0.005, 0.031, 0.038, 0.044, 0.004, 0.036, 0.039, 0.039, 0.001, 0.002, 0.032, 0.014, 0.043, 0.023, 0.016, 0.046, 0.01, 0.031, 0.028, 0.042, 0.032, 0.022, 0.028, 0.043, 0.013, 0.019, 0.021, 0.035, 0.017, 0.006, 0.001, 0.042, 0.039, 0.009, 0, 0.048, 0.043, 0.025, 0.044, 0.007, 0.003, 0.003, 0.009, 0.003, 0.009, 0.01, 0.019, 0.046, 0.028, 0.049, 0.033, 0.041, 0.011, 0.043, 0.038, 0.025, 0.012, 0.02, 0.005, 0.025, 0.037, 0.012, 0.03, 0.048, 0.001, 0.006, 0.022, 0.021, 0.019, 0.027, 0.018, 0.001, 0.028, 0.015, 0.044, 0.045, 0.044, 0.011, 0.015, 0.033, 0.011, 0.001, 0.05, 0.006, 0.011, 0.025, 0.01, 0.048, 0.015, 0.01, 0.034, 0.007, 0.006, 0.041, 0.048, 0.037, 0.035, 0.004, 0.038, 0.033, 0.01, 0, 0.01, 0.047, 0.001, 0.034, 0.046, 0.046, 0.042, 0.04, 0.033, 0.003, 0.013, 0.034, 0.002, 0.012, 0.039, 0.003, 0.049, 0.013, 0.043, 0.037, 0.044, 0.007, 0.013, 0.046, 0.017, 0.048, 0.043, 0.016, 0.002, 0.006, 0.048, 0.044, 0.006, 0.028, 0.036, 0.012, 0.017, 0.004, 0.049, 0.004, 0.04, 0.032, 0.047, 0.024, 0.029, 0.049, 0.013, 0.049, 0.043, 0.033, 0.005, 0.028, 0.018, 0.036, 0.025, 0.035, 0.016, 0.001, 0.029, 0.048, 0.023, 0.042, 0.005, 0.001, 0.039, 0.011, 0.006, 0.035, 0.049, 0.034, 0.001, 0.029, 0.014, 0.005, 0.043, 0.041, 0.01, 0.014, 0.015, 0.04, 0.037, 0.011, 0.044, 0.011, 0.011, 0.035, 0.02, 0.031, 0.04, 0.026, 0.025, 0.004, 0.039, 0.032, 0.006, 0.037, 0.024, 0.004, 0.039, 0.046, 0.035, 0.029, 0.043, 0.002, 0.002, 0.026, 0.01, 0.035, 0.043, 0.049, 0.012, 0.017, 0.018, 0.033, 0.012, 0.001, 0.022, 0.017, 0.002, 0.009, 0.018, 0.005, 0.012, 0.04, 0.011, 0.018, 0.046, 0.012, 0.025, 0.028, 0.014, 0.047, 0.016, 0.044, 0.003, 0.046, 0.049, 0.042, 0.017, 0.009, 0.032, 0.04, 0.008, 0.037, 0.022, 0.026, 0.038, 0.025, 0.023, 0.028, 0.04, 0.046, 0.046, 0.006, 0.018, 0.026, 0.012, 0.037, 0.048, 0.037, 0.028, 0.007, 0.035, 0.047, 0.035, 0.028, 0.021, 0.024, 0.042, 0.043, 0.009, 0.049, 0.047, 0.019, 0.025, 0.014, 0.049, 0.045, 0.004, 0.003, 0.014, 0, 0.046, 0.018, 0.028, 0.019, 0.049, 0.011, 0.001, 0.03, 0.027, 0.006, 0.025, 0.031, 0.007, 0.039, 0.028, 0.023, 0.016, 0.03, 0.035, 0.041, 0.027, 0.039, 0.007, 0.004, 0.039, 0.01, 0.037, 0.047, 0.005, 0.005, 0.04, 0.027, 0.034, 0.011, 0.02, 0.019, 0.02, 0.024, 0.021, 0.05, 0.047, 0.05, 0.016, 0.046, 0.026, 0.003, 0.044, 0.038, 0.049, 0.032, 0.011, 0.046, 0.049, 0.003, 0.009, 0.023, 0.029, 0.041, 0.025, 0.027, 0.023, 0.011, 0.028, 0.017, 0.011, 0.02, 0.028, 0.028, 0.005, 0.022, 0.044, 0.008, 0.005, 0.047, 0.044, 0.003, 0.035, 0.009, 0.029, 0.029, 0.019, 0.026, 0.026, 0.045, 0.024, 0.034, 0.026, 0.001, 0.018, 0.006, 0.031, 0.046, 0, 0.013, 0.015, 0.042, 0.024, 0.023, 0.045, 0, 0.01, 0.01, 0.043, 0.018, 0.035, 0.047, 0.013, 0.002, 0.02, 0.022, 0.006, 0.003, 0.025, 0.038, 0.047, 0.045, 0.047, 0.009, 0.015, 0.031, 0.027, 0.025, 0.01, 0.034, 0.005, 0.042, 0.023, 0.007, 0.049, 0.009, 0.004, 0.025, 0.026, 0.033, 0.027, 0.01, 0.042, 0.048, 0.038, 0.008, 0.034, 0.01, 0.017, 0.048, 0.041, 0.048, 0.031, 0.031, 0.016, 0.047, 0.049, 0.042, 0.041, 0.037, 0.004, 0.018, 0.03, 0.008, 0.043, 0.027, 0.001, 0.016, 0.008, 0.02, 0.02, 0.014, 0.024, 0.035, 0.042, 0.049, 0.035, 0.047, 0.034, 0.022, 0.044, 0.045, 0.019, 0.043, 0.041, 0.027, 0.007, 0.001, 0.041, 0.016, 0.032, 0.001, 0.047, 0.009, 0.031, 0.005, 0.033, 0.012, 0.026, 0.048, 0.04, 0.011, 0.043, 0.007, 0.001, 0.035, 0.008, 0.015, 0.04, 0.045, 0.049, 0.033, 0.036, 0.02, 0.036, 0.005, 0.012, 0.002, 0.043, 0.004, 0.048, 0.008, 0.048, 0.028, 0.005, 0.021, 0.002, 0.021, 0.048, 0.003, 0.043, 0.025, 0.044, 0.05, 0.044, 0.013, 0.006, 0.041, 0.014, 0.048, 0.005, 0.012, 0.031, 0.024, 0.025, 0.044, 0.026, 0.007, 0.003, 0.005, 0.028, 0.012, 0.047, 0.031, 0.047, 0.027, 0.007, 0.042, 0.005, 0.022, 0.031, 0.001, 0.023, 0.006, 0.023, 0.04, 0.04, 0.039, 0.023, 0.046, 0.012, 0.026, 0.048, 0.002, 0.049, 0.047, 0.021, 0.029, 0.016, 0.017, 0.002, 0.015, 0.022, 0.012, 0.004, 0.007, 0.008, 0.001, 0.028, 0.012, 0.012, 0.034, 0.027, 0.036, 0.029, 0.032, 0.03, 0.001, 0.004, 0.041, 0.045, 0.009, 0.013, 0.038, 0.001, 0.031, 0.03, 0.032, 0.013, 0.045, 0.038, 0.019, 0, 0.019, 0.026, 0.005, 0.041, 0.025, 0.046, 0.001, 0.029, 0.021, 0.037, 0.01, 0.029, 0.03, 0.045, 0.033, 0.006, 0.041, 0.01, 0.039, 0.01, 0.01, 0.005, 0.05, 0.013, 0.038, 0.034, 0.046, 0.049, 0.045, 0.031, 0.027, 0.042, 0.043, 0.031, 0.026, 0.026, 0.016, 0.03, 0.014, 0.045, 0.037, 0.002, 0.027, 0.043, 0.049, 0.033, 0.045, 0.01, 0.03, 0.002, 0.007, 0.024, 0.006, 0.01, 0.009, 0.046, 0.032, 0.049, 0.039, 0.043, 0.013, 0.021, 0.024, 0.034, 0.014, 0.017, 0.029, 0.026, 0.006, 0.023, 0.014, 0.027, 0.011, 0.039, 0.048, 0.024, 0.036, 0.036, 0.009, 0.017, 0.031, 0.022, 0.04, 0.043, 0.031, 0.043, 0.043, 0.002, 0.032, 0.022, 0.048, 0.021, 0.027, 0.007, 0.001, 0.017, 0.03, 0.035, 0.049, 0.009, 0.017, 0.032, 0.037, 0.016, 0.004, 0.034, 0.007, 0.015, 0.025, 0.044, 0.036, 0.041, 0.026, 0.027, 0.044, 0.043, 0.013, 0.031, 0.037, 0.044, 0.028, 0.032, 0.014, 0.001, 0.02, 0.014, 0, 0.05, 0.019, 0.012, 0.01, 0.024, 0.006, 0.003, 0.029, 0.017, 0.05, 0.013, 0.027, 0.013, 0.028, 0.042, 0.049, 0.018, 0.022, 0.035, 0.026, 0.039, 0.004, 0.001, 0.03, 0.009, 0.003, 0.004, 0.012, 0.024, 0.023, 0.001, 0.003, 0.039, 0.003, 0.044, 0.037, 0.014, 0.016, 0.04, 0.01, 0.048, 0.011, 0.003, 0.028, 0.018, 0.032, 0.025, 0.008, 0.039, 0.016, 0.044, 0.004, 0.023, 0.029, 0.002, 0.042, 0.016, 0, 0.011, 0.021, 0.013, 0.049, 0.044, 0.011, 0.007, 0.015, 0.004, 0.022, 0.05, 0.023, 0.047, 0.03, 0.047, 0.042, 0.009, 0.05, 0.007, 0.049, 0.033, 0.006, 0.036, 0.041, 0.019, 0.028, 0.022, 0.032, 0.047, 0.048, 0.026, 0.005, 0.026, 0.015, 0.006, 0.001, 0.041, 0.016, 0.013, 0.023, 0.037, 0.034, 0.037, 0.042, 0.038, 0.017, 0.035, 0.038, 0.003, 0.03, 0.042, 0.017, 0.039, 0.042, 0.022, 0.025, 0.039, 0.009, 0.033, 0.041, 0.025, 0.016, 0.004, 0.042, 0.03, 0.015, 0.036, 0.05, 0.035, 0.009, 0.018, 0.002, 0.043, 0.04, 0.037, 0.008, 0.012, 0.036, 0.038, 0.032, 0.042, 0.043, 0.043, 0.033, 0.043, 0.004, 0.024, 0.033, 0.008, 0.041, 0.024, 0.031, 0.015, 0.043, 0.026, 0.017, 0.009, 0.019, 0.015, 0.036, 0.009, 0.049, 0.037, 0.04, 0.045, 0.021, 0.04, 0.05, 0.045, 0.038, 0.006, 0.031, 0.034, 0.041, 0.024, 0.013, 0.043, 0.041, 0.001, 0.013, 0.004, 0.029, 0.019, 0.005, 0.04, 0.048, 0.022, 0.025, 0.037, 0.039, 0.033, 0.018, 0.035, 0.026, 0.039, 0.049, 0.002, 0.006, 0.029, 0.018, 0.038, 0.019, 0.02, 0.003, 0.005, 0.012, 0.006, 0.041, 0.019, 0.037, 0.038, 0.049, 0.007, 0.018, 0.002, 0.019, 0.017, 0.024, 0.03, 0.022, 0.008, 0.017, 0.035, 0.001, 0.042, 0.011, 0.013, 0.02, 0.028, 0.017, 0.009, 0.004, 0.031, 0.009, 0.023, 0.003, 0.002, 0.027, 0.015, 0.048, 0.021, 0.041, 0.045, 0.011, 0.032, 0.028, 0.009, 0.05, 0.047, 0.02, 0.012, 0.046, 0.032, 0.021, 0.028, 0.042, 0.002, 0.015, 0.035, 0.015, 0.016, 0.019, 0.033, 0.004, 0.004, 0.002, 0.008, 0.004, 0.035, 0.022, 0.004, 0.029, 0.001, 0.017, 0.012, 0.013, 0.032, 0.04, 0.017, 0.024, 0.049, 0.033, 0.004, 0.014, 0.017, 0.043, 0.003, 0.008, 0.026, 0.016, 0.035, 0.032, 0.021, 0.03, 0.036, 0.007, 0.011, 0.031, 0.039, 0.042, 0.004, 0.03, 0.027, 0.019, 0.045, 0.041, 0.028, 0.009, 0.003, 0.04, 0.049, 0.044, 0.013, 0.012, 0.044, 0.031, 0.022, 0.036, 0, 0.018, 0.028, 0.039, 0.015, 0.03, 0.023, 0.033, 0.041, 0.006, 0.022, 0, 0.027, 0.012, 0.032, 0.021, 0.006, 0.027, 0.034, 0.035, 0.033, 0.025, 0.035, 0.012, 0.033, 0.017, 0.046, 0.034, 0.045, 0.033, 0.018, 0.027, 0.021, 0.005, 0.026, 0.041, 0.005, 0.039, 0.018, 0.029, 0.013, 0.045, 0.031, 0.017, 0.043, 0.001, 0.03, 0.019, 0.038, 0.005, 0.011, 0.015, 0.041, 0.003, 0.035, 0.045, 0.041, 0.038, 0.016, 0.008, 0.007, 0.012, 0.014, 0.024, 0.004, 0.032, 0.027, 0.032, 0.046, 0.03, 0.011, 0.048, 0.021, 0.035, 0.028, 0.018, 0.037, 0.038, 0.03, 0.04, 0.038, 0.049, 0.021, 0.035, 0.01, 0.014, 0.027, 0.05, 0.043, 0.02, 0.048, 0.04, 0.01, 0.043, 0.007, 0.046, 0.043, 0.043, 0.046, 0.038, 0.007, 0.023, 0.028, 0.022, 0.012, 0.011, 0.038, 0.005, 0.048, 0.019, 0.028, 0.036, 0.05, 0.048, 0.002, 0.02, 0.024, 0.032, 0.036, 0.046, 0.031, 0.019, 0.039, 0.033, 0.011, 0.045, 0.028, 0.004, 0.005, 0.028, 0.005, 0.011, 0.047, 0.011, 0.038, 0.018, 0.035, 0.001, 0.027, 0.01, 0.005, 0.037, 0.005, 0, 0.022, 0.016, 0.039, 0.016, 0.039, 0.003, 0.033, 0.022, 0.017, 0.017, 0.044, 0.036, 0.036, 0.014, 0.036, 0.041, 0.035, 0.004, 0.022, 0.044, 0.026, 0.042, 0.046, 0.02, 0.001, 0.05, 0.041, 0.014, 0.025, 0.01, 0.027, 0.049, 0.015, 0.05, 0.045, 0.016, 0.002, 0.021, 0.018, 0.015, 0.049, 0.027, 0.034, 0.016, 0.035, 0.015, 0.044, 0.025, 0.03, 0.012, 0.033, 0.039, 0.001, 0.038, 0.014, 0.05, 0.01, 0.048, 0.008, 0.01, 0.001, 0.021, 0.002, 0.046, 0.03, 0.008, 0.044, 0.021, 0.027, 0.018, 0.047, 0.048, 0.013, 0.017, 0.011, 0.042, 0.003, 0.031, 0.024, 0.008, 0.028, 0.01, 0.01, 0.048, 0.032, 0.003, 0.005, 0.028, 0.014, 0.036, 0.016, 0.05, 0.005, 0.044, 0.006, 0.038, 0.041, 0.037, 0.009, 0.048, 0.039, 0.038, 0.004, 0.043, 0.017, 0.043, 0.036, 0.027, 0.031, 0.037, 0.047, 0.022, 0.018, 0.021, 0.007, 0.006, 0.036, 0.016, 0.049, 0.034, 0.016, 0.023, 0.008, 0.014, 0.015, 0.027, 0.048, 0.019, 0.031, 0.037, 0.027, 0.043, 0.048, 0.031, 0.015, 0.003, 0.004, 0, 0.038, 0.042, 0.026, 0.008, 0.047, 0.032, 0.042, 0.012, 0.029, 0.034, 0.036, 0.005, 0.02, 0.02, 0.017, 0.034, 0.042, 0.035, 0.003, 0.049, 0.013, 0.046, 0.044, 0.004, 0.006, 0.032, 0.001, 0.008, 0.041, 0.015, 0.015, 0.039, 0.007, 0.02, 0.026, 0.02, 0.018, 0.022, 0.002, 0, 0.006, 0.019, 0.027, 0.046, 0.044, 0.016, 0.01, 0.01, 0.02, 0.048, 0.048, 0.004, 0.037, 0.023, 0.002, 0.01, 0.042, 0.041, 0.013, 0.035, 0.039, 0.014, 0.018, 0.039, 0.009, 0.034, 0.007, 0.028, 0.004, 0.016, 0.045, 0.025, 0.004, 0.046, 0.025, 0.035, 0.012, 0.032, 0.004, 0.019, 0.009, 0.022, 0.035, 0.049, 0.017, 0.041, 0.002, 0.011, 0.038, 0.026, 0.009, 0.007, 0.025, 0.031, 0.022, 0.016, 0.005, 0.001, 0, 0.032, 0, 0.016, 0.034, 0.047, 0.024, 0.018, 0.041, 0.05, 0.032, 0.05, 0.008, 0.007, 0.006, 0.014, 0.01, 0.029, 0.014, 0.044, 0.025, 0.04, 0.04, 0.047, 0.026, 0.035, 0.021, 0.024, 0.039, 0.038, 0.007, 0.05, 0.015, 0.038, 0.035, 0.043, 0.034, 0.019, 0.018, 0.008, 0.005, 0.014, 0.02, 0.048, 0.037, 0.014, 0.011, 0.011, 0.027, 0.007, 0.03, 0.012, 0.039, 0.001, 0.001, 0.023, 0.048, 0.008, 0.028, 0.042, 0.003, 0.023, 0.028, 0.006, 0.02, 0.03, 0.009, 0.022, 0.035, 0.017, 0.042, 0.001, 0.003, 0.018, 0.043, 0.011, 0.004, 0.014, 0.003, 0, 0.039, 0.049, 0.028, 0.033, 0.01, 0.015, 0.012, 0.025, 0.001, 0.026, 0, 0.004, 0.024, 0.036, 0.021, 0.046, 0.036, 0.027, 0.037, 0.049, 0.001, 0.027, 0.048, 0.003, 0.017, 0.036, 0.04, 0.041, 0.036, 0.002, 0.004, 0.019, 0.003, 0.048, 0.005, 0.002, 0.006, 0.03, 0.03, 0.012, 0.039, 0.025, 0.038, 0.049, 0.032, 0.017, 0.041, 0.047, 0.002, 0.007, 0.041, 0.036, 0.029, 0.022, 0.039, 0.029, 0.049, 0.038, 0.04, 0.012, 0.04, 0.035, 0.044, 0.015, 0.027, 0.031, 0.028, 0.043, 0.036, 0.005, 0.008, 0.019, 0.031, 0.041, 0.046, 0.005, 0.012, 0.018, 0.028, 0.032, 0.021, 0.028, 0.02, 0.031, 0.033, 0.041, 0.014, 0.022, 0.03, 0.026, 0.029, 0.039, 0.047, 0.012, 0.032, 0.037, 0.025, 0.021, 0.028, 0.033, 0.032, 0.036, 0.03, 0.047, 0.037, 0.039, 0.005, 0.036, 0.025, 0.022, 0.043, 0.041, 0.007, 0.005, 0.035, 0.008, 0.045, 0.022, 0.009, 0.027, 0.036, 0.017, 0.015, 0.031, 0.044, 0.008, 0.017, 0.021, 0.016, 0.011, 0.01, 0.013, 0.036, 0.01, 0.003, 0.049, 0.018, 0.028, 0.028, 0.043, 0.001, 0.01, 0.016, 0.01, 0.027, 0.004, 0.003, 0.013, 0.02, 0.02, 0.047, 0.029, 0.022, 0.007, 0.015, 0.032, 0.048, 0.045, 0.043, 0.027, 0.009, 0.008, 0, 0.003, 0.03, 0.031, 0.011, 0.041, 0.001, 0.02, 0.047, 0.001, 0.014, 0.035, 0.039, 0.015, 0.048, 0.008, 0.007, 0.017, 0.015, 0.032, 0.006, 0.027, 0.005, 0.006, 0.021, 0.012, 0.013, 0.035, 0.042, 0.047, 0.048, 0.016, 0.011, 0.012, 0.008, 0.011, 0.019, 0.043, 0.037, 0.008, 0.008, 0.006, 0.02, 0.033, 0.014, 0.007, 0.045, 0.019, 0.047, 0.045, 0.027, 0.009, 0.045, 0.006, 0.015, 0.02, 0.04, 0.041, 0.02, 0.032, 0.045, 0.043, 0.015, 0.001, 0.021, 0.031, 0.046, 0.011, 0.047, 0.041, 0.042, 0.012, 0.043, 0.015, 0.046, 0.012, 0.046, 0.049, 0.014, 0.007, 0.002, 0.009, 0.016, 0.045, 0.022, 0.023, 0.014, 0.013, 0.005, 0.008, 0.026, 0.02, 0.012, 0.018, 0.006, 0.026, 0.014, 0.003, 0.006, 0.047, 0.012, 0.043, 0, 0.027, 0.007, 0.021, 0.006, 0.015, 0.027, 0.02, 0.034, 0.049, 0.043, 0.015, 0.05, 0.036, 0.035, 0.014, 0.043, 0.044, 0.031, 0.044, 0.03, 0.027, 0.041, 0.044, 0.037, 0.002, 0.025, 0.027, 0.012, 0.003, 0.033, 0.024, 0.033, 0.011, 0.01, 0.023, 0.033, 0.042, 0.002, 0.009, 0.045, 0.011, 0.027, 0.049, 0.034, 0.035, 0.034, 0.049, 0.006, 0.022, 0.035, 0.045, 0.048, 0.037, 0.011, 0.016, 0.01, 0.038, 0.019, 0.024, 0.021, 0.021, 0.022, 0.016, 0.012, 0.006, 0.028, 0.002, 0.018, 0.013, 0.046, 0.035, 0.026, 0.011, 0.019, 0.036, 0.046, 0.044, 0.017, 0.026, 0.028, 0.04, 0.044, 0.006, 0.022, 0.025, 0.002, 0.02, 0.015, 0.003, 0.009, 0.037, 0.035, 0.041, 0.005, 0.01, 0.014, 0.008, 0.044, 0.035, 0.035, 0.025, 0.032, 0.042, 0.01, 0.031, 0.009, 0.05, 0.046, 0.011, 0.031, 0.03, 0.014, 0.042, 0.03, 0.041, 0.008, 0.007, 0.049, 0.032, 0.026, 0.02, 0.02, 0.002, 0.03, 0.013, 0.016, 0.046, 0.042, 0.037, 0.012, 0.034, 0.012, 0.023, 0.007, 0.036, 0.027, 0.049, 0.004, 0.022, 0.048, 0.02, 0.009, 0.027, 0.002, 0.023, 0.021, 0.021, 0.007, 0.026, 0.014, 0.026, 0.041, 0.047, 0.013, 0.009, 0.037, 0.006, 0.013, 0.013, 0.048, 0.042, 0.01, 0.049, 0.042, 0.02, 0.034, 0.001, 0.031, 0.022, 0.029, 0.004, 0.038, 0.007, 0.041, 0.039, 0.02, 0.049, 0.036, 0.039, 0.001, 0.016, 0.019, 0.033, 0.044, 0.02, 0.024, 0.04, 0.001, 0.046, 0.049, 0.034, 0.02, 0.018, 0.031, 0.016, 0.042, 0.049, 0.008, 0.031, 0.008, 0.004, 0.033, 0.021, 0.033, 0.013, 0.029, 0.03, 0.042, 0.033, 0.05, 0.026, 0.049, 0.008, 0.004, 0.043, 0.005, 0.024, 0.03, 0.034, 0.022, 0.023, 0.029, 0.035, 0.001, 0.041, 0.048, 0.008, 0.047, 0.003, 0.03, 0.02, 0.024, 0.044, 0.045, 0.018, 0.023, 0.03, 0.027, 0.025, 0.014, 0.031, 0.02, 0.043, 0.047, 0.013, 0.036, 0.01, 0.037, 0.022, 0.038, 0.03, 0.012, 0.035, 0.049, 0.021, 0.004, 0.011, 0.022, 0.032, 0.038, 0.004, 0.03, 0.048, 0.018, 0.038, 0.048, 0.011, 0.031, 0.032, 0.015, 0.022, 0.034, 0.018, 0.012, 0.02, 0.013, 0.008, 0.023, 0.04, 0.039, 0.043, 0.025, 0.002, 0.002, 0.017, 0.019, 0.013, 0.01, 0.038, 0.001, 0.023, 0.023, 0.018, 0.033, 0.03, 0.029, 0.016, 0.02, 0.046, 0.027, 0.046, 0.001, 0.042, 0.047, 0.009, 0.029, 0.039, 0.034, 0.012, 0.049, 0.034, 0.007, 0.021, 0.011, 0.021, 0.048, 0.028, 0.046, 0.036, 0.037, 0.04, 0.035, 0.022, 0.033, 0.045, 0, 0.039, 0.034, 0.048, 0.008, 0.019, 0.001, 0.039, 0.018, 0.021, 0.048, 0.042, 0.024, 0.013, 0.003, 0.008, 0.022, 0.038, 0.047, 0.008, 0.037, 0.042, 0.05, 0.015, 0.024, 0.049, 0.033, 0.043, 0.01, 0.018, 0.03, 0.011, 0.035, 0.008, 0.028, 0.041, 0.011, 0.027, 0.029, 0.03, 0.002, 0.041, 0.011, 0.032, 0.019, 0.042, 0.048, 0.046, 0.008, 0.049, 0.004, 0.033, 0.014, 0.04, 0.025, 0.03, 0.007, 0.049, 0.011, 0.028, 0.032, 0.026, 0.022, 0.042, 0.004, 0.048, 0.011, 0.034, 0.028, 0.018, 0.002, 0.038, 0.025, 0.046, 0.001, 0.044, 0.038, 0.039, 0.038, 0.021, 0.022, 0.041, 0.031, 0.021, 0.047, 0.024, 0.032, 0.047, 0.046, 0.041, 0.01, 0.017, 0.032, 0.031, 0.005, 0.005, 0.036, 0.002, 0.003, 0.048, 0.02, 0.018, 0.002, 0.01, 0.015, 0.012, 0.025, 0.005, 0.011, 0.021, 0.01, 0.018, 0.023, 0.03, 0.009, 0.03, 0.047, 0.008, 0.045, 0.039, 0.032, 0.026, 0.015, 0.032, 0.007, 0.01, 0.019, 0.035, 0.04, 0.018, 0.045, 0.048, 0.01, 0.024, 0.026, 0.045, 0.041, 0.004, 0.034, 0.001, 0.02, 0.018, 0.013, 0.018, 0.034, 0.024, 0.002, 0.049, 0.014, 0.004, 0.007, 0.028, 0.016, 0.033, 0.022, 0.042, 0.023, 0.023, 0.009, 0.033, 0.019, 0.034, 0.044, 0.022, 0.019, 0.019, 0.017, 0.028, 0.041, 0.025, 0.022, 0.017, 0.038, 0.006, 0.032, 0.033, 0.048, 0.007, 0.05, 0.024, 0.016, 0.006, 0.014, 0.004, 0.005, 0.037, 0.042, 0.03, 0.013, 0.001, 0.03, 0.01, 0.003, 0.041, 0.028, 0.044, 0.049, 0.023, 0.012, 0.003, 0.049, 0.011, 0.005, 0.028, 0, 0.028, 0.041, 0.007, 0.045, 0.044, 0.048, 0.045, 0.024, 0.042, 0.011, 0.015, 0.004, 0.047, 0.036, 0.009, 0.042, 0.043, 0.039, 0.005, 0.016, 0.037, 0.009, 0.006, 0.032, 0.044, 0.008, 0.025, 0.012, 0.028, 0.046, 0.026, 0.001, 0.036, 0.003, 0.032, 0.013, 0.008, 0.016, 0.021, 0.048, 0.01, 0.021, 0.019, 0.004, 0.001, 0.035, 0.028, 0.004, 0.019, 0, 0.025, 0.006, 0.048, 0.034, 0.041, 0.001, 0.005, 0.03, 0.039, 0.033, 0.013, 0.042, 0.005, 0.004, 0.018, 0.029, 0.039, 0.002, 0.041, 0.048, 0.037, 0.018, 0.006, 0.032, 0.049, 0.02, 0.025, 0.045, 0.044, 0.02, 0.038, 0.012, 0.048, 0.039, 0.043, 0.028, 0.019, 0.035, 0.041, 0.002, 0.048, 0.039, 0.042, 0.006, 0.025, 0.023, 0.038, 0.022, 0.046, 0.008, 0.014, 0.038, 0.032, 0.003, 0.031, 0.029, 0.023, 0.01, 0.033, 0.028, 0.017, 0.047, 0.022, 0.036, 0.044, 0.049, 0.033, 0.002, 0.023, 0.009, 0.025, 0.003, 0.013, 0.013, 0.045, 0.043, 0.003, 0.013, 0.037, 0.003, 0.012, 0.014, 0.015, 0.015, 0.043, 0.014, 0.027, 0.005, 0.029, 0.005, 0.012, 0.001, 0.039, 0.027, 0.043, 0.025, 0.041, 0.042, 0.01, 0.035, 0.033, 0.022, 0.04, 0.026, 0.011, 0.039, 0.021, 0.031, 0.026, 0.029, 0.018, 0.029, 0.005, 0.007, 0.034, 0.01, 0.031, 0.004, 0.029, 0.031, 0.05, 0.038, 0.048, 0.032, 0.019, 0.031, 0.045, 0.019, 0.006, 0.016, 0.039, 0.008, 0.049, 0.04, 0.036, 0.03, 0.03, 0.049, 0.029, 0.009, 0.009, 0.048, 0.027, 0.008, 0.011, 0.019, 0.008, 0.013, 0.029, 0.01, 0.028, 0.002, 0.031, 0.045, 0.035, 0.014, 0.041, 0.023, 0.022, 0.043, 0.036, 0.009, 0.018, 0.022, 0.003, 0.041, 0.029, 0.004, 0.046, 0.023, 0.015, 0.002, 0.003, 0.027, 0.048, 0.027, 0.023, 0.004, 0.006, 0.049, 0.023, 0.002, 0.022, 0.002, 0.029, 0.001, 0.021, 0.034, 0.043, 0.019, 0.006, 0.026, 0.019, 0.002, 0.007, 0.001, 0.038, 0.039, 0.022, 0.027, 0.029, 0.027, 0.048, 0.005, 0.028, 0.012, 0.004, 0.047, 0.032, 0.031, 0.026, 0.035, 0.033, 0.012, 0.03, 0.048, 0.043, 0.031, 0.019, 0.013, 0.01, 0.047, 0.021, 0.048, 0.02, 0.013, 0.014, 0.011, 0.037, 0.015, 0.039, 0.021, 0.032, 0.044, 0.006, 0.012, 0.011, 0.03, 0.03, 0.045, 0.047, 0.046, 0.038, 0.006, 0.01, 0.023, 0.035, 0.013, 0.045, 0.017, 0.047, 0.043, 0.039, 0.027, 0.04, 0.025, 0.027, 0.027, 0.039, 0.014, 0.005, 0.021, 0.035, 0.022, 0.039, 0.024, 0.01, 0.029, 0.022, 0.033, 0.013, 0.043, 0.007, 0.026, 0.015, 0.015, 0.009, 0.022, 0.019, 0.044, 0.021, 0.041, 0.049, 0.025, 0.03, 0.04, 0.035, 0.049, 0.048, 0.017, 0.007, 0.019, 0.018, 0.038, 0.034, 0.032, 0.046, 0.006, 0.045, 0.01, 0.046, 0.038, 0.035, 0.007, 0.02, 0.012, 0.005, 0.019, 0.006, 0.016, 0.004, 0.048, 0.02, 0.035, 0.026, 0.001, 0.039, 0.017, 0.014, 0.046, 0.027, 0.026, 0.025, 0.011, 0.008, 0.004, 0.007, 0.024, 0.019, 0.039, 0.039, 0.016, 0.009, 0.011, 0.002, 0.043, 0.037, 0.004, 0.041, 0.032, 0.029, 0.04, 0.019, 0.038, 0.037, 0.004, 0.028, 0.037, 0, 0.03, 0.04, 0.005, 0.029, 0.047, 0.026, 0.005, 0.009, 0.036, 0.001, 0.031, 0.028, 0.019, 0.03, 0.028, 0.004, 0.02, 0.022, 0.011, 0.03, 0.02, 0.009, 0.035, 0.013, 0.026, 0.035, 0.026, 0.009, 0.032, 0.04, 0.032, 0.004, 0.033, 0.046, 0.047, 0.049, 0.049, 0.018, 0.032, 0.01, 0.046, 0.03, 0.032, 0.048, 0.037, 0.006, 0.038, 0.033, 0.002, 0.042, 0.03, 0.006, 0.004, 0.008, 0.019, 0.009, 0.035, 0.027, 0.004, 0.033, 0.014, 0.024, 0.021, 0.003, 0.022, 0.011, 0.041, 0.002, 0.044, 0.031, 0.025, 0.004, 0.011, 0.007, 0.005, 0.013, 0.014, 0.021, 0.014, 0.042, 0.025, 0, 0.025, 0.017, 0.017, 0.03, 0.006, 0.04, 0.04, 0.025, 0.028, 0.044, 0.019, 0.001, 0.01, 0.039, 0.026, 0.023, 0.02, 0.007, 0.041, 0.039, 0.008, 0.049, 0.035, 0.009, 0.006, 0.024, 0.011, 0.023, 0.001, 0.038, 0.038, 0.017, 0.02, 0.018, 0.024, 0.035, 0.018, 0.043, 0, 0.011, 0.023, 0.029, 0.003, 0.012, 0.047, 0.035, 0.009, 0.033, 0.019, 0.043, 0.002, 0.025, 0.024, 0.018, 0.041, 0, 0.016, 0.036, 0.018, 0.017, 0.018, 0.043, 0.028, 0.033, 0.04, 0.039, 0.049, 0.045, 0.037, 0.032, 0.047, 0.005, 0.017, 0.04, 0.006, 0.03, 0.049, 0.008, 0.043, 0.049, 0.02, 0.018, 0.034, 0.041, 0.01, 0.045, 0.04, 0.013, 0.037, 0.046, 0.034, 0.015, 0.024, 0.004, 0.022, 0.041, 0.017, 0.046, 0.038, 0.043, 0.02, 0.032, 0.028, 0.004, 0.028, 0.013, 0.013, 0.015, 0.04, 0.022, 0.011, 0.045, 0.042, 0.034, 0.004, 0.004, 0.008, 0.005, 0, 0.024, 0.039, 0.024, 0.015, 0.031, 0.024, 0.023, 0.006, 0.017, 0.01, 0.001, 0.033, 0.01, 0.016, 0.035, 0.013, 0.017, 0.008, 0.03, 0.018, 0.018, 0.005, 0.002, 0.047, 0.019, 0.023, 0.008, 0.036, 0.029, 0.023, 0.027, 0.004, 0.011, 0.025, 0.028, 0.04, 0.016, 0.032, 0.046, 0.01, 0.008, 0.043, 0.05, 0.031, 0.031, 0.04, 0.035, 0.012, 0.05, 0.036, 0.021, 0.001, 0.016, 0.042, 0.03, 0.001, 0.045, 0.02, 0.014, 0.013, 0.037, 0.022, 0.043, 0.023, 0.042, 0.004, 0.013, 0.027, 0.034, 0.048, 0.022, 0.042, 0.031, 0.033, 0.001, 0.035, 0.017, 0.002, 0.032, 0.004, 0.006, 0.031, 0.032, 0.001, 0.039, 0.044, 0.048, 0.044, 0.032, 0.026, 0.023, 0.045, 0.017, 0.019, 0.029, 0.013, 0.037, 0.034, 0.028, 0.046, 0.014, 0.012, 0.028, 0.042, 0.009, 0.042, 0.004, 0.038, 0.048, 0.011, 0.028, 0.031, 0.033, 0.037, 0.007, 0.004, 0.021, 0.01, 0.047, 0.032, 0.045, 0.033, 0.043, 0.009, 0.002, 0.019, 0.012, 0.018, 0.043, 0.039, 0.029, 0.025, 0.031, 0.041, 0.048, 0.001, 0.04, 0.03, 0.039, 0.004, 0.003, 0.043, 0.037, 0.03, 0.014, 0.001, 0.05, 0.022, 0.003, 0.043, 0.037, 0.032, 0.043, 0.014, 0.032, 0.014, 0.042, 0.023, 0.013, 0.03, 0.046, 0.039, 0.035, 0.005, 0.012, 0.024, 0.045, 0.039, 0.032, 0.044, 0.003, 0.009, 0.05, 0.017, 0.019, 0.037, 0.001, 0.048, 0.035, 0.011, 0.006, 0.048, 0.046, 0.013, 0.015, 0.029, 0.011, 0.038, 0.022, 0.044, 0, 0.008, 0.034, 0.048, 0.035, 0.022, 0.024, 0.011, 0.041, 0.011, 0.001, 0.004, 0.038, 0.036, 0.037, 0.022, 0.024, 0.032, 0.048, 0.04, 0.012, 0.035, 0.006, 0.029, 0.009, 0.003, 0.012, 0.015, 0.041, 0.016, 0.026, 0.037, 0.035, 0.023, 0.023, 0.041, 0.007, 0.001, 0.015, 0.001, 0.035, 0.031, 0.028, 0.022, 0.008, 0.003, 0.012, 0.041, 0.01, 0.001, 0.014, 0.034, 0.025, 0.02, 0.04, 0.047, 0.015, 0.026, 0.008, 0.044, 0.01, 0.032, 0.043, 0.034, 0.035, 0.047, 0.013, 0.03, 0.044, 0.042, 0.037, 0.048, 0.031, 0.035, 0.042, 0.046, 0.022, 0.041, 0.009, 0.02, 0.011, 0.034, 0.023, 0.02, 0.002, 0.027, 0.024, 0.017, 0.031, 0.009, 0.026, 0.028, 0.012, 0.013, 0.035, 0.035, 0.023, 0.032, 0.045, 0.039, 0.032, 0.031, 0.012, 0.012, 0.012, 0.006, 0.047, 0.007, 0.045, 0.005, 0.013, 0.038, 0.01, 0.011, 0.037, 0.044, 0.004, 0.028, 0.042, 0.041, 0.009, 0.026, 0.04, 0.037, 0.05, 0.049, 0.012, 0, 0.04, 0.049, 0.038, 0.05, 0.042, 0.019, 0.025, 0.017, 0.006, 0.027, 0.048, 0.043, 0.041, 0.002, 0.005, 0.026, 0.035, 0.003, 0.035, 0.047, 0.033, 0.037, 0.037, 0.024, 0.027, 0.046, 0.024, 0.018, 0.016, 0.014, 0.007, 0.033, 0.049, 0.016, 0.035, 0.022, 0.026, 0.046, 0.046, 0.039, 0.034, 0.035, 0.014, 0.012, 0.02, 0.035, 0.006, 0.029, 0.045, 0.014, 0.018, 0.019, 0.027, 0.027, 0.015, 0.043, 0.031, 0.014, 0.015, 0.039, 0.029, 0.002, 0.047, 0.045, 0.044, 0.006, 0.011, 0.044, 0.032, 0.047, 0.037, 0.032, 0.014, 0.032, 0.023, 0.034, 0.044, 0.015, 0.038, 0.016, 0.044, 0.024, 0.02, 0.017, 0.049, 0.024, 0.026, 0.025, 0.017, 0.019, 0.029, 0.031, 0.001, 0.03, 0.047, 0.05, 0.049, 0.034, 0.015, 0.025, 0.024, 0.028, 0.047, 0.031, 0.046, 0.041, 0.021, 0.015, 0.007, 0.023, 0.011, 0.036, 0.038, 0.019, 0.015, 0.034, 0.015, 0.043, 0.002, 0.041, 0.014, 0.048, 0.008, 0.02, 0.049, 0.023, 0.019, 0.042, 0.033, 0.044, 0.002, 0.045, 0.012, 0.036, 0.03, 0.042, 0.047, 0.013, 0.039, 0.032, 0.005, 0.047, 0.046, 0.031, 0.03, 0.004, 0.014, 0.008, 0.018, 0.001, 0.036, 0.03, 0.031, 0.048, 0.02, 0.024, 0.031, 0.025, 0.012, 0.048, 0.013, 0.024, 0.001, 0.008, 0.016, 0.037, 0.002, 0.026, 0.004, 0.025, 0.018, 0.045, 0.041, 0.017, 0.001, 0.05, 0.043, 0.035, 0.004, 0.033, 0.019, 0.043, 0.01, 0.047, 0.028, 0.012, 0.013, 0.034, 0.014, 0.027, 0.023, 0.043, 0.019, 0.011, 0.023, 0.048, 0.025, 0.025, 0.021, 0.038, 0.045, 0.031, 0.037, 0.039, 0.011, 0.002, 0.025, 0.047, 0.042, 0.045, 0.031, 0.024, 0.003, 0.011, 0.034, 0.037, 0.026, 0.034, 0.037, 0.035, 0.021, 0.019, 0.045, 0.031, 0.042, 0.044, 0.041, 0.021, 0.042, 0.006, 0.028, 0.004, 0.041, 0.023, 0.043, 0.016, 0.026, 0.037, 0.05, 0.034, 0.046, 0.023, 0.014, 0.003, 0.008, 0.028, 0.034, 0.038, 0.048, 0.002, 0, 0.021, 0.031, 0.025, 0.027, 0.004, 0.011, 0.017, 0.041, 0.045, 0.029, 0.008, 0.032, 0.004, 0.027, 0.05, 0.038, 0.04, 0.009, 0.018, 0.019, 0.038, 0.034, 0.025, 0.011, 0.037, 0.026, 0.026, 0.011, 0.023, 0.004, 0.046, 0.047, 0.026, 0.002, 0.042, 0.021, 0.034, 0.04, 0.045, 0.021, 0.042, 0.007, 0.044, 0.018, 0.003, 0.042, 0.028, 0.014, 0.037, 0.021, 0.034, 0.017, 0.023, 0.011, 0.004, 0.008, 0.023, 0.047, 0.018, 0.029, 0.001, 0.028, 0.016, 0.022, 0.012, 0.038, 0.012, 0.008, 0.045, 0.02, 0.005, 0.039, 0.013, 0.019, 0.006, 0.043, 0.018, 0.024, 0.045, 0.043, 0.028, 0.029, 0.019, 0.046, 0.037, 0.026, 0.03, 0.002, 0.001, 0.013, 0.006, 0, 0.045, 0.037, 0.025, 0.027, 0.006, 0.013, 0.041, 0.026, 0.034, 0.026, 0.041, 0.041, 0.03, 0.001, 0.046, 0.016, 0.003, 0.022, 0.04, 0.025, 0.029, 0.016, 0.034, 0.036, 0.023, 0.04, 0, 0.027, 0.026, 0.004, 0.015, 0.012, 0.027, 0.03, 0.026, 0.004, 0.013, 0.046, 0.035, 0.01, 0.03, 0.021, 0.023, 0.024, 0.03, 0.045, 0.017, 0.002, 0.009, 0.013, 0.01, 0.033, 0.028, 0.012, 0.035, 0.043, 0.048, 0.024, 0.039, 0.046, 0.022, 0.018, 0.049, 0.029, 0.003, 0.018, 0.004, 0.003, 0.038, 0.026, 0.031, 0.031, 0.031, 0.02, 0.038, 0.028, 0.034, 0.037, 0.022, 0.019, 0.039, 0.009, 0.038, 0.024, 0.011, 0.004, 0.022, 0.047, 0.02, 0.036, 0.008, 0.015, 0.03, 0.029, 0.048, 0.048, 0.025, 0.024, 0.02, 0.036, 0.003, 0.04, 0.01, 0.016, 0.049, 0.047, 0.042, 0.036, 0.021, 0.036, 0.029, 0.03, 0.031, 0.018, 0.005, 0.03, 0.037, 0.005, 0.031, 0.036, 0.007, 0.023, 0.044, 0.034, 0.045, 0.011, 0.019, 0.027, 0.001, 0.014, 0.005, 0.012, 0.005, 0.045, 0.042, 0.012, 0.046, 0.036, 0.032, 0.046, 0.005, 0.035, 0.031, 0.023, 0.007, 0.038, 0.004, 0.038, 0.039, 0.028, 0.022, 0.026, 0.039, 0.044, 0.044, 0.014, 0.004, 0, 0.012, 0.005, 0.02, 0.048, 0.05, 0.035, 0.01, 0.042, 0.023, 0.023, 0.014, 0.03, 0.009, 0.002, 0.045, 0, 0.01, 0.005, 0.026, 0.044, 0.018, 0.021, 0.013, 0.036, 0.014, 0.041, 0.03, 0.013, 0.046, 0.036, 0.003, 0.009, 0.012, 0.015, 0.011, 0.043, 0.018, 0.022, 0.021, 0.036, 0.018, 0.033, 0.035, 0.007, 0.004, 0.007, 0.035, 0.004, 0.022, 0.013, 0.02, 0.014, 0.048, 0.028, 0.05, 0.018, 0.025, 0.02, 0.009, 0.028, 0.047, 0.035, 0.026, 0.041, 0.006, 0.048, 0.012, 0.028, 0.021, 0.029, 0.019, 0.028, 0.013, 0.027, 0.04, 0.008, 0.02, 0.034, 0.023, 0.01, 0.016, 0.017, 0.013, 0.036, 0.043, 0.024, 0.007, 0.022, 0.028, 0.021, 0.04, 0.042, 0.007, 0.039, 0.034, 0.018, 0.03, 0.016, 0.01, 0.017, 0.013, 0.021, 0.03, 0.012, 0.022, 0.025, 0.045, 0.048, 0.011, 0.001, 0.007, 0.014, 0.015, 0.007, 0.022, 0.038, 0.025, 0.03, 0.035, 0.024, 0.033, 0.006, 0.015, 0.041, 0.046, 0.002, 0.03, 0.043, 0.011, 0.002, 0.034, 0.038, 0.022, 0.015, 0.006, 0.045, 0.045, 0.002, 0.027, 0.019, 0.048, 0.044, 0.008, 0.015, 0.021, 0.026, 0.015, 0.02, 0.01, 0.032, 0.023, 0.02, 0.042, 0, 0, 0.009, 0.045, 0.009, 0.035, 0.048, 0.005, 0.029, 0.034, 0.047, 0.011, 0.027, 0.019, 0.03, 0.022, 0.031, 0.006, 0.035, 0.036, 0.024, 0.03, 0.047, 0.005, 0.023, 0.026, 0.03, 0.043, 0.005, 0.018, 0.048, 0.027, 0.04, 0.021, 0.038, 0.021, 0.049, 0.001, 0.019, 0.042, 0.047, 0.022, 0.005, 0.042, 0.002, 0.05, 0.018, 0.043, 0.029, 0.013, 0.046, 0.032, 0.027, 0.018, 0.021, 0.022, 0.002, 0.032, 0.004, 0.017, 0.03, 0.001, 0.037, 0.018, 0.001, 0.028, 0.026, 0.037, 0.003, 0.025, 0.031, 0.034, 0.025, 0.021, 0.012, 0.001, 0.039, 0.037, 0.019, 0.03, 0.003, 0.042, 0.004, 0.049, 0.049, 0.008, 0.033, 0.046, 0.001, 0.031, 0.04, 0.017, 0.03, 0.02, 0.018, 0.008, 0.028, 0.002, 0.033, 0.015, 0.022, 0.002, 0.005, 0.027, 0.04, 0.042, 0.005, 0.001, 0.034, 0.031, 0.039, 0.028, 0.031, 0.027, 0.034, 0.048, 0.013, 0.004, 0.008, 0.035, 0.025, 0.014, 0.002, 0.018, 0.046, 0.042, 0.041, 0.026, 0.026, 0.002, 0.044, 0.011, 0.018, 0.025, 0.038, 0.048, 0.014, 0.02, 0.011, 0.029, 0.038, 0.045, 0.046, 0.016, 0.007, 0.045, 0.041, 0.046, 0.009, 0.029, 0.008, 0.001, 0.022, 0.001, 0.013, 0.023, 0.018, 0.047, 0.034, 0.035, 0.04, 0.006, 0.021, 0.002, 0.042, 0.012, 0.049, 0.012, 0.011, 0.042, 0.005, 0.008, 0.045, 0.025, 0.017, 0.022, 0, 0.014, 0.042, 0.047, 0.037, 0.049, 0.005, 0.05, 0.047, 0.033, 0.009, 0.019, 0.033, 0.028, 0.015, 0.008, 0.035, 0.009, 0.019, 0.027, 0.047, 0.035, 0.031, 0.042, 0.037, 0.002, 0.045, 0.021, 0.019, 0.011, 0.048, 0.038, 0.037, 0.01, 0.008, 0.033, 0.01, 0.022, 0.012, 0.007, 0.02, 0.043, 0.029, 0.037, 0.043, 0.027, 0.005, 0.049, 0.023, 0.003, 0.009, 0.033, 0.032, 0.02, 0.002, 0.023, 0.006, 0.044, 0.009, 0.001, 0.048, 0.045, 0.046, 0.046, 0.034, 0.028, 0.031, 0.045, 0.003, 0.044, 0.031, 0.017, 0.017, 0.033, 0.015, 0.026, 0.036, 0.034, 0.024, 0.022, 0.036, 0.016, 0.011, 0.018, 0.009, 0.021, 0.019, 0, 0.029, 0.043, 0.028, 0.028, 0.018, 0.043, 0.046, 0.003, 0.049, 0.023, 0.014, 0.016, 0.023, 0.04, 0.01, 0.045, 0.001, 0.027, 0.006, 0.011, 0.028, 0.035, 0.005, 0.042, 0.01, 0.046, 0.013, 0.034, 0.002, 0.036, 0.019, 0.044, 0.033, 0.003, 0.026, 0.027, 0.026, 0.03, 0.041, 0.022, 0.03, 0.023, 0.026, 0.015, 0.008, 0.017, 0.03, 0.007, 0.001, 0.023, 0.049, 0.032, 0.022, 0.009, 0.026, 0.013, 0.021, 0.015, 0.033, 0.001, 0.029, 0.001, 0.037, 0.02, 0.04, 0.034, 0.011, 0.035, 0.049, 0.007, 0.007, 0.034, 0.022, 0.014, 0.043, 0.022, 0.009, 0.045, 0.002, 0.032, 0.017, 0.014, 0.043, 0.044, 0.045, 0.005, 0.024, 0.046, 0.028, 0.047, 0.026, 0.026, 0.026, 0.006, 0.034, 0.017, 0.035, 0.025, 0.022, 0.009, 0.004, 0.015, 0.014, 0.033, 0.021, 0.015, 0.033, 0.001, 0.014, 0.004, 0.018, 0.004, 0.013, 0.023, 0.035, 0.037, 0.041, 0.021, 0.042, 0.049, 0.04, 0.033, 0.019, 0.021, 0.021, 0.027, 0.015, 0.04, 0.025, 0.025, 0.032, 0.046, 0.026, 0.017, 0.022, 0.031, 0.01, 0.009, 0.012, 0.002, 0.015, 0.016, 0.004, 0.022, 0.039, 0.025, 0.033, 0.019, 0.005, 0.015, 0.004, 0.022, 0.044, 0.009, 0.014, 0.043, 0.037, 0.018, 0.009, 0.047, 0.006, 0.02, 0.012, 0.007, 0.041, 0.046, 0.016, 0.011, 0.001, 0.047, 0.021, 0.028, 0.022, 0.018, 0.018, 0.02, 0.027, 0.002, 0.042, 0.046, 0.04, 0.043, 0.048, 0.036, 0.047, 0.018, 0.05, 0.021, 0.026, 0.027, 0.025, 0.044, 0.04, 0.023, 0.021, 0.04, 0.022, 0.004, 0.049, 0.03, 0.007, 0.039, 0.001, 0.002, 0.047, 0.006, 0.013
+        ]
+        xDimension 100
+        xSpacing 0.1
+        yDimension 100
+        ySpacing 0.1
+      }
+    }
+  ]
+  boundingObject USE Rough_Terrain
+}
