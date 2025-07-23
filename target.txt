@@ -22,7 +22,7 @@ action_dim = 12         # 12維修正量 (6腿 × 2關節)，膝關節與踝關�
 reward_dim = 1          # 標量獎勵值
 hidden_size = 128       # 隱藏層維度
 n_layer = 3             # Transformer層數
-n_head = 1              # 單頭注意力
+n_head = 2              # 單頭注意力
 dropout = 0.1           # Dropout率
 
 # 輸入序列結構
@@ -42,7 +42,7 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
         目的： 鼓勵機器人朝正確方向移動
         條件： 無特殊條件
         說明： 當機器人朝向與目標方向的夾角小於30°時給予正獎勵
-        權重：W_r
+        權重：W_θ
         方法： 使用IMU的yaw數據判斷目前前進方向與初始的前進方向夾角(θ)
 
     (2) 速度獎勵 (r_v)  #v<0.01時加入懲罰函數
@@ -58,10 +58,10 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
         公式： min(exp(-max(|pitch|,|roll|)/0.03),1)
 
         目的： 鼓勵機器人在移動中保持機身水平、穩定，最好pitch & roll小於0.03
-        條件： 當pitch or roll <=0.03時
+        條件： 當pitch or roll <=0.05時
         說明： 用pitch與roll計算獎勵
-        權重：
-        方法：
+        權重：W_s
+        方法：利用IMU獲得pitch，roll
 
     (4) 方向懲罰 (p_θ)
         公式： p_θ = -10
@@ -69,6 +69,7 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
         目的： 懲罰前進方向偏離過大
         條件： 機器人偏離過大，也就是yaw>=0.524
         說明： 懲罰項，確保機器人保持前進方向
+        權重：W_θ
 
     (5) 速度懲罰 (p_v)
         公式： p_v = -10
@@ -76,6 +77,7 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
         目的： 懲罰機器人倒退
         條件： 機器人倒退，也就是v<=0.01
         說明： 懲罰項，確保機器人前進
+        權重：W_v
 
     (6) 跌倒懲罰 (p_s)
         公式： p_s = -10
@@ -83,17 +85,12 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
         目的： 懲罰機器人跌倒
         條件： 機器人跌倒時，也就是pitch or roll>=0.785
         說明： 懲罰項，確保機器人保持穩定
+        權重：W_s
 
 權重分配
-穩定性獎勵: 0.4    # 最高優先級
-方向維持獎勵: 0.3   # 次要優先級  
-速度獎勵: 0.3      # 最低優先級
-
-# 性能目標，訓練實先不用考慮
-穩定性容忍度: roll/pitch ≤ 0.03 rad (≈1.72°)
-方向偏差容忍度: yaw ≤ 0.17 rad (≈10°)
-目標前進速度: 0.4 m/s
-最低速度要求: 0.2 m/s
+穩定性獎勵W_s: 0.4    # 最高優先級
+方向維持獎勵W_θ: 0.3   # 次要優先級  
+速度獎勵W_v: 0.3      # 最低優先級
 
 # 早期終止條件
 - 機身傾斜 > 0.52 rad (≈30°)
@@ -116,7 +113,7 @@ python# 階段1: 平地訓練
 - 暖身訓練100個episode
 6. 訓練過程數據保存
 使用PyTorch中包含的或是其他現有的紀錄方式
-包含內容: 優化器狀態 + 訓練統計 + 課程學習進度
+包含內容: 優化器狀態 + 訓練統計 + 課程學習進度+獎勵組成
 
 當前狀態
 
