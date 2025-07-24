@@ -68,6 +68,7 @@ class HexapodController:
         # 初始化馬達
         self.motors = {}
         self.init_motors()
+        self.init_gps()
         
         # 初始化CPG系統
         self.initialize_cpg_system()
@@ -127,6 +128,21 @@ class HexapodController:
                     print(f"  ❌ 初始化馬達 {motor_name} 時發生錯誤: {e}")
         
         print("=========================")
+    
+    def init_gps(self):
+        """初始化GPS感測器"""
+        try:
+            self.gps_device = self.robot.getDevice("gps")
+            if self.gps_device is None:
+                print("❌ 找不到GPS感測器")
+                return
+            
+            self.gps_device.enable(self.timestep)
+            print("✅ GPS感測器已啟用")
+            
+        except Exception as e:
+            print(f"❌ 初始化GPS感測器時發生錯誤: {e}")
+            self.gps_device = None
     
     def create_output_directories(self):
         """建立輸出檔案的資料夾"""
@@ -406,7 +422,12 @@ class HexapodController:
                     
                     # 每100步顯示一次進度
                     if self.current_step % 100 == 0:
-                        print(f"當前步數: {self.current_step}/{self.MAX_STEPS}")
+                        if hasattr(self, 'gps_device') and self.gps_device is not None:
+                            position = self.gps_device.getValues()
+                            height = position[2]
+                            print(f"當前步數: {self.current_step}/{self.MAX_STEPS}, 機器人高度: {height:.4f} m")
+                        else:
+                            print(f"當前步數: {self.current_step}/{self.MAX_STEPS}")
                 else:
                     # 達到最大步數，儲存所有資料並停止模擬
                     print(f"\n✅ 已達到最大步數 {self.MAX_STEPS}")
