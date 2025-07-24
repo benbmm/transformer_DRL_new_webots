@@ -4,6 +4,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 
 WorldInfo {
+  basicTimeStep 20
 }
 Viewpoint {
   orientation 0.5172933052656377 -0.0658376064277494 -0.8532719647962287 3.3579422058470443
@@ -14,9 +15,11 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DEF Hexa Robot {
-  translation 5.074673006119738e-07 6.905299540131922e-06 0.09102715672108637
+  translation 0 0 0.0896404
   rotation 0.7745860789038269 0.44724068777510484 0.447204845196075 1.823424331732345
   children [
+    GPS {
+    }
     Pen {
       translation 0 -0.02 6.7342e-08
       rotation 1 0 0 -1.5707996938995747
@@ -25,7 +28,7 @@ DEF Hexa Robot {
     }
     InertialUnit {
       translation 0 0.03 0
-      rotation 0 1 0 -1.0471996938995747
+      rotation 0.7745961212986637 0.44721407003194 0.44721407003194 -1.823475307179586
       name "inertialunit1"
     }
     DEF forward Solid {

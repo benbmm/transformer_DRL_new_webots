@@ -8,7 +8,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.27079559258494434 0.17728413968977208 -0.9461712745856462 2.032412879616702
-  position 4.469179679393726 7.760342751789262 5.301793955492767
+  position 5.210785296913598 9.45973791329051 6.457813650445432
 }
 TexturedBackground {
 }
@@ -21,10 +21,10 @@ DEF Hexa Robot {
     GPS {
     }
     Pen {
-      translation 0 -0.03 1.01013e-07
+      translation 0 -0.02 6.7342e-08
       rotation 1 0 0 -1.5707996938995747
       inkColor 1 1 0
-      leadSize 0.1
+      leadSize 0.05
     }
     InertialUnit {
       translation 0 0.03 0
@@ -223,7 +223,6 @@ DEF Hexa Robot {
               name "L00"
               minPosition -1
               maxPosition 1
-              maxTorque 25
             }
           ]
           endPoint Solid {
@@ -293,7 +292,6 @@ DEF Hexa Robot {
                     name "L01"
                     minPosition -1
                     maxPosition 1
-                    maxTorque 25
                   }
                 ]
                 endPoint Solid {
@@ -363,7 +361,6 @@ DEF Hexa Robot {
                           name "L02"
                           minPosition -1
                           maxPosition 1
-                          maxTorque 25
                         }
                       ]
                       endPoint Solid {
@@ -517,7 +514,6 @@ DEF Hexa Robot {
               name "L10"
               minPosition -1
               maxPosition 1
-              maxTorque 25
             }
           ]
           endPoint Solid {
@@ -586,7 +582,6 @@ DEF Hexa Robot {
                     name "L11"
                     minPosition -1
                     maxPosition 1
-                    maxTorque 25
                   }
                 ]
                 endPoint Solid {
@@ -656,7 +651,6 @@ DEF Hexa Robot {
                           name "L12"
                           minPosition -1
                           maxPosition 1
-                          maxTorque 25
                         }
                       ]
                       endPoint Solid {
@@ -810,7 +804,6 @@ DEF Hexa Robot {
               name "L20"
               minPosition -1
               maxPosition 1
-              maxTorque 25
             }
           ]
           endPoint Solid {
@@ -879,7 +872,6 @@ DEF Hexa Robot {
                     name "L21"
                     minPosition -1
                     maxPosition 1
-                    maxTorque 25
                   }
                 ]
                 endPoint Solid {
@@ -949,7 +941,6 @@ DEF Hexa Robot {
                           name "L22"
                           minPosition -1
                           maxPosition 1
-                          maxTorque 25
                         }
                       ]
                       endPoint Solid {
@@ -1103,7 +1094,6 @@ DEF Hexa Robot {
               name "R00"
               minPosition -1
               maxPosition 1
-              maxTorque 25
             }
           ]
           endPoint Solid {
@@ -1172,7 +1162,6 @@ DEF Hexa Robot {
                     name "R01"
                     minPosition -1
                     maxPosition 1
-                    maxTorque 25
                   }
                 ]
                 endPoint Solid {
@@ -1242,7 +1231,6 @@ DEF Hexa Robot {
                           name "R02"
                           minPosition -1
                           maxPosition 1
-                          maxTorque 25
                         }
                       ]
                       endPoint Solid {
@@ -1396,7 +1384,6 @@ DEF Hexa Robot {
               name "R10"
               minPosition -1
               maxPosition 1
-              maxTorque 25
             }
           ]
           endPoint Solid {
@@ -1465,7 +1452,6 @@ DEF Hexa Robot {
                     name "R11"
                     minPosition -1
                     maxPosition 1
-                    maxTorque 25
                   }
                 ]
                 endPoint Solid {
@@ -1535,7 +1521,6 @@ DEF Hexa Robot {
                           name "R12"
                           minPosition -1
                           maxPosition 100000000109297
-                          maxTorque 25
                         }
                       ]
                       endPoint Solid {
@@ -1689,7 +1674,6 @@ DEF Hexa Robot {
               name "R20"
               minPosition -1
               maxPosition 1
-              maxTorque 25
             }
           ]
           endPoint Solid {
@@ -1758,7 +1742,6 @@ DEF Hexa Robot {
                     name "R21"
                     minPosition -1
                     maxPosition 1000004359517266
-                    maxTorque 25
                   }
                 ]
                 endPoint Solid {
@@ -1828,7 +1811,6 @@ DEF Hexa Robot {
                           name "R22"
                           minPosition -1
                           maxPosition 1
-                          maxTorque 25
                         }
                       ]
                       endPoint Solid {
@@ -2007,7 +1989,7 @@ DEF Hexa Robot {
   physics Physics {
     mass 10
   }
-  controller "my_controller2"
+  controller "my_controller1"
   supervisor TRUE
 }
 DEF floor Solid {
