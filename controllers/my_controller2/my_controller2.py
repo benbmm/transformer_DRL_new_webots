@@ -141,12 +141,12 @@ class HexapodController:
         # Transformer配置
         self.transformer_config = {
             'sequence_length': 50,
-            'state_dim': 3,
+            'state_dim': 6,
             'action_dim': 12,
             'reward_dim': 1,
             'hidden_size': 128,
             'n_layer': 3,
-            'n_head': 1,
+            'n_head': 2,
             'max_correction': 0.6
         }
         
@@ -329,7 +329,32 @@ class HexapodController:
                 index += 1
     
     def get_imu_data(self):
-        """讀取IMU數據並轉換為歐拉角"""
+        """讀取IMU數據並轉換為6維腳部方向分量"""
+        try:
+            if not hasattr(self, 'imu_device') or self.imu_device is None:
+                return np.zeros(6)
+            
+            roll_pitch_yaw = self.imu_device.getRollPitchYaw()
+            roll, pitch, yaw = roll_pitch_yaw
+            
+            # 轉換為6維腳部方向分量
+            sqrt_half = np.sqrt(0.5)
+            
+            e1 = (pitch + roll) * sqrt_half    # 前右腳
+            e2 = roll                          # 右中腳
+            e3 = (-pitch + roll) * sqrt_half   # 後右腳
+            e4 = (-pitch - roll) * sqrt_half   # 後左腳
+            e5 = -roll                         # 左中腳
+            e6 = (pitch - roll) * sqrt_half    # 前左腳
+            
+            return np.array([e1, e2, e3, e4, e5, e6])
+        except Exception as e:
+            if self.current_step % 100 == 0:
+                print(f"讀取IMU數據錯誤: {e}")
+            return np.zeros(6)
+        
+    def get_raw_imu_data(self):
+        """讀取原始IMU歐拉角數據（用於獎勵計算和終止條件）"""
         try:
             if not hasattr(self, 'imu_device') or self.imu_device is None:
                 return np.zeros(3)
@@ -338,7 +363,7 @@ class HexapodController:
             return np.array(roll_pitch_yaw)
         except Exception as e:
             if self.current_step % 100 == 0:
-                print(f"讀取IMU數據錯誤: {e}")
+                print(f"讀取原始IMU數據錯誤: {e}")
             return np.zeros(3)
     
     def get_position_data(self):
