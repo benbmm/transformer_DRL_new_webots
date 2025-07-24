@@ -361,6 +361,10 @@ class HexapodController:
                 try:
                     if (step >= self.control_start_step):
                         self.motors[leg_idx][joint_idx].setPosition(motor_angle)
+                    else:
+                        motor_angle = self.replace_ankle_with_knee_signal(0, leg_idx, joint_idx)
+                        motor_angle = self.apply_height_offset(motor_angle, leg_idx, joint_idx)
+                        self.motors[leg_idx][joint_idx].setPosition(motor_angle)
                 except Exception as e:
                     print(f"設定馬達角度時發生錯誤 (腿{leg_idx}, 關節{joint_idx}): {e}")
     
