@@ -166,6 +166,13 @@ class HexapodController:
         self.use_transformer = True
         self.transformer_start_step = 200
 
+        # 新增：獎勵和終止條件相關變數
+        self.initial_yaw = None  # 記錄初始方向
+        self.start_position = None  # 記錄起始位置
+        self.position_history_200 = deque(maxlen=200)  # 200步位置歷史
+        self.episode_terminated = False  # 是否已終止
+        self.termination_reason = None  # 終止原因
+
         print("Transformer模組已初始化")
 
         # 建立儲存資料夾
@@ -253,34 +260,21 @@ class HexapodController:
                 if self.gps_device is None:
                     print("⚠️ 未找到GPS感測器，將使用Supervisor節點獲取位置")
                     self.gps_device = None
-                    self.position_history = []
-                    self.previous_position = None
-                    self.current_speed = 0.0
-                    self.speed_history = []
                     return
             
             self.gps_device.enable(self.timestep)
             print("✅ GPS感測器已啟用")
             
-            self.position_history = []
-            self.previous_position = None
-            self.current_speed = 0.0
-            self.speed_history = []
-            
         except Exception as e:
             print(f"❌ 初始化GPS感測器時發生錯誤: {e}")
             self.gps_device = None
-            self.position_history = []
-            self.previous_position = None
-            self.current_speed = 0.0
-            self.speed_history = []
     
     def _initialize_buffers(self):
         """初始化序列緩存"""
         seq_len = self.transformer_config['sequence_length']
         
         for _ in range(seq_len):
-            self.state_buffer.append(np.zeros(3))
+            self.state_buffer.append(np.zeros(6))  # 6維腳部方向分量
             self.action_buffer.append(np.zeros(12))
             self.reward_buffer.append(np.zeros(1))
         
@@ -387,84 +381,188 @@ class HexapodController:
                 print(f"讀取位置數據錯誤: {e}")
             return np.zeros(3)
     
-    def update_speed_calculation(self):
+    def update_position_tracking(self):
         """更新速度計算"""
         current_position = self.get_position_data()
         
-        self.position_history.append(current_position.copy())
-        if len(self.position_history) > 10:
-            self.position_history.pop(0)
+        # 記錄起始位置和初始yaw
+        if self.start_position is None:
+            self.start_position = current_position.copy()
         
-        if self.previous_position is not None:
-            displacement = current_position - self.previous_position
-            distance = np.linalg.norm(displacement[:2])
-            
-            time_interval = self.timestep / 1000.0
-            self.current_speed = distance / time_interval if time_interval > 0 else 0.0
-            
-            self.speed_history.append(self.current_speed)
-            if len(self.speed_history) > 50:
-                self.speed_history.pop(0)
+        if self.initial_yaw is None:
+            raw_imu = self.get_raw_imu_data()
+            self.initial_yaw = raw_imu[2]  # yaw
         
-        self.previous_position = current_position.copy()
+        # 更新200步位置歷史
+        self.position_history_200.append(current_position.copy())
     
     def get_average_speed(self):
-        """獲取平均速度"""
-        if len(self.speed_history) == 0:
+        """獲取平均速度（基於序列長度的位置變化）"""
+        if len(self.position_history_200) < 2:
             return 0.0
-        return np.mean(self.speed_history[-10:])
+        
+        # 使用n個step的位置變化計算速度
+        seq_len = self.transformer_config['sequence_length']
+        if len(self.position_history_200) >= seq_len:
+            start_pos = list(self.position_history_200)[-seq_len]
+            end_pos = list(self.position_history_200)[-1]
+            
+            displacement = end_pos - start_pos
+            distance = np.linalg.norm(displacement[:2])  # 只考慮x,y平面距離
+            
+            time_interval = seq_len * self.timestep / 1000.0  # n*0.02秒
+            speed = distance / time_interval if time_interval > 0 else 0.0
+            return speed
+        else:
+            # 如果位置歷史不足，返回0速度
+            return 0.0
     
-    def calculate_stability_reward(self, imu_data):
-        """計算穩定性獎勵（線性版本）"""
-        roll, pitch, yaw = imu_data
+    def calculate_direction_reward_and_penalty(self, raw_imu_data):
+        """計算方向獎勵和懲罰（指數版本）"""
+        roll, pitch, yaw = raw_imu_data
         
-        roll_error = abs(roll)
-        pitch_error = abs(pitch)
+        # 計算與初始方向的偏差
+        if self.initial_yaw is not None:
+            theta = abs(yaw - self.initial_yaw)
+            # 處理角度跨越π的情況
+            if theta > np.pi:
+                theta = 2 * np.pi - theta
+        else:
+            theta = abs(yaw)
         
-        roll_reward = 1.0 / (1.0 + roll_error)
-        pitch_reward = 1.0 / (1.0 + pitch_error)
+        # 方向獎勵：指數函數
+        r_theta = np.exp(-(theta**2) / (0.3**2))
         
-        stability_reward = (roll_reward + pitch_reward) / 2.0
+        # 偏向懲罰：角度偏差 >= 0.785 rad 時
+        p_theta = -1.0 if theta >= 0.785 else 0.0
         
-        return stability_reward
+        return r_theta, p_theta, theta
     
-    def calculate_direction_reward(self, imu_data):
-        """計算方向維持獎勵（線性版本）"""
-        roll, pitch, yaw = imu_data
-        
-        yaw_error = abs(yaw)
-        direction_reward = 1.0 / (1.0 + yaw_error)
-        
-        return direction_reward
-    
-    def calculate_speed_reward(self):
-        """計算速度獎勵（線性版本）"""
+    def calculate_speed_reward_and_penalty(self):
+        """計算速度獎勵和懲罰（指數版本）"""
         current_speed = self.get_average_speed()
         
-        max_reasonable_speed = 1.0
-        speed_reward = min(current_speed / max_reasonable_speed, 1.0)
+        # 速度獎勵：v_max = 1
+        r_v = min(max(current_speed, 0) / 1.0, 1.0)
         
-        return speed_reward
+        # 緩慢懲罰：200步前進距離 < 0.05m
+        p_v = 0.0
+        if len(self.position_history_200) >= 200:
+            start_pos = list(self.position_history_200)[0]
+            current_pos = list(self.position_history_200)[-1]
+            total_distance = np.linalg.norm((current_pos - start_pos)[:2])
+            
+            if total_distance < 0.05:
+                p_v = -1.0
+        
+        return r_v, p_v, current_speed
     
-    def calculate_reward(self, imu_data):
-        """計算綜合獎勵"""
-        stability_reward = self.calculate_stability_reward(imu_data)
-        direction_reward = self.calculate_direction_reward(imu_data)
-        speed_reward = self.calculate_speed_reward()
+    def calculate_stability_reward_and_penalty(self, raw_imu_data):
+        """計算穩定性獎勵和懲罰（指數版本）"""
+        roll, pitch, yaw = raw_imu_data
         
-        total_reward = (
-            0.4 * stability_reward +
-            0.3 * direction_reward + 
-            0.3 * speed_reward
-        )
+        # 穩定性獎勵：指數函數
+        stability_error = (abs(pitch) + abs(roll)) / 2.0
+        r_s = np.exp(-(stability_error**2) / (0.1**2))
         
+        # 跌倒懲罰：pitch or roll >= 0.785 rad
+        p_s = -1.0 if (abs(pitch) >= 0.785 or abs(roll) >= 0.785) else 0.0
+        
+        return r_s, p_s, stability_error
+    
+    def calculate_control_reward(self, corrections):
+        """計算控制量獎勵"""
+        if corrections is None or len(corrections) == 0:
+            return 1.0  # 沒有修正時給予最高獎勵
+        
+        # 計算修正量的平均絕對值
+        avg_correction = np.mean(np.abs(corrections))
+        
+        # 控制量獎勵：指數函數
+        r_c = np.exp(-(avg_correction**2) / (0.9**2))
+        
+        return r_c
+    
+    def calculate_reward(self, raw_imu_data, corrections=None):
+        """計算綜合獎勵（完全按照target規格）"""
+        # 計算各項獎勵和懲罰
+        r_theta, p_theta, theta_error = self.calculate_direction_reward_and_penalty(raw_imu_data)
+        r_v, p_v, current_speed = self.calculate_speed_reward_and_penalty()
+        r_s, p_s, stability_error = self.calculate_stability_reward_and_penalty(raw_imu_data)
+        r_c = self.calculate_control_reward(corrections)
+        
+        # 權重設定（按照target要求）
+        w_s = 4   # 穩定性獎勵
+        w_theta = 3   # 方向維持獎勵
+        w_v = 2   # 速度獎勵
+        w_c = 1   # 控制量獎勵
+        
+        # 總獎勵函數：R = w_θ*r_θ + p_θ + w_v*r_v + p_v + w_s*r_s + p_s + w_c*r_c
+        total_reward = (w_theta * r_theta + p_theta + 
+                       w_v * r_v + p_v + 
+                       w_s * r_s + p_s + 
+                       w_c * r_c)
+        
+        # 詳細日誌輸出
         if self.current_step % 100 == 0:
-            avg_speed = self.get_average_speed()
-            print(f"線性獎勵 - 穩定性: {stability_reward:.3f}, 方向: {direction_reward:.3f}, 速度: {speed_reward:.3f}")
-            print(f"  角度誤差 - Roll: {abs(imu_data[0]):.4f}, Pitch: {abs(imu_data[1]):.4f}, Yaw: {abs(imu_data[2]):.4f}")
-            print(f"  當前速度: {avg_speed:.3f} m/s")
+            print(f"指數獎勵詳細資訊 (步數 {self.current_step}):")
+            print(f"  方向: r_θ={r_theta:.3f} (θ={theta_error:.4f}), p_θ={p_theta:.0f}")
+            print(f"  速度: r_v={r_v:.3f} (v={current_speed:.3f}), p_v={p_v:.0f}")
+            print(f"  穩定: r_s={r_s:.3f} (error={stability_error:.4f}), p_s={p_s:.0f}")
+            print(f"  控制: r_c={r_c:.3f}")
+            print(f"  總獎勵: {total_reward:.3f}")
+            print(f"  原始角度 - Roll: {abs(raw_imu_data[0]):.4f}, Pitch: {abs(raw_imu_data[1]):.4f}, Yaw: {abs(raw_imu_data[2]):.4f}")
         
         return total_reward
+    
+    def check_termination_conditions(self, raw_imu_data):
+        """檢查終止條件"""
+        if self.episode_terminated:
+            return True
+        
+        roll, pitch, yaw = raw_imu_data
+        current_position = self.get_position_data()
+        
+        # 1. pitch or roll > 0.785 rad
+        if abs(pitch) > 0.785 or abs(roll) > 0.785:
+            self.episode_terminated = True
+            self.termination_reason = f"跌倒終止 - Roll: {abs(roll):.4f}, Pitch: {abs(pitch):.4f}"
+            return True
+        
+        # 2. 方向偏差 > 0.785 rad
+        if self.initial_yaw is not None:
+            theta = abs(yaw - self.initial_yaw)
+            if theta > np.pi:
+                theta = 2 * np.pi - theta
+            if theta > 0.785:
+                self.episode_terminated = True
+                self.termination_reason = f"方向偏離終止 - 偏差: {theta:.4f} rad"
+                return True
+        
+        # 3. 200步前進距離 < 0.05m
+        if len(self.position_history_200) >= 200:
+            start_pos = list(self.position_history_200)[0]
+            total_distance = np.linalg.norm((current_position - start_pos)[:2])
+            if total_distance < 0.05:
+                self.episode_terminated = True
+                self.termination_reason = f"移動緩慢終止 - 200步距離: {total_distance:.4f}m"
+                return True
+        
+        # 4. 前進3.5m
+        if self.start_position is not None:
+            total_forward_distance = np.linalg.norm((current_position - self.start_position)[:2])
+            if total_forward_distance >= 3.5:
+                self.episode_terminated = True
+                self.termination_reason = f"成功完成 - 前進距離: {total_forward_distance:.4f}m"
+                return True
+        
+        # 5. 到達最大step=2000
+        if self.current_step >= self.MAX_STEPS:
+            self.episode_terminated = True
+            self.termination_reason = f"達到最大步數: {self.MAX_STEPS}"
+            return True
+        
+        return False
     
     def get_transformer_correction(self):
         """使用Transformer產生修正量"""
@@ -603,10 +701,18 @@ class HexapodController:
         """將CPG+Transformer輸出應用到馬達"""
         step = self.current_step
         
+        # 獲取IMU數據（6維腳部方向分量）
         imu_data = self.get_imu_data()
         self.state_buffer.append(imu_data)
         
-        self.update_speed_calculation()
+        # 獲取原始IMU數據（3維歐拉角，用於獎勵計算）
+        raw_imu_data = self.get_raw_imu_data()
+        
+        self.update_position_tracking()
+        
+        # 檢查終止條件
+        if self.check_termination_conditions(raw_imu_data):
+            return  # 如果已終止，不再執行馬達命令
         
         transformer_corrections = self.get_transformer_correction()
         
@@ -633,7 +739,7 @@ class HexapodController:
                     correction_idx = (leg_idx - 1) * 2 + (joint_idx - 2)
                     if correction_idx < len(transformer_corrections):
                         motor_angle += transformer_corrections[correction_idx]
-                        if self.current_step % 100 == 0 :
+                        if self.current_step % 100 == 0:
                             print(f"步數{self.current_step}: 腿{leg_idx}關節{joint_idx}修正量: {transformer_corrections[correction_idx]:.4f}")
                 
                 # 儲存動作到緩存
@@ -654,8 +760,8 @@ class HexapodController:
         # 更新動作緩存
         self.action_buffer.append(current_actions)
         
-        # 計算實際獎勵
-        current_reward = self.calculate_reward(imu_data)
+        # 計算實際獎勵（使用原始IMU數據和修正量）
+        current_reward = self.calculate_reward(raw_imu_data, transformer_corrections)
         self.reward_buffer.append(np.array([current_reward]))
     
     def save_cpg_outputs(self):
@@ -702,7 +808,7 @@ class HexapodController:
         
         try:
             while self.robot.step(self.timestep) != -1:
-                if self.current_step < self.MAX_STEPS:
+                if self.current_step < self.MAX_STEPS and not self.episode_terminated:
                     self.calculate_cpg_output(self.current_step)
                     self.apply_motor_commands()
                     self.current_step += 1
@@ -713,10 +819,35 @@ class HexapodController:
                         if len(self.state_buffer) > 0:
                             current_imu = list(self.state_buffer)[-1]
                             current_reward = list(self.reward_buffer)[-1][0]
-                            print(f"IMU數據 - Roll: {current_imu[0]:.3f}, Pitch: {current_imu[1]:.3f}, Yaw: {current_imu[2]:.3f}")
-                            print(f"當前獎勵: {current_reward:.3f}, 平均速度: {self.get_average_speed():.3f} m/s")
+                            raw_imu = self.get_raw_imu_data()
+                            position = self.get_position_data()
+                            
+                            if self.start_position is not None:
+                                forward_distance = np.linalg.norm((position - self.start_position)[:2])
+                                print(f"前進距離: {forward_distance:.3f}m")
+                            
+                            print(f"IMU腳部方向分量 - e1~e6: {current_imu}")
+                            print(f"原始歐拉角 - Roll: {raw_imu[0]:.3f}, Pitch: {raw_imu[1]:.3f}, Yaw: {raw_imu[2]:.3f}")
+                            print(f"當前獎勵: {current_reward:.3f}, 速度: {self.get_average_speed():.3f} m/s")
+                            
+                            # 檢查是否接近終止條件
+                            if abs(raw_imu[0]) > 0.7 or abs(raw_imu[1]) > 0.7:
+                                print(f"⚠️ 警告：接近跌倒閾值 (0.785)")
+                            
+                            if self.initial_yaw is not None:
+                                theta = abs(raw_imu[2] - self.initial_yaw)
+                                if theta > np.pi:
+                                    theta = 2 * np.pi - theta
+                                if theta > 0.7:
+                                    print(f"⚠️ 警告：接近方向偏離閾值 (0.785)")
+                
                 else:
-                    print(f"\n✅ 已達到最大步數 {self.MAX_STEPS}")
+                    # 達到最大步數或episode已終止
+                    if self.termination_reason:
+                        print(f"\n📋 Episode終止原因: {self.termination_reason}")
+                    else:
+                        print(f"\n✅ 已達到最大步數 {self.MAX_STEPS}")
+                    
                     self.save_cpg_outputs()
                     self.save_processed_signals()
                     print("模擬完成!")
