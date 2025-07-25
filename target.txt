@@ -18,7 +18,7 @@ Policy Network: Transformer
 
 2. Transformer設計規格
 python# 網絡架構
-sequence_length = n 	# 根據控制頻率設定，n*頻率=1秒，n目前訂為20
+sequence_length = n 	# 根據控制頻率設定，n*頻率=1秒，n目前訂為50
 state_dim = 6           # 由歐拉角計算六隻腳方向的分量，e¹ = (pitch + roll)√(1/2) - 前右腳，需要同時響應俯仰和翻滾，e² = roll - 右中腳，主要響應翻滾運動，e³ = (-pitch + roll)√(1/2) - 後右腳，翻滾為正，俯仰為負，e⁴ = (-pitch - roll)√(1/2) - 後左腳，兩個運動都為負向響應，e⁵ = -roll - 左中腳，翻滾的反向響應，e⁶ = (pitch - roll)√(1/2) - 前左腳，俯仰為正，翻滾為負
 action_dim = 12         # 12維修正量 (6腿 × 2關節)，膝關節與踝關節
 reward_dim = 1          # 標量獎勵值
@@ -126,11 +126,13 @@ python# 階段1: 平地訓練
 6. 訓練過程數據保存
 使用PyTorch中包含的或是其他現有的紀錄方式
 包含內容: 優化器狀態 + 訓練統計 + 課程學習進度+獎勵組成
+7.當需要重新採集數據時，需要使用wb_supervisor_world_reload()來重新載入環境，重新載入會讓controller執行中斷，所以必要的資訊要先記錄在檔案
 
 當前狀態
 
 ✅ 已完成: CPG六足控制代碼
 ✅ 已完成: 完整Webots機器人模型
+✅ 已完成: 加入transformer
 
 
 實作優先順序
