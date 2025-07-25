@@ -1989,7 +1989,7 @@ DEF Hexa Robot {
   physics Physics {
     mass 10
   }
-  controller "my_controller1"
+  controller "my_controller2"
   supervisor TRUE
 }
 DEF floor Solid {
