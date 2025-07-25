@@ -31,7 +31,7 @@ class HexapodController:
     
     def __init__(self):
         # CPG參數
-        self.MAX_STEPS = 5000
+        self.MAX_STEPS = 2000
         self.NUM_LEGS = 6
         self.NUM_OSCILLATORS = 3
         self.STEP_SIZE = 0.2
