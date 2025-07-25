@@ -35,7 +35,6 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
 基礎步態: CPG生成穩定基礎運動模式（已調優）
 適應修正: Transformer學習地形適應修正量
 最終輸出: at = ac + ar (CPG輸出 + RL修正)
-修正量限制: ±0.6
 
 4. 獎勵函數設計
     (1) 方向獎勵 (r_θ)  #abs(θ)>=0.785時加入懲罰函數
@@ -108,6 +107,7 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
 - 到達最大step=2000
 
 5. 漸進式訓練策略
+目前先以平地的訓練為主，平地訓練完成後再將權重移到新的環境用新的控制器訓練
 python# 階段1: 平地訓練
 成功標準: 前進3.5m，且100%的pitch & roll低於0.03，且step<1500
 進入下一階段條件:成功20次

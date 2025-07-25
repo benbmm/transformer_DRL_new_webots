@@ -55,8 +55,8 @@ class HexapodTransformer(nn.Module):
         # 輸出投影層 (12維修正量)
         self.output_projection = nn.Linear(config['hidden_size'], config['action_dim'])
         
-        # 修正量限制
-        self.max_correction = config.get('max_correction', 0.6)
+        # 修正量限制，先不用限制
+        #self.max_correction = config.get('max_correction', 0.6)
         
     def forward(self, state_sequence, action_sequence, reward_sequence):
         """
