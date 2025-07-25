@@ -69,6 +69,7 @@ class HexapodController:
         self.motors = {}
         self.init_motors()
         self.init_gps()
+        self.init_imu()
         
         # 初始化CPG系統
         self.initialize_cpg_system()
@@ -143,6 +144,33 @@ class HexapodController:
         except Exception as e:
             print(f"❌ 初始化GPS感測器時發生錯誤: {e}")
             self.gps_device = None
+
+    def init_imu(self):
+        """初始化IMU感測器"""
+        try:
+            self.imu_device = self.robot.getDevice("inertialunit1")
+            if self.imu_device is None:
+                print("❌ 找不到IMU感測器")
+                return
+            
+            self.imu_device.enable(self.timestep)
+            print("✅ IMU感測器已啟用")
+            
+        except Exception as e:
+            print(f"❌ 初始化IMU感測器時發生錯誤: {e}")
+            self.imu_device = None
+    
+    def get_imu_data(self):
+        """讀取IMU數據"""
+        try:
+            if hasattr(self, 'imu_device') and self.imu_device is not None:
+                roll_pitch_yaw = self.imu_device.getRollPitchYaw()
+                return roll_pitch_yaw
+            else:
+                return [0.0, 0.0, 0.0]
+        except Exception as e:
+            print(f"讀取IMU數據錯誤: {e}")
+            return [0.0, 0.0, 0.0]
     
     def create_output_directories(self):
         """建立輸出檔案的資料夾"""
@@ -426,12 +454,13 @@ class HexapodController:
                     
                     # 每100步顯示一次進度
                     if self.current_step % 100 == 0:
-                        if hasattr(self, 'gps_device') and self.gps_device is not None:
-                            position = self.gps_device.getValues()
-                            height = position[2]
-                            print(f"當前步數: {self.current_step}/{self.MAX_STEPS}, 機器人高度: {height:.4f} m")
-                        else:
-                            print(f"當前步數: {self.current_step}/{self.MAX_STEPS}")
+                        position = self.gps_device.getValues()
+                        x, y, z = position[0], position[1], position[2]
+                        imu_data = self.get_imu_data()
+                        roll, pitch, yaw = imu_data
+                        print(f"當前步數: {self.current_step}/{self.MAX_STEPS}")
+                        print(f"  GPS座標 - X: {x:.4f} m, Y: {y:.4f} m, Z: {z:.4f} m")
+                        print(f"  IMU數據 - Roll: {roll:.4f} rad, Pitch: {pitch:.4f} rad, Yaw: {yaw:.4f} rad")
                 else:
                     # 達到最大步數，儲存所有資料並停止模擬
                     print(f"\n✅ 已達到最大步數 {self.MAX_STEPS}")
