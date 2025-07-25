@@ -111,7 +111,8 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
 python# 階段1: 平地訓練
 成功標準: 前進3.5m，且100%的pitch & roll低於0.03，且step<1500
 進入下一階段條件:成功20次
-達成進入下一階段條件之後就停止訓練
+階段停止條件:到達 max_episodes = 2000 ，或者一段時間200 episodes沒進步，
+達成進入下一階段或階段停止條件之後就停止訓練
 
 # 階段3: 不平地形
 成功標準: 實做後看情況再決定
