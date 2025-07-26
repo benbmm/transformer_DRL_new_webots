@@ -57,7 +57,7 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
 使用PyTorch中包含的或是其他現有的紀錄方式
 包含內容: 優化器狀態 + 訓練統計 + 課程學習進度+獎勵組成
 6.當需要重新採集數據時，需要使用wb_supervisor_world_reload()來重新載入環境，重新載入會讓controller執行中斷，所以必要的資訊要先記錄在檔案，controller刷新後重新讀取
-7.再控制器中需要控制訓練平台，
+7.再控制器中需要用Supervisor方式控制訓練平台，實現正弦波運動，訊號為0.2 * math.sin(1.0 * math.pi * current_time)
 
 當前狀態
 
