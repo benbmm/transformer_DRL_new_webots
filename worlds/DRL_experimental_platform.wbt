@@ -9,15 +9,15 @@ WorldInfo {
   basicTimeStep 20
 }
 Viewpoint {
-  orientation 0.153142719526078 -0.005414724790399514 -0.9881892471645303 3.2114437968571408
-  position 1.7614297314317426 -0.232351544578681 0.9933569031150314
+  orientation 0.12342679047619114 0.011095865604129297 -0.9922916452128586 2.9636528714205332
+  position 1.7677265016372279 0.26880534921017146 0.8729894304571844
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 DEF Hexa Robot {
-  translation 0 0 0.594874
+  translation 0 0 0.614874
   rotation 0.7745860789038269 0.44724068777510484 0.447204845196075 1.823424331732345
   children [
     GPS {
@@ -2009,7 +2009,7 @@ DEF experimental_platform Solid {
               metalness 0
             }
             geometry Box {
-              size 0.8 0.8 0.01
+              size 0.8 0.8 0.05
             }
           }
         ]

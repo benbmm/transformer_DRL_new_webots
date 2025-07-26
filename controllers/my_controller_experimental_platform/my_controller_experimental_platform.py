@@ -81,9 +81,10 @@ class HexapodTransformer(nn.Module):
 
 class PPOTrainer:
     """PPO訓練器"""
-    def __init__(self, agent, config):
+    def __init__(self, agent, config, device):
         self.agent = agent
         self.config = config
+        self.device = device  # ✅ 添加device屬性
         self.optimizer = optim.Adam(agent.parameters(), lr=config['learning_rate'])
         
         # 訓練參數
@@ -97,9 +98,11 @@ class PPOTrainer:
         self.num_epochs = config.get('num_epochs', 4)
         
     def compute_gae(self, rewards, values, dones, next_value, gamma=0.99, gae_lambda=0.95):
-        """計算GAE優勢函數"""
-        advantages = torch.zeros_like(rewards)
-        lastgaelam = 0
+        """計算GAE優勢函數 - 修正設備分配問題"""
+        # ✅ 確保所有張量都在同一設備上
+        device = rewards.device
+        advantages = torch.zeros_like(rewards).to(device)
+        lastgaelam = torch.tensor(0.0).to(device)
         
         for t in reversed(range(len(rewards))):
             if t == len(rewards) - 1:
@@ -116,9 +119,30 @@ class PPOTrainer:
         return advantages, returns
     
     def update(self, states, actions, rewards, logprobs, values, dones):
-        """PPO更新 - 保持序列數據的時間順序"""
-        # 計算下一個狀態的值（這裡簡化為0）
-        next_value = torch.zeros(1)
+        """PPO更新 - 修正設備分配問題"""
+        # ✅ 確保所有張量都在正確設備上
+        next_value = torch.zeros(1).to(self.device)
+        
+        # 將輸入數據移動到正確設備
+        if isinstance(rewards, np.ndarray):
+            rewards = torch.FloatTensor(rewards).to(self.device)
+        else:
+            rewards = rewards.to(self.device)
+            
+        if isinstance(logprobs, np.ndarray):
+            logprobs = torch.FloatTensor(logprobs).to(self.device)
+        else:
+            logprobs = logprobs.to(self.device)
+            
+        if isinstance(values, np.ndarray):
+            values = torch.FloatTensor(values).to(self.device)
+        else:
+            values = values.to(self.device)
+            
+        if isinstance(dones, np.ndarray):
+            dones = torch.FloatTensor(dones).to(self.device)
+        else:
+            dones = dones.to(self.device)
         
         # 計算優勢函數和回報
         advantages, returns = self.compute_gae(rewards, values, dones, next_value)
@@ -134,7 +158,6 @@ class PPOTrainer:
         # 多輪更新
         for epoch in range(self.num_epochs):
             # ✅ 保持序列順序：連續取樣而非隨機打亂
-            # 對於Transformer序列模型，時間順序很重要
             for start in range(0, batch_size, self.batch_size):
                 end = min(start + self.batch_size, batch_size)
                 
@@ -152,15 +175,15 @@ class PPOTrainer:
                 mb_returns = returns[mb_indices]
                 mb_oldlogprobs = logprobs[mb_indices]
                 
-                # 準備序列數據
-                state_seq = torch.stack([s[0] for s in mb_states])
-                action_seq = torch.stack([s[1] for s in mb_states])
-                reward_seq = torch.stack([s[2] for s in mb_states])
+                # ✅ 準備序列數據並確保在正確設備上
+                state_seq = torch.stack([s[0].squeeze(0) for s in mb_states]).to(self.device)
+                action_seq = torch.stack([s[1].squeeze(0) for s in mb_states]).to(self.device)
+                reward_seq = torch.stack([s[2].squeeze(0) for s in mb_states]).to(self.device)
+                mb_actions_tensor = torch.stack([a for a in mb_actions]).to(self.device)
                 
                 # 前向傳播
                 _, newlogprob, entropy, newvalue = self.agent.get_action_and_value(
-                    state_seq, action_seq, reward_seq, 
-                    torch.stack([a for a in mb_actions])
+                    state_seq, action_seq, reward_seq, mb_actions_tensor
                 )
                 
                 # PPO損失
@@ -211,9 +234,18 @@ class HexapodExperimentalController:
         self.robot = Supervisor()
         self.current_step = 0
         
-        # 控制參數
+        # ✅ 控制參數 - 參考controller2
         self.body_height_offset = 0.5
         self.control_start_step = 100
+        self.knee_clamp_positive = True       # 膝關節限制為正值
+        self.use_knee_signal_for_ankle = True # 踝關節使用膝關節信號
+        
+        # ✅ 初始化處理過的訊號記錄
+        self.processed_signals = {}
+        for leg_idx in range(1, self.NUM_LEGS + 1):
+            self.processed_signals[leg_idx] = {}
+            for joint_idx in range(1, 4):  # 1:髖, 2:膝, 3:踝
+                self.processed_signals[leg_idx][joint_idx] = np.zeros(self.MAX_STEPS + 1)
         
         # Transformer配置
         self.transformer_config = {
@@ -236,7 +268,7 @@ class HexapodExperimentalController:
         # 初始化神經網絡
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.agent = HexapodTransformer(self.transformer_config).to(self.device)
-        self.trainer = PPOTrainer(self.agent, self.transformer_config)
+        self.trainer = PPOTrainer(self.agent, self.transformer_config, self.device)  # ✅ 傳遞device
         
         # 序列緩存
         self.state_buffer = deque(maxlen=self.transformer_config['sequence_length'])
@@ -497,12 +529,12 @@ class HexapodExperimentalController:
         return False
     
     def get_transformer_action(self):
-        """獲取Transformer動作"""
+        """獲取Transformer動作 - 修正設備分配問題"""
         if len(self.state_buffer) < self.transformer_config['sequence_length']:
             return np.zeros(6)
         
         try:
-            # 準備序列數據
+            # ✅ 確保所有數據都在正確設備上
             state_seq = torch.FloatTensor(np.array(list(self.state_buffer))).unsqueeze(0).to(self.device)
             action_seq = torch.FloatTensor(np.array(list(self.action_buffer))).unsqueeze(0).to(self.device)
             reward_seq = torch.FloatTensor(np.array(list(self.reward_buffer))).unsqueeze(0).to(self.device)
@@ -512,7 +544,7 @@ class HexapodExperimentalController:
                     state_seq, action_seq, reward_seq
                 )
             
-            # 儲存訓練數據
+            # ✅ 確保儲存的訓練數據在CPU上（節省GPU內存）
             self.episode_states.append((state_seq.cpu(), action_seq.cpu(), reward_seq.cpu()))
             self.episode_actions.append(action.cpu())
             self.episode_logprobs.append(logprob.cpu())
@@ -522,40 +554,136 @@ class HexapodExperimentalController:
             
         except Exception as e:
             print(f"Transformer推理錯誤: {e}")
+            import traceback
+            traceback.print_exc()
             return np.zeros(6)
     
+    def process_special_joints(self, motor_angle, leg_idx, joint_idx):
+        """處理特殊關節 - 參考controller2"""
+        # 膝關節處理：確保正值（站立姿態）
+        if joint_idx == 2:
+            if self.knee_clamp_positive and motor_angle <= 0:
+                return 0.0
+        
+        # 踝關節特殊處理：特定腿部的負值限制
+        elif joint_idx == 3:
+            if not self.use_knee_signal_for_ankle:
+                if (leg_idx == 2 or leg_idx == 5) and motor_angle >= 0:  # R1, L1中腿
+                    return 0.0
+        
+        return motor_angle
+    
+    def adjust_signal_direction(self, motor_angle, leg_idx, joint_idx):
+        """調整訊號方向 - 參考controller2
+        
+        反向規則：
+        - 右側腿部(leg_idx 1-3): 踝關節反向
+        - 左側腿部(leg_idx 4-6): 髖關節和膝關節反向  
+        - 額外踝關節反向: R0(leg_idx=1), L0(leg_idx=6), R1(leg_idx=2), L1(leg_idx=5)
+        """
+        
+        # 右側腿部踝關節反向（當不使用膝關節信號控制踝關節時）
+        if not self.use_knee_signal_for_ankle:
+            if leg_idx <= 3 and joint_idx == 3:
+                motor_angle = -motor_angle
+        
+        # 左側腿部髖關節和膝關節反向
+        if leg_idx >= 4 and (joint_idx == 1 or joint_idx == 2):
+            motor_angle = -motor_angle
+        
+        # 額外的踝關節反向（當不使用膝關節信號控制踝關節時）
+        if not self.use_knee_signal_for_ankle:
+            if (leg_idx == 1 or leg_idx == 6) and joint_idx == 3:  # R0, L0前腿
+                motor_angle = -motor_angle
+            if (leg_idx == 2 or leg_idx == 5) and joint_idx == 3:  # R1, L1中腿
+                motor_angle = -motor_angle
+
+        return motor_angle
+    
+    def replace_ankle_with_knee_signal(self, motor_angle, leg_idx, joint_idx):
+        """將踝關節訊號替換為膝關節訊號 - 參考controller2"""
+        if joint_idx == 3 and self.use_knee_signal_for_ankle:
+            # 使用同隻腳膝關節的處理過訊號
+            if leg_idx in self.processed_signals and 2 in self.processed_signals[leg_idx]:
+                knee_signal = self.processed_signals[leg_idx][2][self.current_step]
+                return knee_signal * 1  # 可以調整係數
+            else:
+                # 如果沒有膝關節信號，使用基礎踝關節角度
+                return motor_angle
+        return motor_angle
+    
+    def apply_height_offset(self, motor_angle, leg_idx, joint_idx):
+        """應用機身高度偏移 - 參考controller2"""
+        # 只對膝關節，以及在不使用膝關節信號控制踝關節時的踝關節應用偏移
+        should_apply_offset = (
+            joint_idx == 2 or  # 膝關節
+            (joint_idx == 3 and not self.use_knee_signal_for_ankle)  # 踝關節(條件性)
+        )
+    
+        if should_apply_offset:
+            # 右側腿部(1-3)用負偏移，左側腿部(4-6)用正偏移
+            offset_direction = -1 if leg_idx <= 3 else 1
+            return motor_angle + (self.body_height_offset * offset_direction)
+        
+        return motor_angle
+    
     def apply_fixed_angles_with_corrections(self, corrections):
-        """應用固定角度和Transformer修正"""
+        """應用固定角度和Transformer修正 - 使用controller2的處理流程"""
         # 基礎固定角度
         base_angles = {
             'hip': 0.0,      # 髖關節固定為0
-            'knee': 0.5,     # 膝關節基礎角度
-            'ankle': 0.5     # 踝關節基礎角度
+            'knee': 0.0,     # 膝關節基礎角度
+            'ankle': 0.0     # 踝關節基礎角度
         }
+        
+        # 初始化處理過的訊號記錄（如果不存在）
+        if not hasattr(self, 'processed_signals'):
+            self.processed_signals = {}
+            for leg_idx in range(1, self.NUM_LEGS + 1):
+                self.processed_signals[leg_idx] = {}
+                for joint_idx in range(1, 4):
+                    self.processed_signals[leg_idx][joint_idx] = np.zeros(self.MAX_STEPS + 1)
         
         for leg_idx in range(1, self.NUM_LEGS + 1):
             if leg_idx not in self.motors:
                 continue
             
-            # 確定左右腿的方向係數
-            direction = 1 if leg_idx <= 3 else -1  # 右腿為正，左腿為負
-            
             for joint_idx in range(1, 4):  # 1:髖, 2:膝, 3:踝
                 if joint_idx not in self.motors[leg_idx]:
                     continue
                 
+                # 步驟1: 獲取基礎角度
                 if joint_idx == 1:  # 髖關節
                     motor_angle = base_angles['hip']
                 elif joint_idx == 2:  # 膝關節
-                    motor_angle = base_angles['knee'] * direction
-                    # 加入Transformer修正
-                    correction_idx = leg_idx - 1
+                    motor_angle = base_angles['knee']
+                else:  # 踝關節
+                    motor_angle = base_angles['ankle']
+                
+                # 步驟2: 踝關節訊號替換（如果啟用）
+                motor_angle = self.replace_ankle_with_knee_signal(motor_angle, leg_idx, joint_idx)
+                
+                # 步驟3: 特殊關節處理
+                motor_angle = self.process_special_joints(motor_angle, leg_idx, joint_idx)
+                
+                # 步驟4: 訊號方向調整（馬達轉動方向相關）
+                motor_angle = self.adjust_signal_direction(motor_angle, leg_idx, joint_idx)
+                
+                # 步驟5: 應用機身高度偏移
+                motor_angle = self.apply_height_offset(motor_angle, leg_idx, joint_idx)
+                
+                # 步驟6: 添加Transformer修正量（只對膝關節）
+                if joint_idx == 2:  # 只有膝關節接受Transformer修正
+                    correction_idx = leg_idx - 1  # 6個膝關節對應6個修正量
                     if correction_idx < len(corrections):
                         motor_angle += corrections[correction_idx]
-                else:  # 踝關節
-                    motor_angle = base_angles['ankle'] * direction
+                        if self.current_step % 200 == 0:
+                            print(f"腿{leg_idx}膝關節修正量: {corrections[correction_idx]:.4f}")
                 
-                # 發送到馬達
+                # 步驟7: 儲存處理過的訊號
+                self.processed_signals[leg_idx][joint_idx][self.current_step] = motor_angle
+                
+                # 步驟8: 發送到馬達
                 try:
                     if self.current_step >= self.control_start_step:
                         self.motors[leg_idx][joint_idx].setPosition(motor_angle)
@@ -595,8 +723,112 @@ class HexapodExperimentalController:
         except Exception as e:
             print(f"❌ 載入檢查點失敗: {e}")
     
+    def save_episode_data(self):
+        """保存episode訓練數據到檔案（重置前）"""
+        episode_data = {
+            'episode_count': self.episode_count,
+            'total_steps': self.total_steps,
+            'episode_total_reward': getattr(self, 'episode_total_reward', 0),
+            'termination_reason': self.termination_reason,
+            'current_step': self.current_step,
+            'best_reward': self.best_reward,
+            # 深拷貝訓練數據以避免引用問題
+            'states': [s for s in self.episode_states] if self.episode_states else [],
+            'actions': [a.clone() if hasattr(a, 'clone') else a for a in self.episode_actions],
+            'rewards': self.episode_rewards.copy() if self.episode_rewards else [],
+            'logprobs': [lp.clone() if hasattr(lp, 'clone') else lp for lp in self.episode_logprobs],
+            'values': [v.clone() if hasattr(v, 'clone') else v for v in self.episode_values],
+            'dones': self.episode_dones.copy() if self.episode_dones else [],
+            # 保存緩存狀態
+            'state_buffer': list(self.state_buffer),
+            'action_buffer': list(self.action_buffer),
+            'reward_buffer': list(self.reward_buffer)
+        }
+        
+        # 保存到檔案
+        episode_file = os.path.join(self.logs_dir, "pending_episode_data.pkl")
+        try:
+            with open(episode_file, 'wb') as f:
+                pickle.dump(episode_data, f)
+            print(f"✅ Episode數據已保存到檔案")
+        except Exception as e:
+            print(f"❌ 保存episode數據失敗: {e}")
+    
+    def load_and_process_episode_data(self):
+        """載入並處理episode訓練數據（重置後立即調用）"""
+        episode_file = os.path.join(self.logs_dir, "pending_episode_data.pkl")
+        
+        if not os.path.exists(episode_file):
+            return False
+        
+        try:
+            with open(episode_file, 'rb') as f:
+                episode_data = pickle.load(f)
+            
+            print(f"✅ 載入待處理Episode數據")
+            print(f"   Episode: {episode_data.get('episode_count', 0)}")
+            print(f"   總獎勵: {episode_data.get('episode_total_reward', 0):.4f}")
+            print(f"   終止原因: {episode_data.get('termination_reason', '未知')}")
+            print(f"   步數: {episode_data.get('current_step', 0)}")
+            
+            # 恢復訓練統計（但不是當前episode狀態）
+            self.total_steps = episode_data.get('total_steps', 0)
+            self.best_reward = episode_data.get('best_reward', -float('inf'))
+            
+            # 執行PPO訓練（如果有足夠數據）
+            states = episode_data.get('states', [])
+            actions = episode_data.get('actions', [])
+            rewards = episode_data.get('rewards', [])
+            logprobs = episode_data.get('logprobs', [])
+            values = episode_data.get('values', [])
+            dones = episode_data.get('dones', [])
+            
+            if len(states) >= 10:  # 需要足夠的數據進行訓練
+                print("執行延遲的PPO訓練...")
+                try:
+                    # 轉換數據格式
+                    rewards_tensor = torch.tensor(rewards)
+                    logprobs_tensor = torch.stack(logprobs) if logprobs else torch.tensor([])
+                    values_tensor = torch.stack(values).squeeze() if values else torch.tensor([])
+                    dones_tensor = torch.tensor(dones)
+                    
+                    # 執行PPO更新
+                    loss_info = self.trainer.update(states, actions, rewards_tensor, 
+                                                  logprobs_tensor, values_tensor, dones_tensor)
+                    
+                    print(f"PPO更新完成 - PG損失: {loss_info['pg_loss']:.4f}, "
+                          f"V損失: {loss_info['v_loss']:.4f}, "
+                          f"熵損失: {loss_info['entropy_loss']:.4f}")
+                    
+                    # 更新最佳獎勵
+                    episode_reward = episode_data.get('episode_total_reward', 0)
+                    if episode_reward > self.best_reward:
+                        self.best_reward = episode_reward
+                        self.save_training_checkpoint()  # 保存最佳模型
+                    
+                except Exception as e:
+                    print(f"❌ PPO訓練失敗: {e}")
+            else:
+                print(f"⚠️ 數據不足，跳過PPO訓練 (數據量: {len(states)})")
+            
+            # 清理episode數據檔案
+            os.remove(episode_file)
+            print("✅ Episode數據檔案已清理")
+            
+            return True
+            
+        except Exception as e:
+            print(f"❌ 載入episode數據失敗: {e}")
+            # 嘗試清理損壞的檔案
+            try:
+                os.remove(episode_file)
+                print("🗑️ 已清理損壞的數據檔案")
+            except:
+                pass
+            return False
+    
     def reset_episode(self):
-        """重置episode"""
+        """重置episode - 使用simulationReset()避免控制器中斷"""
         print(f"\n=== Episode {self.episode_count} 結束 ===")
         if hasattr(self, 'episode_total_reward'):
             print(f"總獎勵: {self.episode_total_reward:.4f}")
@@ -604,24 +836,37 @@ class HexapodExperimentalController:
             print(f"終止原因: {self.termination_reason}")
         print(f"步數: {self.current_step}")
         
-        # 執行PPO訓練
-        if len(self.episode_states) > 0:
+        # ✅ 先執行PPO訓練（在重置前）
+        if len(self.episode_states) >= 10:  # 確保有足夠數據
+            print("執行PPO訓練...")
             self.train_ppo()
+        else:
+            print(f"⚠️ 數據不足，跳過PPO訓練 (數據量: {len(self.episode_states)})")
         
-        # 重載環境
+        # 保存最佳模型
+        if hasattr(self, 'episode_total_reward') and self.episode_total_reward > self.best_reward:
+            self.best_reward = self.episode_total_reward
+            self.save_training_checkpoint()
+            print(f"🏆 新的最佳獎勵: {self.best_reward:.4f}")
+        
+        # ✅ 使用simulationReset()重置環境
+        print("重置模擬環境...")
         try:
-            self.robot.worldReload()
-            time.sleep(0.1)  # 等待重載完成
+            self.robot.simulationReset()
+            print("✅ 模擬環境重置成功")
         except Exception as e:
-            print(f"環境重載失敗: {e}")
+            print(f"❌ 模擬環境重置失敗: {e}")
         
-        # 重置狀態
+        # 更新episode計數
+        self.episode_count += 1
+        
+        # 重置當前episode狀態
         self.current_step = 0
         self.episode_terminated = False
         self.termination_reason = None
-        self.episode_count += 1
+        self.episode_total_reward = 0  # 重置當前episode獎勵
         
-        # 清空episode數據
+        # 清空當前episode數據
         self.episode_states.clear()
         self.episode_actions.clear()
         self.episode_rewards.clear()
@@ -633,30 +878,82 @@ class HexapodExperimentalController:
         self._initialize_buffers()
         
         print(f"開始 Episode {self.episode_count}")
+        
+        # 定期保存檢查點
+        if self.episode_count % 10 == 0:
+            self.save_training_checkpoint()
+            print(f"📁 已保存檢查點 (Episode {self.episode_count})")
     
     def train_ppo(self):
-        """執行PPO訓練"""
+        """執行PPO訓練 - 修正設備分配問題"""
         if len(self.episode_states) < 10:  # 需要足夠的數據
+            print(f"⚠️ 訓練數據不足: {len(self.episode_states)}")
             return
         
         try:
-            # 轉換數據格式
+            # ✅ 轉換數據格式並確保設備一致性
             states = self.episode_states
             actions = self.episode_actions
-            rewards = torch.tensor(self.episode_rewards)
-            logprobs = torch.stack(self.episode_logprobs)
-            values = torch.stack(self.episode_values).squeeze()
-            dones = torch.tensor(self.episode_dones)
+            rewards = torch.FloatTensor(self.episode_rewards).to(self.device)
+            
+            # 處理logprobs和values
+            if len(self.episode_logprobs) > 0:
+                logprobs = torch.stack([lp.to(self.device) for lp in self.episode_logprobs])
+            else:
+                logprobs = torch.zeros(len(states)).to(self.device)
+            
+            if len(self.episode_values) > 0:
+                values = torch.stack([v.to(self.device) for v in self.episode_values]).squeeze()
+            else:
+                values = torch.zeros(len(states)).to(self.device)
+            
+            # ✅ 確保dones維度與其他張量匹配
+            dones_list = self.episode_dones
+            if len(dones_list) > len(states):
+                dones_list = dones_list[:len(states)]  # 截斷到正確長度
+            elif len(dones_list) < len(states):
+                # 補齊到正確長度（用0填充）
+                dones_list.extend([0.0] * (len(states) - len(dones_list)))
+            
+            dones = torch.FloatTensor(dones_list).to(self.device)
+            
+            # 確保維度一致
+            if len(values.shape) == 0:
+                values = values.unsqueeze(0)
+            if len(logprobs.shape) == 0:
+                logprobs = logprobs.unsqueeze(0)
+            
+            # ✅ 確保所有張量長度一致
+            min_length = min(len(states), len(actions), rewards.shape[0], 
+                           logprobs.shape[0], values.shape[0], dones.shape[0])
+            
+            if min_length < len(states):
+                states = states[:min_length]
+                actions = actions[:min_length]
+                rewards = rewards[:min_length]
+                logprobs = logprobs[:min_length]
+                values = values[:min_length]
+                dones = dones[:min_length]
+            
+            print(f"訓練數據維度檢查:")
+            print(f"  states: {len(states)}")
+            print(f"  actions: {len(actions)}")
+            print(f"  rewards: {rewards.shape}, device: {rewards.device}")
+            print(f"  logprobs: {logprobs.shape}, device: {logprobs.device}")
+            print(f"  values: {values.shape}, device: {values.device}")
+            print(f"  dones: {dones.shape}, device: {dones.device}")
             
             # 執行PPO更新
             loss_info = self.trainer.update(states, actions, rewards, logprobs, values, dones)
             
-            print(f"PPO更新 - PG損失: {loss_info['pg_loss']:.4f}, "
+            print(f"PPO更新完成 - PG損失: {loss_info['pg_loss']:.4f}, "
                   f"V損失: {loss_info['v_loss']:.4f}, "
                   f"熵損失: {loss_info['entropy_loss']:.4f}")
             
         except Exception as e:
             print(f"PPO訓練錯誤: {e}")
+            import traceback
+            traceback.print_exc()
     
     def run(self):
         """主運行循環"""
@@ -667,7 +964,10 @@ class HexapodExperimentalController:
         if os.path.exists(latest_checkpoint):
             self.load_training_checkpoint(latest_checkpoint)
         
+        # 初始化episode獎勵
         self.episode_total_reward = 0
+        
+        print(f"當前Episode: {self.episode_count}")
         
         while self.robot.step(self.timestep) != -1:
             # 控制實驗平台
@@ -682,11 +982,30 @@ class HexapodExperimentalController:
             
             # 檢查終止條件
             if self.check_termination_conditions(raw_imu_data):
+                # ✅ 在reset之前先完成當前步的數據收集
+                
+                # 獲取Transformer動作（即使終止也要完整收集這一步的數據）
+                transformer_corrections = self.get_transformer_action()
+                self.action_buffer.append(transformer_corrections)
+                
+                # 計算最終獎勵
+                current_reward = self.calculate_reward(raw_imu_data)
+                self.reward_buffer.append(np.array([current_reward]))
+                self.episode_rewards.append(current_reward)
+                self.episode_total_reward += current_reward
+                
+                # 標記為終止
                 self.episode_dones.append(1.0)
+                
+                # 應用控制指令（最後一次）
+                self.apply_fixed_angles_with_corrections(transformer_corrections)
+                
+                # 然後重置episode
                 self.reset_episode()
                 continue
-            else:
-                self.episode_dones.append(0.0)
+            
+            # 非終止情況的正常流程
+            self.episode_dones.append(0.0)
             
             # 獲取Transformer動作
             transformer_corrections = self.get_transformer_action()
