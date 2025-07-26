@@ -1,0 +1,74 @@
+六足機器人地形適應控制系統 - 小目標
+核心目標
+使用Transformer + PPO強化學習訓練六足機器人在會變換請斜角度的平台保持機身水平，機器人會原地站在平台上，由transformer產生修正量控制膝關節，其餘關節保持固定角度
+
+技術架構
+1. AI架構
+
+Policy Network: Transformer
+訓練算法: PPO (Proximal Policy Optimization)
+模擬環境: Webots
+感測器限制: 僅使用IMU（慣性測量單元）
+
+2. Transformer設計規格
+python# 網絡架構
+sequence_length = n 	# 根據控制頻率設定，n*頻率=1秒，n目前訂為50
+state_dim = 6           # 由歐拉角計算六隻腳方向的分量，e¹ = (pitch + roll)√(1/2) - 前右腳，需要同時響應俯仰和翻滾，e² = roll - 右中腳，主要響應翻滾運動，e³ = (-pitch + roll)√(1/2) - 後右腳，翻滾為正，俯仰為負，e⁴ = (-pitch - roll)√(1/2) - 後左腳，兩個運動都為負向響應，e⁵ = -roll - 左中腳，翻滾的反向響應，e⁶ = (pitch - roll)√(1/2) - 前左腳，俯仰為正，翻滾為負
+action_dim = 6         # 6維修正量 (6腿 × 1關節)，只有膝關節
+reward_dim = 1          # 標量獎勵值
+hidden_size = 128       # 隱藏層維度
+n_layer = 3             # Transformer層數
+n_head = 2              # 單頭注意力
+dropout = 0.1           # Dropout率
+
+# 輸入序列結構
+input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, action_t, reward_t)]
+3. 混合控制系統
+
+控制架構: 固定角度訊號 + 強化學習
+基礎步態: 原地站立
+適應修正: Transformer學習地形適應修正量
+最終輸出: at = ac + ar (固定角度訊號 + RL修正)
+
+4. 獎勵函數設計
+    (1) 控制量獎勵(r_c) 
+        公式： r_c=exp(-|a|²/0.9^2),a是12個transformer輸出的修正量絕對值取平均
+
+        目的： 避免機器人做多餘的動作
+        條件： 無特殊條件
+        說明： 讓tr只做必要的控制，不需要控制的時候越貼近原步態越好
+        權重：w_c
+
+    (2) 跌倒懲罰 (p_s)
+        公式： p_s = -1
+
+        目的： 懲罰機器人跌倒
+        條件： 機器人跌倒時，也就是pitch or roll>=0.524
+        說明： 懲罰項，確保機器人保持穩定
+
+    (3) 總獎勵函數
+        R=r_s+p_s
+
+# 早期終止條件
+- pitch or roll > 0.524 rad 
+- 到達最大step=2000
+
+6. 訓練過程數據保存
+使用PyTorch中包含的或是其他現有的紀錄方式
+包含內容: 優化器狀態 + 訓練統計 + 課程學習進度+獎勵組成
+7.當需要重新採集數據時，需要使用wb_supervisor_world_reload()來重新載入環境，重新載入會讓controller執行中斷，所以必要的資訊要先記錄在檔案，controller刷新後重新讀取
+
+當前狀態
+
+✅ 已完成: CPG六足控制代碼
+✅ 已完成: 完整Webots機器人模型
+✅ 已完成: 加入transformer
+
+
+實作優先順序
+
+設計Transformer架構 - 實現狀態-動作-獎勵序列處理
+實作混合控制系統 - 整合CPG與Transformer
+設計獎勵函數 
+訓練實作
+模型優化測試
