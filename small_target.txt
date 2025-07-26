@@ -26,7 +26,7 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
 3. 混合控制系統
 
 控制架構: 固定角度訊號 + 強化學習
-基礎步態: 原地站立
+基礎步態: 原地站立，訊號固定0度，並且需要調整訊號方向、應用機身高度偏移
 適應修正: Transformer學習地形適應修正量
 最終輸出: at = ac + ar (固定角度訊號 + RL修正)
 
