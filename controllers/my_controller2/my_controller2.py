@@ -81,7 +81,7 @@ class HexapodTransformer(nn.Module):
         
         # 輸出投影並限制範圍
         corrections = self.output_projection(last_hidden)
-        corrections = torch.tanh(corrections) * self.max_correction
+        #corrections = torch.tanh(corrections) * self.max_correction
         
         return corrections
 
