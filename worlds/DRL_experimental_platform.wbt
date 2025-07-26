@@ -1,0 +1,2028 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Parquetry.proto"
+
+WorldInfo {
+  basicTimeStep 20
+}
+Viewpoint {
+  orientation 0.153142719526078 -0.005414724790399514 -0.9881892471645303 3.2114437968571408
+  position 4.892393146747738 0.023131564150374845 1.944773209037249
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF Hexa Robot {
+  translation -1.998263554336484e-05 -6.717453049720142e-05 0.594874168439292
+  rotation 0.7745860789038269 0.44724068777510484 0.447204845196075 1.823424331732345
+  children [
+    GPS {
+    }
+    Pen {
+      translation 0 -0.02 6.7342e-08
+      rotation 1 0 0 -1.5707996938995747
+      inkColor 1 1 0
+      leadSize 0.05
+    }
+    InertialUnit {
+      translation 0 0.03 0
+      rotation 0.7745961212986637 0.44721407003194 0.44721407003194 -1.823475307179586
+      name "inertialunit1"
+    }
+    DEF forward Solid {
+      translation 0.052 0.035 0.09
+      rotation 0 1 0 0.5235996938995747
+      children [
+        Shape {
+          geometry Cone {
+            bottomRadius 0.02
+            height 0.05
+          }
+        }
+      ]
+      name "solid(2)"
+    }
+    DEF Body Group {
+      children [
+        DEF Trunk Group {
+          children [
+            DEF L0 Solid {
+              translation 0.104 0.012 0.06
+              rotation 0 1 0 1.047
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(3)"
+              boundingObject USE L0
+            }
+            DEF L1 Solid {
+              translation 0.104 0.012 -0.06
+              rotation 0 1 0 20.94
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(8)"
+              boundingObject USE L0
+            }
+            DEF L2 Solid {
+              translation 0 0.012 -0.119
+              rotation 0 1 0 3.141
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(9)"
+              boundingObject USE L0
+            }
+            DEF R0 Solid {
+              translation 0 0.012 0.12
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(1)"
+              boundingObject USE L0
+            }
+            DEF R1 Solid {
+              translation -0.104 0.012 0.06
+              rotation 0 1 0 5.235
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(6)"
+              boundingObject USE L0
+            }
+            DEF R2 Solid {
+              translation -0.104 0.012 -0.06
+              rotation 0 1 0 4.188
+              children [
+                DEF L0 Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Box {
+                    size 0.024 0.05 0.03
+                  }
+                }
+              ]
+              name "solid(10)"
+              boundingObject USE L0
+            }
+            DEF Main1 Solid {
+              translation 0 0.036 0
+              rotation 1 0 0 1.5707996938995747
+              children [
+                DEF Main Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Cylinder {
+                    height 0.001
+                    radius 0.105
+                  }
+                }
+              ]
+              boundingObject USE Main
+              physics Physics {
+                density 15000
+              }
+            }
+            DEF Main2 Solid {
+              translation 0 -0.015000000000000001 0
+              rotation 1 0 0 1.5707996938995747
+              children [
+                DEF Main Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.1 0.1 0.1
+                      emissiveColor 0.1 0.1 0.1
+                    }
+                  }
+                  geometry Cylinder {
+                    height 0.001
+                    radius 0.105
+                  }
+                }
+              ]
+              name "solid(7)"
+              boundingObject USE Main
+              physics Physics {
+                density 15000
+              }
+            }
+          ]
+        }
+      ]
+    }
+    DEF Legs Group {
+      children [
+        DEF L0 HingeJoint {
+          jointParameters HingeJointParameters {
+            position -6.229704105772172e-07
+            axis 0 1 0
+            anchor 0.104 0.012 0.06
+          }
+          device [
+            DEF L00 RotationalMotor {
+              name "L00"
+              minPosition -1
+              maxPosition 1
+            }
+          ]
+          endPoint Solid {
+            translation 0.10799995242265861 7.148087179033313e-06 0.06199998944709046
+            rotation -4.37438255266721e-07 -0.9999999999990942 1.272881020045052e-06 0.5764006930083997
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics DEF STANDARD_PHYSICS Physics {
+                }
+              }
+              DEF Seat_1 Solid {
+                translation 0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF L01 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position -2.7569754023356143e-07
+                  axis 0 0 -1
+                  anchor 0.024 0.0195 -0.004
+                }
+                device [
+                  DEF L01 RotationalMotor {
+                    name "L01"
+                    minPosition -1
+                    maxPosition 1
+                  }
+                ]
+                endPoint Solid {
+                  translation 0.024 0.0195 -9.540979117872439e-18
+                  rotation 0.9999999999999809 1.3784877009715287e-07 1.3784826375618255e-07 1.5708000000000173
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation 0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation 0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF L02 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -4.731808372585092e-10
+                        axis 0 1 0
+                        anchor 0.056 0 0
+                      }
+                      device [
+                        DEF L02 RotationalMotor {
+                          name "L02"
+                          minPosition -1
+                          maxPosition 1
+                        }
+                      ]
+                      endPoint Solid {
+                        translation 0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                }
+              }
+            ]
+            name "(7)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+          }
+        }
+        DEF L1 HingeJoint {
+          jointParameters HingeJointParameters {
+            position 6.760166274462841e-07
+            axis 0 1 0
+            anchor 0.104 0.012 -0.06
+          }
+          device [
+            DEF L10 RotationalMotor {
+              name "L10"
+              minPosition -1
+              maxPosition 1
+            }
+          ]
+          endPoint Solid {
+            translation 0.1129999608441993 -4.16030981176263e-06 -0.06700002610473864
+            rotation -1.402008552172559e-07 0.999999999999924 -3.643310987433633e-07 0.5708004184038599
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation 0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF L11 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position -2.9958550974499275e-07
+                  axis 0 0 -1
+                  anchor 0.024 0.0195 -0.004
+                }
+                device [
+                  DEF L11 RotationalMotor {
+                    name "L11"
+                    minPosition -1
+                    maxPosition 1
+                  }
+                ]
+                endPoint Solid {
+                  translation 0.024 0.0195 -3.122502256758253e-17
+                  rotation 0.9999999999999776 1.4979275485286798e-07 1.4979220459511436e-07 1.5708000000000197
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation 0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation 0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF L12 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -2.7689069610203345e-10
+                        axis 0 1 0
+                        anchor 0.056 0 0
+                      }
+                      device [
+                        DEF L12 RotationalMotor {
+                          name "L12"
+                          minPosition -1
+                          maxPosition 1
+                        }
+                      ]
+                      endPoint Solid {
+                        translation 0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                }
+              }
+            ]
+            name "(8)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+          }
+        }
+        DEF L2 HingeJoint {
+          jointParameters HingeJointParameters {
+            position 7.157836841910851e-07
+            axis 0 1 0
+            anchor 0 0.012 -0.119
+          }
+          device [
+            DEF L20 RotationalMotor {
+              name "L20"
+              minPosition -1
+              maxPosition 1
+            }
+          ]
+          endPoint Solid {
+            translation -0.002000021003019133 7.339718930242031e-06 -0.14099995017545855
+            rotation 4.4187463412713684e-07 0.999999999999797 4.587816463944233e-07 1.5871021309891142
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation 0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF L21 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position -1.8797833096144475e-07
+                  axis 0 0 -1
+                  anchor 0.024 0.0195 -0.004
+                }
+                device [
+                  DEF L21 RotationalMotor {
+                    name "L21"
+                    minPosition -1
+                    maxPosition 1
+                  }
+                ]
+                endPoint Solid {
+                  translation 0.024 0.0195 -1.8214596497756474e-17
+                  rotation 0.9999999999999912 9.3989165554321e-08 9.398881991604313e-08 1.5708000000000042
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation 0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation 0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF L22 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -1.022232119736328e-10
+                        axis 0 1 0
+                        anchor 0.056 0 0
+                      }
+                      device [
+                        DEF L22 RotationalMotor {
+                          name "L22"
+                          minPosition -1
+                          maxPosition 1
+                        }
+                      ]
+                      endPoint Solid {
+                        translation 0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation -1 0 0 -5.307179586466759e-06
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                }
+              }
+            ]
+            name "(9)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+          }
+        }
+        DEF R0 HingeJoint {
+          jointParameters HingeJointParameters {
+            position 6.726786992268804e-07
+            axis 0 1 0
+            anchor 0 0.012 0.12
+          }
+          device [
+            DEF R00 RotationalMotor {
+              name "R00"
+              minPosition -1
+              maxPosition 1
+            }
+          ]
+          endPoint Solid {
+            translation 3.2411824593135224e-09 2.720766029553484e-06 0.13000005846837687
+            rotation -2.165922039103521e-07 0.9999999999999578 -1.9406028274779885e-07 1.553599719727412
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation -0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF R01 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 2.083255885368794e-07
+                  axis 0 0 -1
+                  anchor -0.024 0.0195 -0.004
+                }
+                device [
+                  DEF R01 RotationalMotor {
+                    name "R01"
+                    minPosition -1
+                    maxPosition 1
+                  }
+                ]
+                endPoint Solid {
+                  translation -0.024 0.0195 -3.5561831257524545e-17
+                  rotation 0.9999999999993873 -9.942527942575472e-07 -4.867564117038953e-07 1.570800000000565
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation -0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation -0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF R02 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -2.2420728477316617e-08
+                        axis 0 1 0
+                        anchor -0.056 0 0
+                      }
+                      device [
+                        DEF R02 RotationalMotor {
+                          name "R02"
+                          minPosition -1
+                          maxPosition 1
+                        }
+                      ]
+                      endPoint Solid {
+                        translation -0.056 0 0
+                        rotation 0 -1 0 2.9802322387695313e-08
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation -1 0 0 -5.307179586466759e-06
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                }
+              }
+            ]
+            name "(10)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+          }
+        }
+        DEF R1 HingeJoint {
+          jointParameters HingeJointParameters {
+            position -6.857852382169538e-07
+            axis 0 1 0
+            anchor -0.104 0.012 0.06
+          }
+          device [
+            DEF R10 RotationalMotor {
+              name "R10"
+              minPosition -1
+              maxPosition 1
+            }
+          ]
+          endPoint Solid {
+            translation -0.12000007597976065 1.6059746439991973e-07 0.06999997672210569
+            rotation -1.3081486354801902e-07 0.9999999999999409 -3.1742373839705527e-07 0.5363985336499847
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation -0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF R11 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 2.1810843253992063e-07
+                  axis 0 0 -1
+                  anchor -0.024 0.0195 -0.004
+                }
+                device [
+                  DEF R11 RotationalMotor {
+                    name "R11"
+                    minPosition -1
+                    maxPosition 1
+                  }
+                ]
+                endPoint Solid {
+                  translation -0.024 0.0195 -2.862293735361732e-17
+                  rotation 0.9999999999999881 -1.0905421623070719e-07 -1.09053815652959e-07 1.5708000000000066
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation -0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation -0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF R12 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position 9.847120367158047e-11
+                        axis 0 1 0
+                        anchor -0.056 0 0
+                      }
+                      device [
+                        DEF R12 RotationalMotor {
+                          name "R12"
+                          minPosition -1
+                          maxPosition 100000000109297
+                        }
+                      ]
+                      endPoint Solid {
+                        translation -0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                }
+              }
+            ]
+            name "(11)"
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+          }
+        }
+        DEF R2 HingeJoint {
+          jointParameters HingeJointParameters {
+            position -6.767923191851292e-07
+            axis 0 1 0
+            anchor -0.104 0.012 -0.06
+          }
+          device [
+            DEF R20 RotationalMotor {
+              name "R20"
+              minPosition -1
+              maxPosition 1
+            }
+          ]
+          endPoint Solid {
+            translation -0.11800006436853114 2.515953732762713e-06 -0.06900002087047641
+            rotation 1.5157633297271802e-07 -0.9999999999996896 -7.732717387232176e-07 0.5208001042892051
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.1 0.1 0.1
+                    emissiveColor 0.1 0.1 0.1
+                  }
+                }
+                geometry Cylinder {
+                  height 0.05
+                  radius 0.0125
+                }
+              }
+              DEF Seat_0 Solid {
+                translation 0 -0.009 -0.01075
+                children [
+                  DEF Seat Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.057
+                    }
+                  }
+                ]
+                name "Seat_0"
+                boundingObject USE Seat
+                physics USE STANDARD_PHYSICS
+              }
+              DEF Seat_1 Solid {
+                translation -0.024 0.01 -0.007
+                rotation 1 0 0 1.5708
+                children [
+                  DEF Seat_s Shape {
+                    appearance Appearance {
+                      material Material {
+                        diffuseColor 0.1 0.1 0.1
+                        emissiveColor 0.1 0.1 0.1
+                      }
+                    }
+                    geometry Box {
+                      size 0.024 0.028 0.052
+                    }
+                  }
+                ]
+                name "Seat_1"
+                boundingObject USE Seat_s
+                physics USE STANDARD_PHYSICS
+              }
+              DEF R21 HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 2.3442005119502635e-07
+                  axis 0 0 -1
+                  anchor -0.024 0.0195 -0.004
+                }
+                device [
+                  DEF R21 RotationalMotor {
+                    name "R21"
+                    minPosition -1
+                    maxPosition 1000004359517266
+                  }
+                ]
+                endPoint Solid {
+                  translation -0.024 0.0195 -2.862293735361732e-17
+                  rotation 0.9999999999999862 -1.1721002563678349e-07 -1.1720959498332476e-07 1.570800000000012
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 0.1 0.1 0.1
+                          emissiveColor 0.1 0.1 0.1
+                        }
+                      }
+                      geometry Cylinder {
+                        height 0.05
+                        radius 0.0125
+                      }
+                    }
+                    DEF Seat_2 Solid {
+                      translation -0.01425 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_2"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF Seat_3 Solid {
+                      translation -0.04225 0 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        DEF Seat_z Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Box {
+                            size 0.024 0.052 0.028
+                          }
+                        }
+                      ]
+                      name "Seat_3"
+                      boundingObject USE Seat_z
+                      physics USE STANDARD_PHYSICS
+                    }
+                    DEF R22 HingeJoint {
+                      jointParameters HingeJointParameters {
+                        position -1.9754726008985218e-10
+                        axis 0 1 0
+                        anchor -0.056 0 0
+                      }
+                      device [
+                        DEF R22 RotationalMotor {
+                          name "R22"
+                          minPosition -1
+                          maxPosition 1
+                        }
+                      ]
+                      endPoint Solid {
+                        translation -0.056 0 0
+                        rotation 0 1 0 0
+                        children [
+                          Shape {
+                            appearance Appearance {
+                              material Material {
+                                diffuseColor 0.1 0.1 0.1
+                                emissiveColor 0.1 0.1 0.1
+                              }
+                            }
+                            geometry Cylinder {
+                              height 0.05
+                              radius 0.0125
+                            }
+                          }
+                          DEF Seat_4 Solid {
+                            translation 0 -0.007 0.0095
+                            children [
+                              DEF Seat_s Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.024 0.028 0.052
+                                }
+                              }
+                            ]
+                            name "Seat_4"
+                            boundingObject USE Seat_s
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_5 Solid {
+                            translation 0 0.002 0.0505
+                            children [
+                              DEF Seat_5 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.021 0.009 0.03
+                                }
+                              }
+                            ]
+                            name "Seat_5"
+                            boundingObject USE Seat_5
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_6 Solid {
+                            translation 0 0.002 0.0755
+                            children [
+                              DEF Seat_6 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.017 0.009 0.02
+                                }
+                              }
+                            ]
+                            name "Seat_6"
+                            boundingObject USE Seat_6
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_7 Solid {
+                            translation 0 0.002 0.093
+                            children [
+                              DEF Seat_7 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Box {
+                                  size 0.014 0.009 0.015
+                                }
+                              }
+                            ]
+                            name "Seat_7"
+                            boundingObject USE Seat_7
+                            physics USE STANDARD_PHYSICS
+                          }
+                          DEF Seat_8 Solid {
+                            translation 0 0.002 0.1005
+                            rotation 1 0 0 -3.1415853071795863
+                            children [
+                              DEF Seat_8 Shape {
+                                appearance Appearance {
+                                  material Material {
+                                    diffuseColor 0.1 0.1 0.1
+                                    emissiveColor 0.1 0.1 0.1
+                                  }
+                                }
+                                geometry Capsule {
+                                  height 0.008
+                                  radius 0.007
+                                }
+                              }
+                            ]
+                            name "Seat_8"
+                            boundingObject USE Seat_8
+                            physics USE STANDARD_PHYSICS
+                          }
+                        ]
+                        boundingObject DEF Servo Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.1 0.1 0.1
+                              emissiveColor 0.1 0.1 0.1
+                            }
+                          }
+                          geometry Cylinder {
+                            height 0.05
+                            radius 0.0125
+                          }
+                        }
+                        physics USE STANDARD_PHYSICS
+                      }
+                    }
+                  ]
+                  boundingObject USE Servo
+                  physics USE STANDARD_PHYSICS
+                }
+              }
+            ]
+            name ""
+            boundingObject USE Servo
+            physics USE STANDARD_PHYSICS
+          }
+        }
+      ]
+    }
+    DEF sensor_body1 DistanceSensor {
+      translation -0.034377840426420475 0.043 -0.05594222833965361
+      rotation 0 -1 0 4.188793946718347
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 1 0 0
+              emissiveColor 1 0.501961 0.501961
+              specularColor 1 0 0
+            }
+            textureTransform TextureTransform {
+              center 0.24 0
+              translation 0 0.24
+            }
+          }
+          geometry Sphere {
+            radius 0.004
+          }
+        }
+      ]
+      name "sensor_body1"
+      lookupTable [
+        0 1000 0
+        0.1 1000 0.1
+        0.45 525 0
+        0.8 50 0.1
+        0.81 50 0
+      ]
+    }
+  ]
+  physics Physics {
+    mass 10
+  }
+  controller "<none>"
+  supervisor TRUE
+}
+DEF experimental_platform Solid {
+  translation 0 0 0.5
+  children [
+    DEF platform_motor HingeJoint {
+      jointParameters HingeJointParameters {
+      }
+      endPoint Solid {
+        rotation 1 0 0 0
+        children [
+          DEF platform Shape {
+            appearance PBRAppearance {
+              baseColor 0.764706 0.764706 0.764706
+              metalness 0
+            }
+            geometry Box {
+              size 0.8 0.8 0.01
+            }
+          }
+        ]
+        name "solid(1)"
+        boundingObject USE platform
+      }
+    }
+  ]
+  name "solid(1)"
+}
+RectangleArena {
+  floorSize 5 5
+  floorAppearance Parquetry {
+    type "light strip"
+  }
+}
