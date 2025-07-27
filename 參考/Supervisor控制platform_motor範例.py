@@ -68,7 +68,7 @@ while supervisor.step(timestep) != -1:
     current_time = supervisor.getTime()
     
     # 計算正弦波角度: 0.2 * sin(2π * t)
-    sine_angle = 0.2 * math.sin(1.0 * math.pi * current_time)+0.1
+    sine_angle = 0.2 * math.sin(1.0 * math.pi * current_time)
     
     # 生成隨機雜訊: ±0.05 弧度
     #noise = (random.random() - 0.5) * 2.0 * 0.001
