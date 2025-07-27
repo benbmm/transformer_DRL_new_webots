@@ -73,15 +73,6 @@ input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, acti
 
 當前狀態
 
-✅ 已完成: CPG六足控制代碼
 ✅ 已完成: 完整Webots機器人模型
 ✅ 已完成: 加入transformer
 
-
-實作優先順序
-
-設計Transformer架構 - 實現狀態-動作-獎勵序列處理
-實作混合控制系統 - 整合CPG與Transformer
-設計獎勵函數 
-訓練實作
-模型優化測試
