@@ -1,6 +1,7 @@
 六足機器人地形適應控制系統 - 小目標
 核心目標
 使用Transformer + PPO強化學習訓練六足機器人在會變換傾斜角度的平台保持機身水平，機器人會原地站在平台上，由transformer產生修正量控制膝關節以平衡機身，其餘關節保持固定角度
+參考Decision Transformer的強化學習問題轉化為序列建模架構，也就是說輸入是return_t-1 state_t-1 action_t-1 return_t state_t action_t序列，並解只採用state的輸出，也就是說，action_t-1是state_t-1的輸出，action_t是state_t的輸出。
 
 技術架構
 1. AI架構
