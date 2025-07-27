@@ -89,8 +89,11 @@ def test_trained_model():
             print("❌ 找不到已訓練的模型，請先進行訓練")
             return False
         
+        # ✅ 智能設備選擇
         print(f"📁 載入模型: {model_path}")
-        
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        print(f"🎮 使用設備: {device}")
         # 創建環境
         env = HexapodBalanceEnv(max_episode_steps=2000, sequence_length=50)
         print("✅ 環境創建完成")
@@ -107,7 +110,7 @@ def test_trained_model():
         print("✅ 策略網路創建完成")
         
         # 載入訓練好的模型
-        checkpoint = torch.load(model_path, map_location='cpu')
+        checkpoint = torch.load(model_path, map_location=device)
         policy.load_state_dict(checkpoint['policy_state_dict'])
         print("✅ 模型權重載入完成")
         
@@ -228,12 +231,24 @@ def run_test_episodes(env, wrapper, num_episodes=5):
     # 顯示統計結果
     avg_reward = sum(all_rewards) / len(all_rewards)
     avg_length = sum(all_lengths) / len(all_lengths)
+
+    avg_reward_per_step = avg_reward / avg_length if avg_length > 0 else 0
     
     print(f"\n📊 測試結果統計:")
     print(f"  平均獎勵: {avg_reward:.3f}")
+    print(f"  平均每步獎勵: {avg_reward_per_step:.3f}")
     print(f"  平均長度: {avg_length:.1f}")
     print(f"  最佳獎勵: {max(all_rewards):.3f}")
     print(f"  最差獎勵: {min(all_rewards):.3f}")
+    
+    if avg_reward_per_step >= 0.8:
+        print("🏆 性能評級: 優秀 (≥0.8)")
+    elif avg_reward_per_step >= 0.5:
+        print("🥈 性能評級: 良好 (≥0.5)")
+    elif avg_reward_per_step >= 0.2:
+        print("🥉 性能評級: 一般 (≥0.2)")
+    else:
+        print("❌ 性能評級: 差 (<0.2)")
 
 def get_training_config():
     """獲取訓練配置"""
@@ -269,7 +284,7 @@ def get_training_config():
             
             # 學習配置
             learning_rate=3e-4,
-            target_reward=0.5,            # 較低目標用於快速測試
+            target_reward=500,            # 較低目標用於快速測試
             
             # 日誌配置
             use_wandb=False,
@@ -294,7 +309,7 @@ def get_training_config():
             
             # 學習配置
             learning_rate=3e-4,
-            target_reward=0.8,            # 高目標獎勵
+            target_reward=1600,            # 高目標獎勵
             
             # 日誌配置
             use_wandb=False,              # 可設為True啟用Weights & Biases
@@ -311,32 +326,68 @@ def check_quick_test_mode():
 
 def find_best_model():
     """尋找最佳訓練模型"""
+    import glob
+    
+    # ✅ 更全面的搜尋路徑
     possible_paths = [
         os.path.join(current_dir, "model_best.pt"),
-        os.path.join(current_dir, "..", "..", "models", "model_best.pt"),
-        os.path.join(current_dir, "..", "..", "runs", "*", "model_best.pt"),
+        os.path.join(current_dir, "runs", "*", "model_best.pt"),
+        os.path.join(current_dir, "runs", "*", "model_final.pt"),  # 也尋找final模型
+        os.path.join(current_dir, "model_*.pt"),  # 當前目錄中的所有模型
     ]
     
-    for path_pattern in possible_paths:
-        if '*' in path_pattern:
-            import glob
-            matches = glob.glob(path_pattern)
-            if matches:
-                # 返回最新的檔案
-                return max(matches, key=os.path.getmtime)
-        else:
-            if os.path.exists(path_pattern):
-                return path_pattern
+    print("🔍 搜尋已訓練模型...")
     
+    for path_pattern in possible_paths:
+        try:
+            print(f"  檢查路徑: {path_pattern}")
+            
+            if '*' in path_pattern:
+                # ✅ 安全的 glob 操作
+                matches = glob.glob(path_pattern)
+                if matches:
+                    print(f"  找到 {len(matches)} 個匹配檔案")
+                    # ✅ 安全的檔案時間檢查
+                    best_match = None
+                    best_time = 0
+                    
+                    for match in matches:
+                        try:
+                            mtime = os.path.getmtime(match)
+                            if mtime > best_time:
+                                best_time = mtime
+                                best_match = match
+                        except (OSError, PermissionError) as e:
+                            print(f"    ⚠️ 無法讀取檔案時間 {match}: {e}")
+                            continue
+                    
+                    if best_match:
+                        print(f"  ✅ 選擇最新檔案: {best_match}")
+                        return best_match
+            else:
+                # ✅ 安全的檔案存在檢查
+                if os.path.exists(path_pattern) and os.path.isfile(path_pattern):
+                    print(f"  ✅ 找到檔案: {path_pattern}")
+                    return path_pattern
+                    
+        except Exception as e:
+            print(f"  ⚠️ 檢查路徑 {path_pattern} 時出錯: {e}")
+            continue
+    
+    print("  ❌ 未找到任何模型檔案")
     return None
 
 def find_latest_checkpoint():
     """尋找最新的檢查點"""
-    runs_dir = os.path.join(current_dir, "..", "..", "runs")
-    if not os.path.exists(runs_dir):
-        return None
-    
     import glob
+    runs_dir = os.path.join(current_dir, "runs")
+    if not os.path.exists(runs_dir):
+        # 也嘗試在當前目錄直接尋找
+        current_pattern = os.path.join(current_dir, "model_*.pt")
+        checkpoints = glob.glob(current_pattern)
+        if checkpoints:
+            return max(checkpoints, key=os.path.getmtime)
+        return None
     
     # 尋找所有模型檔案
     pattern = os.path.join(runs_dir, "*", "model_*.pt")

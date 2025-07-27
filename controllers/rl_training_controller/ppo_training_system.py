@@ -83,8 +83,9 @@ class GAE:
             returns: [seq_len] 回報
         """
         seq_len = len(rewards)
-        advantages = torch.zeros(seq_len)
-        returns = torch.zeros(seq_len)
+        device = rewards.device if hasattr(rewards, 'device') else 'cpu'
+        advantages = torch.zeros(seq_len, device=device)
+        returns = torch.zeros(seq_len, device=device)
         
         # 從後往前計算
         gae = 0
@@ -93,7 +94,7 @@ class GAE:
                 next_non_terminal = 1.0 - dones[t]
                 next_val = next_value
             else:
-                next_non_terminal = 1.0 - dones[t + 1]
+                next_non_terminal = 1.0 - dones[t]
                 next_val = values[t + 1]
             
             # TD error
@@ -346,41 +347,48 @@ class PPOTrainer:
     
     def ppo_update(self, batch_data):
         """執行PPO更新"""
+        device = self.policy.device
         # 計算優勢函數和回報
         all_advantages, all_returns = self.compute_advantages_and_returns(batch_data)
         
         # 準備訓練數據
         train_data = []
         for i in range(len(batch_data['states_seq'])):
-            # 構建序列數據
             seq_len = len(batch_data['states_seq'][i])
             
-            # 創建填充的序列（確保長度為sequence_length）
-            padded_states = torch.zeros(self.config.sequence_length, 6)
-            padded_actions = torch.zeros(self.config.sequence_length, 6)
-            padded_rewards = torch.zeros(self.config.sequence_length)
+            # 確保序列不超過最大長度
+            max_len = min(seq_len, self.config.sequence_length)
+            
+            # 截取序列
+            states_seq = batch_data['states_seq'][i][:max_len]
+            actions_seq = batch_data['actions_seq'][i][:max_len]
+            rewards_seq = batch_data['rewards_seq'][i][:max_len]
+            
+            # 創建填充的序列
+            padded_states = torch.zeros(self.config.sequence_length, 6, device=device)
+            padded_actions = torch.zeros(self.config.sequence_length, 6, device=device)
+            padded_rewards = torch.zeros(self.config.sequence_length, device=device)
             
             # 填充實際數據
-            actual_len = min(seq_len, self.config.sequence_length)
-            padded_states[:actual_len] = batch_data['states_seq'][i][:actual_len]
-            padded_actions[:actual_len] = batch_data['actions_seq'][i][:actual_len]
-            padded_rewards[:actual_len] = batch_data['rewards_seq'][i][:actual_len]
+            padded_states[:max_len] = states_seq.to(device)
+            padded_actions[:max_len] = actions_seq.to(device)
+            padded_rewards[:max_len] = rewards_seq.to(device)
             
-            # 為每個時間步創建訓練數據
-            for t in range(actual_len):
+            # 為每個有效時間步創建訓練數據
+            for t in range(max_len):
                 train_data.append({
                     'states_seq': padded_states,
                     'actions_seq': padded_actions,
                     'rewards_seq': padded_rewards,
-                    'action': batch_data['actions_seq'][i][t],
-                    'old_log_prob': batch_data['log_probs_seq'][i][t],
-                    'advantage': all_advantages[i][t],
-                    'return': all_returns[i][t],
-                    'old_value': batch_data['values_seq'][i][t]
+                    'action': batch_data['actions_seq'][i][t].to(device),
+                    'old_log_prob': batch_data['log_probs_seq'][i][t].to(device),
+                    'advantage': all_advantages[i][t].to(device),
+                    'return': all_returns[i][t].to(device), 
+                    'old_value': batch_data['values_seq'][i][t].to(device)
                 })
         
         # 標準化優勢函數
-        advantages = torch.tensor([data['advantage'] for data in train_data])
+        advantages = torch.stack([data['advantage'] for data in train_data])
         advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
         for i, data in enumerate(train_data):
             data['advantage'] = advantages[i]
@@ -603,7 +611,9 @@ class PPOTrainer:
             
             # 早停檢查
             if avg_reward >= self.config.target_reward:
-                print(f"🎯 達到目標獎勵 {self.config.target_reward}! 訓練完成!")
+                print(f"🎯 達到目標總獎勵 {self.config.target_reward}! 訓練完成!")
+                print(f"   當前平均獎勵: {avg_reward:.1f}")
+                print(f"   相當於每步獎勵: {avg_reward/self.config.max_episode_steps:.3f}")
                 break
         
         # 訓練完成

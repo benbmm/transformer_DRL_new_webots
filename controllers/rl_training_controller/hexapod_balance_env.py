@@ -6,10 +6,10 @@ from collections import deque
 from controller import Supervisor
 
 try:
-    import gym
-    from gym import spaces
+    import gymnasium as gym
+    from gymnasium import spaces
 except ImportError:
-    sys.exit('請安裝gym: pip install gym')
+    sys.exit('請安裝gymnasium: pip install gymnasium')
 
 
 class HexapodBalanceEnv(Supervisor, gym.Env):
@@ -32,30 +32,7 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
         self.body_height_offset = 0.5
         self.control_start_step = 100
         
-        # 環境規格 - 修復新版本gym的API變化
-        try:
-            # 嘗試新版本的API
-            from gymnasium.envs.registration import EnvSpec
-            self.spec = EnvSpec(
-                id='HexapodBalance-v0',
-                entry_point=None,  # 新版本需要的參數
-                max_episode_steps=max_episode_steps
-            )
-        except (ImportError, TypeError):
-            try:
-                # 嘗試舊版本的API
-                self.spec = gym.envs.registration.EnvSpec(
-                    id='HexapodBalance-v0', 
-                    max_episode_steps=max_episode_steps
-                )
-            except TypeError:
-                # 如果都不行，創建一個簡單的spec對象
-                class SimpleSpec:
-                    def __init__(self, id, max_episode_steps):
-                        self.id = id
-                        self.max_episode_steps = max_episode_steps
-                
-                self.spec = SimpleSpec('HexapodBalance-v0', max_episode_steps)
+        self.spec = type('SimpleSpec', (), {'id': 'HexapodBalance-v0','max_episode_steps':max_episode_steps})()
         
         # 狀態和動作空間定義
         self._setup_spaces()

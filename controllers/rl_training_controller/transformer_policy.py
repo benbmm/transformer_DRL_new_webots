@@ -93,7 +93,7 @@ class SequenceEmbedding(nn.Module):
         self.type_embed = nn.Embedding(3, hidden_size)  # 0:state, 1:action, 2:reward
         
         # 時間步嵌入
-        self.timestep_embed = nn.Embedding(1000, hidden_size)  # 支援最多1000步
+        self.timestep_embed = nn.Embedding(5000, hidden_size)  # 支援最多1000步
         
         self.dropout = nn.Dropout(0.1)
     
@@ -177,6 +177,9 @@ class TransformerPolicyNetwork(nn.Module):
         action_range=1.0       # 動作範圍 [-action_range, action_range]
     ):
         super().__init__()
+
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(f"🎮 使用設備: {self.device}")
         
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -210,6 +213,7 @@ class TransformerPolicyNetwork(nn.Module):
         
         # 初始化權重
         self.apply(self._init_weights)
+        self.to(self.device)
         
         print(f"✅ Transformer Policy Network 初始化完成")
         print(f"📊 參數: state_dim={state_dim}, action_dim={action_dim}")
@@ -232,10 +236,19 @@ class TransformerPolicyNetwork(nn.Module):
         """計算模型參數量"""
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
     
+    def _ensure_device(self, tensor):
+        """確保張量在正確設備上"""
+        if isinstance(tensor, np.ndarray):
+            return torch.tensor(tensor, dtype=torch.float32).to(self.device)
+        elif isinstance(tensor, torch.Tensor):
+            return tensor.to(self.device)
+        else:
+            return torch.tensor(tensor, dtype=torch.float32).to(self.device)
+    
     def create_causal_mask(self, seq_len):
         """創建因果遮罩，確保當前位置只能看到過去的信息"""
-        mask = torch.triu(torch.ones(seq_len, seq_len), diagonal=1).bool()
-        return mask
+        mask = torch.tril(torch.ones(seq_len, seq_len, device=self.device)).bool()
+        return ~mask
     
     def forward(self, states, actions, rewards, return_dict=False):
         """
@@ -251,6 +264,9 @@ class TransformerPolicyNetwork(nn.Module):
             如果return_dict=False: (action_mean, action_logstd, value)
             如果return_dict=True: 包含詳細信息的字典
         """
+        states = self._ensure_device(states)
+        actions = self._ensure_device(actions)
+        rewards = self._ensure_device(rewards)
         # 自動處理單樣本輸入
         if len(states.shape) == 2:  # 單樣本 [seq_len, state_dim]
             states = states.unsqueeze(0)    # [1, seq_len, state_dim]
@@ -337,6 +353,11 @@ class TransformerPolicyNetwork(nn.Module):
             entropy: scalar 或 [batch_size] 策略熵
             value: scalar 或 [batch_size] 狀態價值
         """
+        states = self._ensure_device(states)
+        actions = self._ensure_device(actions)
+        rewards = self._ensure_device(rewards)
+        if action is not None:
+            action = self._ensure_device(action)
         action_mean, action_logstd, value = self.forward(states, actions, rewards)
         action_std = torch.exp(action_logstd)
         
@@ -372,6 +393,9 @@ class TransformerPolicyNetwork(nn.Module):
         Returns:
             value: scalar 或 [batch_size] 狀態價值
         """
+        states = self._ensure_device(states)
+        actions = self._ensure_device(actions)
+        rewards = self._ensure_device(rewards)
         _, _, value = self.forward(states, actions, rewards)
         return value
     
@@ -387,6 +411,9 @@ class TransformerPolicyNetwork(nn.Module):
         Returns:
             dist: torch.distributions.Normal 動作分佈
         """
+        states = self._ensure_device(states)
+        actions = self._ensure_device(actions)
+        rewards = self._ensure_device(rewards)
         action_mean, action_logstd, _ = self.forward(states, actions, rewards)
         action_std = torch.exp(action_logstd)
         return Normal(action_mean, action_std)
@@ -397,9 +424,12 @@ class TransformerPolicyWrapper:
     Transformer Policy的包裝器，提供便利的介面用於與環境互動
     """
     
-    def __init__(self, policy_network, device='cpu'):
+    def __init__(self, policy_network, device=None):
+        if device is None:
+            self.device = policy_network.device
+        else:
+            self.device = device
         self.policy = policy_network.to(device)
-        self.device = device
         
         # 用於推理時的序列緩存
         self.reset_sequence_cache()
@@ -481,6 +511,14 @@ class TransformerPolicyWrapper:
                 self.rewards_cache.squeeze(0)   # [seq_len]
             )
         return value.cpu().item()  # 返回標量
+    
+    def get_sequence_data(self):
+        """獲取當前序列數據（供訓練器使用）"""
+        return {
+            'states': self.states_cache.squeeze(0),   # [seq_len, state_dim]
+            'actions': self.actions_cache.squeeze(0), # [seq_len, action_dim]  
+            'rewards': self.rewards_cache.squeeze(0)  # [seq_len]
+        }
 
 
 # 測試和使用範例
