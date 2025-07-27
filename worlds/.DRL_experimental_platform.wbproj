@@ -5,6 +5,6 @@ sceneTreePerspectives: 000000ff00000001000000030000001c000000c0000000fa010000000
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 1 "controllers/my_controller2/my_controller2.py" "controllers/my_controller_experimental_platform/my_controller_experimental_platform.py"
+textFiles: 2 "controllers/my_controller2/my_controller2.py" "controllers/my_controller_experimental_platform/my_controller_experimental_platform.py" "controllers/rl_training_controller/rl_training_controller.py"
 globalOptionalRendering: CoordinateSystem
 consoles: Console:All:All
