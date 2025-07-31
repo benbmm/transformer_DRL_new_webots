@@ -35,10 +35,11 @@ class WebotsTrXLArgs(Args):
     final_lr: float = 1e-5
     update_epochs: int = 4              # 增加更新輪數
     
-    # Transformer 參數
+    # Transformer 參數 - 調整以匹配觀測維度
     trxl_memory_length: int = 64        # 適合機器人任務的記憶長度
-    trxl_dim: int = 256                 # 降低維度節省計算
+    trxl_dim: int = 6                   # 設為觀測維度，避免額外的線性層
     trxl_num_layers: int = 2            # 減少層數
+    trxl_num_heads: int = 2             # 調整注意力頭數以匹配較小的維度
     
     # Webots 專用參數
     max_episode_steps: int = 2000       # episode 最大步數

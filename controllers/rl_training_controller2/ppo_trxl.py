@@ -240,21 +240,15 @@ class Agent(nn.Module):
         super().__init__()
         self.obs_shape = observation_space.shape
         self.max_episode_steps = max_episode_steps
-
-        if len(self.obs_shape) > 1:
-            self.encoder = nn.Sequential(
-                layer_init(nn.Conv2d(3, 32, 8, stride=4)),
-                nn.ReLU(),
-                layer_init(nn.Conv2d(32, 64, 4, stride=2)),
-                nn.ReLU(),
-                layer_init(nn.Conv2d(64, 64, 3, stride=1)),
-                nn.ReLU(),
-                nn.Flatten(),
-                layer_init(nn.Linear(64 * 7 * 7, args.trxl_dim)),
-                nn.ReLU(),
-            )
+        self.obs_dim = observation_space.shape[0]  # 原始觀測維度
+        
+        # 移除encoder，確保觀測維度與Transformer維度匹配
+        if self.obs_dim != args.trxl_dim:
+            # 如果觀測維度與Transformer維度不匹配，添加一個簡單的線性映射
+            self.obs_projection = layer_init(nn.Linear(self.obs_dim, args.trxl_dim))
         else:
-            self.encoder = layer_init(nn.Linear(observation_space.shape[0], args.trxl_dim))
+            # 如果維度匹配，使用恆等映射
+            self.obs_projection = nn.Identity()
 
         self.transformer = Transformer(
             args.trxl_num_layers, args.trxl_dim, args.trxl_num_heads, self.max_episode_steps, args.trxl_positional_encoding
@@ -297,19 +291,15 @@ class Agent(nn.Module):
             )
 
     def get_value(self, x, memory, memory_mask, memory_indices):
-        if len(self.obs_shape) > 1:
-            x = self.encoder(x.permute((0, 3, 1, 2)) / 255.0)
-        else:
-            x = self.encoder(x)
+        # 直接處理觀測，不使用encoder
+        x = self.obs_projection(x)
         x, _ = self.transformer(x, memory, memory_mask, memory_indices)
         x = self.hidden_post_trxl(x)
         return self.critic(x).flatten()
 
     def get_action_and_value(self, x, memory, memory_mask, memory_indices, action=None):
-        if len(self.obs_shape) > 1:
-            x = self.encoder(x.permute((0, 3, 1, 2)) / 255.0)
-        else:
-            x = self.encoder(x)
+        # 直接處理觀測，不使用encoder
+        x = self.obs_projection(x)
         x, memory = self.transformer(x, memory, memory_mask, memory_indices)
         x = self.hidden_post_trxl(x)
         self.x = x
