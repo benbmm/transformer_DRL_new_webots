@@ -9,8 +9,8 @@ WorldInfo {
   basicTimeStep 20
 }
 Viewpoint {
-  orientation 0.12342679047619114 0.011095865604129297 -0.9922916452128586 2.9636528714205332
-  position 1.7677265016372279 0.26880534921017146 0.8729894304571844
+  orientation 0.2895432741723515 -0.001546944131821159 -0.9571636742717555 3.1518202496288867
+  position 7.96046488240579 0.2523471600319342 4.990335880966628
 }
 TexturedBackground {
 }
@@ -1991,7 +1991,7 @@ DEF Hexa Robot {
   physics Physics {
     mass 10
   }
-  controller "rl_training_controller"
+  controller "rl_training_controller2"
   supervisor TRUE
 }
 DEF experimental_platform Solid {
@@ -2009,7 +2009,7 @@ DEF experimental_platform Solid {
               metalness 0
             }
             geometry Box {
-              size 0.8 0.8 0.05
+              size 2.5 2.5 0.05
             }
           }
         ]

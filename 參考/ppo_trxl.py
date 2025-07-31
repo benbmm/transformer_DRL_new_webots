@@ -335,10 +335,10 @@ class Agent(nn.Module):
 
 
 if __name__ == "__main__":
-    args = tyro.cli(Args)
-    args.batch_size = int(args.num_envs * args.num_steps)
-    args.minibatch_size = int(args.batch_size // args.num_minibatches)
-    args.num_iterations = args.total_timesteps // args.batch_size
+    args = tyro.cli(Args)   #用來讀取命令中的參數，如python script.py --seed 42 --cuda False --env_id "CartPole-v1"
+    args.batch_size = int(args.num_envs * args.num_steps)   #num_envs:環境並行數量，num_steps:收集資料(policy rollout)時step數量，batch_size:總資料量
+    args.minibatch_size = int(args.batch_size // args.num_minibatches)  #minibatch_size:在一個epochs中一個batch_size的資料會分成num_minibatches次minibatch_size訓練
+    args.num_iterations = args.total_timesteps // args.batch_size   #一次迭代包含Policy Rollout、訓練epochs
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
 
     if args.track:
