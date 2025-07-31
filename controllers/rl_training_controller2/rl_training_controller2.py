@@ -5,7 +5,7 @@ Webots 控制器程式 - 六足機器人 TrXL-PPO 訓練
 
 import sys
 import os
-import time
+import time  
 import numpy as np
 import torch
 import torch.nn as nn
@@ -47,8 +47,151 @@ class WebotsTrXLArgs(Args):
     webots_mode: str = "training"       # "training" 或 "evaluation"
 
 
+class SingleEnvMemoryManager:
+    """單環境記憶體管理器 - 簡化版本"""
+    
+    def __init__(self, max_episode_steps, memory_length, num_layers, embed_dim):
+        self.max_episode_steps = max_episode_steps
+        self.memory_length = memory_length
+        self.num_layers = num_layers
+        self.embed_dim = embed_dim
+        
+        # 當前episode的記憶體
+        self.current_episode_memory = torch.zeros(
+            max_episode_steps, num_layers, embed_dim
+        )
+        self.current_episode_step = 0
+        
+        # 生成記憶體遮罩和索引（一次性計算）
+        self._setup_memory_patterns()
+        
+    def _setup_memory_patterns(self):
+        """設置記憶體遮罩和索引模式"""
+        # 生成下三角遮罩
+        self.memory_masks = []
+        for i in range(self.memory_length):
+            mask = torch.zeros(self.memory_length, dtype=torch.bool)
+            mask[:i] = True  # 只能看到之前的步驟
+            self.memory_masks.append(mask)
+        
+        # 生成滑動窗口索引
+        self.memory_indices = []
+        for step in range(self.max_episode_steps):
+            # 計算當前步驟的記憶體窗口
+            start_idx = max(0, step - self.memory_length + 1)
+            end_idx = step + 1
+            
+            # 創建索引數組
+            indices = torch.arange(start_idx, end_idx)
+            
+            # 如果不足memory_length，用0填充
+            if len(indices) < self.memory_length:
+                padding = torch.zeros(self.memory_length - len(indices), dtype=torch.long)
+                indices = torch.cat([padding, indices])
+            
+            self.memory_indices.append(indices)
+        
+        self.memory_indices = torch.stack(self.memory_indices)
+    
+    def get_memory_window(self, step):
+        """獲取指定步驟的記憶體窗口"""
+        step = min(step, self.max_episode_steps - 1)
+        indices = self.memory_indices[step]
+        mask = self.memory_masks[min(step, self.memory_length - 1)]
+        
+        # 提取記憶體窗口
+        memory_window = self.current_episode_memory[indices]  # [memory_length, num_layers, embed_dim]
+        
+        return memory_window.unsqueeze(0), mask.unsqueeze(0), indices.unsqueeze(0)
+    
+    def update_memory(self, step, new_memory):
+        """更新指定步驟的記憶體"""
+        if step < self.max_episode_steps:
+            self.current_episode_memory[step] = new_memory.squeeze(0)
+            self.current_episode_step = step
+    
+    def reset(self):
+        """重置episode記憶體"""
+        self.current_episode_memory.zero_()
+        self.current_episode_step = 0
+
+
+class SingleEnvRolloutBuffer:
+    """單環境rollout緩衝區"""
+    
+    def __init__(self, num_steps, obs_shape, action_dim, memory_length, num_layers, embed_dim):
+        self.num_steps = num_steps
+        self.action_dim = action_dim
+        
+        # 基本數據緩衝區
+        self.observations = torch.zeros((num_steps,) + obs_shape)
+        self.actions = torch.zeros((num_steps, action_dim))
+        self.log_probs = torch.zeros((num_steps, action_dim))
+        self.rewards = torch.zeros(num_steps)
+        self.values = torch.zeros(num_steps)
+        self.dones = torch.zeros(num_steps, dtype=torch.bool)
+        
+        # 記憶體相關緩衝區
+        self.memory_windows = torch.zeros((num_steps, memory_length, num_layers, embed_dim))
+        self.memory_masks = torch.zeros((num_steps, memory_length), dtype=torch.bool)
+        self.memory_indices = torch.zeros((num_steps, memory_length), dtype=torch.long)
+        
+        # Episode邊界追蹤
+        self.episode_starts = torch.zeros(num_steps, dtype=torch.bool)
+        self.episode_ids = torch.zeros(num_steps, dtype=torch.long)
+        
+        self.step = 0
+        self.current_episode_id = 0
+    
+    def add(self, obs, action, log_prob, reward, value, done, 
+            memory_window, memory_mask, memory_indices, episode_start=False):
+        """添加一步數據"""
+        if self.step >= self.num_steps:
+            raise IndexError("Buffer is full")
+        
+        self.observations[self.step] = obs
+        self.actions[self.step] = action
+        self.log_probs[self.step] = log_prob
+        self.rewards[self.step] = reward
+        self.values[self.step] = value
+        self.dones[self.step] = done
+        
+        self.memory_windows[self.step] = memory_window.squeeze(0)
+        self.memory_masks[self.step] = memory_mask.squeeze(0)
+        self.memory_indices[self.step] = memory_indices.squeeze(0)
+        
+        self.episode_starts[self.step] = episode_start
+        self.episode_ids[self.step] = self.current_episode_id
+        
+        if done:
+            self.current_episode_id += 1
+        
+        self.step += 1
+    
+    def get_batch_data(self):
+        """獲取批次數據用於訓練"""
+        return {
+            'observations': self.observations[:self.step],
+            'actions': self.actions[:self.step],
+            'log_probs': self.log_probs[:self.step],
+            'rewards': self.rewards[:self.step],
+            'values': self.values[:self.step],
+            'dones': self.dones[:self.step],
+            'memory_windows': self.memory_windows[:self.step],
+            'memory_masks': self.memory_masks[:self.step],
+            'memory_indices': self.memory_indices[:self.step],
+            'episode_starts': self.episode_starts[:self.step],
+            'episode_ids': self.episode_ids[:self.step],
+        }
+    
+    def reset(self):
+        """重置緩衝區"""
+        self.step = 0
+        self.current_episode_id = 0
+
+
 class WebotsTrainer:
-    """Webots 環境下的 TrXL-PPO 訓練器"""
+    """Webots 環境下的 TrXL-PPO 訓練器 - 修正版本"""
     
     def __init__(self, args):
         self.args = args
@@ -79,6 +222,24 @@ class WebotsTrainer:
         # 創建優化器
         self.optimizer = optim.AdamW(self.agent.parameters(), lr=args.init_lr)
         
+        # 修正：創建記憶體管理器
+        self.memory_manager = SingleEnvMemoryManager(
+            args.max_episode_steps,
+            args.trxl_memory_length,
+            args.trxl_num_layers,
+            args.trxl_dim
+        )
+        
+        # 修正：創建rollout緩衝區
+        self.rollout_buffer = SingleEnvRolloutBuffer(
+            args.num_steps,
+            self.env.observation_space.shape,
+            action_space_shape[0],  # 連續動作維度
+            args.trxl_memory_length,
+            args.trxl_num_layers,
+            args.trxl_dim
+        )
+        
         # 訓練狀態
         self.global_step = 0
         self.iteration = 0
@@ -92,13 +253,6 @@ class WebotsTrainer:
         # TensorBoard
         run_name = f"webots_hexapod_trxl_ppo_{int(time.time())}"
         self.writer = SummaryWriter(f"runs/{run_name}")
-        
-        # 記憶體相關
-        self.current_memory = torch.zeros(
-            (1, args.max_episode_steps, args.trxl_num_layers, args.trxl_dim), 
-            dtype=torch.float32
-        )
-        self.current_episode_step = 0
         
         print("🚀 Webots TrXL-PPO 訓練器初始化完成")
         print(f"📊 環境: {self.env.observation_space} -> {self.env.action_space}")
@@ -125,160 +279,122 @@ class WebotsTrainer:
         print("✅ 環境兼容性驗證通過")
 
     def collect_rollout(self):
-        """收集一個 rollout 的經驗"""
-        # 儲存 rollout 數據
-        observations = torch.zeros((self.args.num_steps, 1) + self.env.observation_space.shape)
-        actions = torch.zeros((self.args.num_steps, 1, self.env.action_space.shape[0]))
-        rewards = torch.zeros((self.args.num_steps, 1))
-        dones = torch.zeros((self.args.num_steps, 1))
-        log_probs = torch.zeros((self.args.num_steps, 1, self.env.action_space.shape[0]))
-        values = torch.zeros((self.args.num_steps, 1))
+        """收集一個 rollout 的經驗 - 修正版本"""
+        # 重置rollout緩衝區
+        self.rollout_buffer.reset()
         
-        # 簡化的記憶體處理
-        stored_memories = []
-        stored_memory_masks = torch.zeros((self.args.num_steps, 1, self.args.trxl_memory_length), dtype=torch.bool)
-        stored_memory_indices = torch.zeros((self.args.num_steps, 1, self.args.trxl_memory_length), dtype=torch.long)
-        
-        # 生成簡化的記憶體遮罩 (只需要一次)
-        memory_mask = torch.tril(torch.ones((self.args.trxl_memory_length, self.args.trxl_memory_length)), diagonal=-1)
         # 獲取當前觀測
         if not hasattr(self, 'current_obs'):
             obs, info = self.env.reset()
-            self.current_obs = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
-            self.current_done = torch.tensor([False])
-            self.current_episode_step = 0
-            self.current_memory = torch.zeros(
-                (1, self.args.max_episode_steps, self.args.trxl_num_layers, self.args.trxl_dim)
-            )
+            self.current_obs = torch.tensor(obs, dtype=torch.float32)
+            self.current_done = False
+            self.memory_manager.reset()
+            episode_start = True
+        else:
+            episode_start = False
         
         # 收集經驗
         for step in range(self.args.num_steps):
             self.global_step += 1
             
-            # 儲存當前觀測和done
-            observations[step] = self.current_obs
-            dones[step] = self.current_done.float()
-            
-            # 準備記憶體窗口
-            episode_step = min(self.current_episode_step, len(memory_indices) - 1)
-            stored_memory_masks[step] = memory_mask[
-                min(episode_step, self.args.trxl_memory_length - 1)
-            ].unsqueeze(0)
-            stored_memory_indices[step] = memory_indices[episode_step].unsqueeze(0)
-            
-            # 提取記憶體窗口
-            memory_window_indices = stored_memory_indices[step][0]  # [memory_length]
-            # 確保索引在有效範圍內
-            valid_indices = torch.clamp(memory_window_indices, 0, self.current_memory.shape[1] - 1)
-            memory_window = self.current_memory[0, valid_indices].unsqueeze(0)  # [1, memory_length, num_layers, dim]
+            # 獲取記憶體窗口
+            memory_window, memory_mask, memory_indices = self.memory_manager.get_memory_window(
+                self.memory_manager.current_episode_step
+            )
             
             # 智能體決策
             with torch.no_grad():
-                action, logprob, _, value, new_memory = self.agent.get_action_and_value(
-                    self.current_obs,
+                obs_tensor = self.current_obs.unsqueeze(0)
+                action, log_prob, _, value, new_memory = self.agent.get_action_and_value(
+                    obs_tensor,
                     memory_window,
-                    stored_memory_masks[step],
-                    stored_memory_indices[step]
+                    memory_mask,
+                    memory_indices
                 )
                 
                 # 更新記憶體
-                if self.current_episode_step < self.current_memory.shape[1]:
-                    self.current_memory[0, self.current_episode_step] = new_memory[0]
-                
-                # 儲存數據
-                actions[step] = action
-                log_probs[step] = logprob
-                values[step] = value
+                self.memory_manager.update_memory(
+                    self.memory_manager.current_episode_step, 
+                    new_memory
+                )
             
             # 執行動作
             obs, reward, terminated, truncated, info = self.env.step(action[0].cpu().numpy())
             done = terminated or truncated
             
+            # 存儲數據到緩衝區
+            self.rollout_buffer.add(
+                obs=self.current_obs,
+                action=action[0],
+                log_prob=log_prob[0],
+                reward=reward,
+                value=value[0],
+                done=done,
+                memory_window=memory_window,
+                memory_mask=memory_mask,
+                memory_indices=memory_indices,
+                episode_start=episode_start
+            )
+            
             # 更新狀態
-            rewards[step] = torch.tensor([reward])
-            self.current_obs = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
-            self.current_done = torch.tensor([done])
+            self.current_obs = torch.tensor(obs, dtype=torch.float32)
+            self.current_done = done
+            episode_start = False
             
             # Episode 管理
             if done:
                 # 記錄 episode 結果
                 self.episode_count += 1
                 episode_info = {
-                    'episode_reward': sum([rewards[i].item() for i in range(max(0, step-self.current_episode_step), step+1)]),
-                    'episode_length': self.current_episode_step + 1,
+                    'episode_reward': sum([self.rollout_buffer.rewards[i].item() 
+                                         for i in range(max(0, step - self.memory_manager.current_episode_step), step + 1)]),
+                    'episode_length': self.memory_manager.current_episode_step + 1,
                     'reason': info.get('reason', ''),
                     'stability_reward': info.get('stability_reward', 0),
                     'penalty': info.get('penalty', 0)
                 }
                 self.episode_infos.append(episode_info)
                 
-                # 保存當前記憶體
-                stored_memories.append(self.current_memory[0].clone())
-                
-                # 重置環境
+                # 重置環境和記憶體
                 obs, info = self.env.reset()
-                self.current_obs = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
-                self.current_done = torch.tensor([False])
-                self.current_episode_step = 0
-                self.current_memory = torch.zeros(
-                    (1, self.args.max_episode_steps, self.args.trxl_num_layers, self.args.trxl_dim)
-                )
+                self.current_obs = torch.tensor(obs, dtype=torch.float32)
+                self.current_done = False
+                self.memory_manager.reset()
+                episode_start = True
             else:
-                self.current_episode_step += 1
-            
-            # 為下一步準備記憶體引用
-            if step == 0 or done:
-                stored_memories.append(self.current_memory[0].clone())
+                self.memory_manager.current_episode_step += 1
         
-        # 確保記憶體列表長度正確
-        while len(stored_memories) < self.args.num_steps:
-            stored_memories.append(self.current_memory[0].clone())
-        
-        stored_memories = stored_memories[:self.args.num_steps]
-        
-        return {
-            'observations': observations,
-            'actions': actions,
-            'rewards': rewards,
-            'dones': dones,
-            'log_probs': log_probs,
-            'values': values,
-            'stored_memories': torch.stack(stored_memories),
-            'stored_memory_masks': stored_memory_masks,
-            'stored_memory_indices': stored_memory_indices
-        }
+        return self.rollout_buffer.get_batch_data()
 
     def compute_advantages(self, rollout_data):
-        """計算 GAE advantages"""
+        """計算 GAE advantages - 修正版本"""
         rewards = rollout_data['rewards']
         values = rollout_data['values']
         dones = rollout_data['dones']
         
         # 計算下一個值
         with torch.no_grad():
-            memory_window_indices = rollout_data['stored_memory_indices'][-1]
-            # 安全的記憶體索引提取
-            max_valid_idx = self.current_memory.shape[1] - 1
-            safe_indices = torch.clamp(memory_window_indices[0], 0, max_valid_idx)
-            memory_window = self.current_memory[:, safe_indices]
+            memory_window, memory_mask, memory_indices = self.memory_manager.get_memory_window(
+                self.memory_manager.current_episode_step
+            )
             
             next_value = self.agent.get_value(
-                self.current_obs,
+                self.current_obs.unsqueeze(0),
                 memory_window,
-                rollout_data['stored_memory_masks'][-1],
-                memory_window_indices
-            )
+                memory_mask,
+                memory_indices
+            )[0]
         
         # GAE 計算
         advantages = torch.zeros_like(rewards)
         lastgaelam = 0
         
-        for t in reversed(range(self.args.num_steps)):
-            if t == self.args.num_steps - 1:
-                nextnonterminal = 1.0 - self.current_done.float()
+        for t in reversed(range(len(rewards))):
+            if t == len(rewards) - 1:
+                nextnonterminal = 1.0 - float(self.current_done)
                 nextvalues = next_value
             else:
-                nextnonterminal = 1.0 - dones[t + 1]
+                nextnonterminal = 1.0 - dones[t + 1].float()
                 nextvalues = values[t + 1]
             
             delta = rewards[t] + self.args.gamma * nextvalues * nextnonterminal - values[t]
@@ -289,21 +405,21 @@ class WebotsTrainer:
         return advantages, returns
 
     def update_policy(self, rollout_data, advantages, returns):
-        """更新策略"""
-        # 展平數據
-        b_obs = rollout_data['observations'].reshape(-1, *rollout_data['observations'].shape[2:])
-        b_logprobs = rollout_data['log_probs'].reshape(-1, *rollout_data['log_probs'].shape[2:])
-        b_actions = rollout_data['actions'].reshape(-1, *rollout_data['actions'].shape[2:])
-        b_advantages = advantages.reshape(-1)
-        b_returns = returns.reshape(-1)
-        b_values = rollout_data['values'].reshape(-1)
-        b_memory_masks = rollout_data['stored_memory_masks'].reshape(-1, *rollout_data['stored_memory_masks'].shape[2:])
-        b_memory_indices = rollout_data['stored_memory_indices'].reshape(-1, *rollout_data['stored_memory_indices'].shape[2:])
-        stored_memories = rollout_data['stored_memories']
+        """更新策略 - 修正版本"""
+        # 準備訓練數據
+        b_obs = rollout_data['observations']
+        b_actions = rollout_data['actions']
+        b_log_probs = rollout_data['log_probs']
+        b_values = rollout_data['values']
+        b_memory_windows = rollout_data['memory_windows']
+        b_memory_masks = rollout_data['memory_masks']
+        b_memory_indices = rollout_data['memory_indices']
+        
+        batch_size = len(b_obs)
         
         # 學習率退火
         frac = 1.0 - (self.global_step - self.args.num_steps) / self.args.total_timesteps
-        frac = max(0.0, frac)  # 確保不會是負數
+        frac = max(0.0, frac)
         lr = frac * self.args.init_lr + (1 - frac) * self.args.final_lr
         for param_group in self.optimizer.param_groups:
             param_group["lr"] = lr
@@ -314,91 +430,53 @@ class WebotsTrainer:
         clipfracs = []
         
         for epoch in range(self.args.update_epochs):
-            b_inds = torch.randperm(self.args.batch_size)
+            # 修正：正確的批次處理
+            indices = torch.randperm(batch_size)
             
-            for start in range(0, self.args.batch_size, self.args.minibatch_size):
-                end = start + self.args.minibatch_size
-                mb_inds = b_inds[start:end]
+            for start in range(0, batch_size, self.args.minibatch_size):
+                end = min(start + self.args.minibatch_size, batch_size)
+                mb_inds = indices[start:end]
                 
-                # 修復記憶體窗口索引問題
-                try:
-                    # 獲取記憶體索引 - 需要確保形狀匹配
-                    mb_memory_indices = b_memory_indices[mb_inds]  # [minibatch_size, memory_length]
-                    
-                    # 創建記憶體窗口
-                    batch_size = len(mb_inds)
-                    memory_length = mb_memory_indices.shape[1]
-                    embed_dim = stored_memories.shape[-1]
-                    num_layers = stored_memories.shape[-2]
-                    
-                    # 為每個 minibatch 樣本創建記憶體窗口
-                    mb_memory_windows = torch.zeros(
-                        batch_size, memory_length, num_layers, embed_dim,
-                        device=stored_memories.device, dtype=stored_memories.dtype
-                    )
-                    
-                    # 逐個樣本處理記憶體窗口
-                    for i, sample_idx in enumerate(mb_inds):
-                        # 計算這個樣本來自哪個 step
-                        step_idx = sample_idx // 1  # 因為是單環境，每個step只有1個樣本
-                        
-                        # 確保 step_idx 在有效範圍內
-                        step_idx = min(step_idx, stored_memories.shape[0] - 1)
-                        
-                        # 獲取該步驟的記憶體
-                        step_memory = stored_memories[step_idx]  # [max_episode_steps, num_layers, embed_dim]
-                        
-                        # 獲取記憶體索引
-                        indices = mb_memory_indices[i]  # [memory_length]
-                        
-                        # 確保索引在有效範圍內
-                        indices = torch.clamp(indices, 0, step_memory.shape[0] - 1)
-                        
-                        # 提取記憶體窗口
-                        mb_memory_windows[i] = step_memory[indices]  # [memory_length, num_layers, embed_dim]
-                    
-                except Exception as e:
-                    print(f"記憶體窗口處理錯誤: {e}")
-                    # 使用備用方案：創建零記憶體
-                    batch_size = len(mb_inds)
-                    memory_length = self.args.trxl_memory_length
-                    mb_memory_windows = torch.zeros(
-                        batch_size, memory_length, self.args.trxl_num_layers, self.args.trxl_dim,
-                        device=self.device
-                    )
+                # 提取minibatch數據
+                mb_obs = b_obs[mb_inds]
+                mb_actions = b_actions[mb_inds]
+                mb_log_probs = b_log_probs[mb_inds]
+                mb_values = b_values[mb_inds]
+                mb_memory_windows = b_memory_windows[mb_inds]
+                mb_memory_masks = b_memory_masks[mb_inds]
+                mb_memory_indices = b_memory_indices[mb_inds]
+                mb_advantages = advantages[mb_inds]
+                mb_returns = returns[mb_inds]
                 
                 # 前向傳播
-                _, newlogprob, entropy, newvalue, _ = self.agent.get_action_and_value(
-                    b_obs[mb_inds], 
+                _, new_log_probs, entropy, new_values, _ = self.agent.get_action_and_value(
+                    mb_obs,
                     mb_memory_windows,
-                    b_memory_masks[mb_inds], 
-                    b_memory_indices[mb_inds], 
-                    b_actions[mb_inds]
+                    mb_memory_masks,
+                    mb_memory_indices,
+                    mb_actions
                 )
                 
                 # 策略損失
-                mb_advantages = b_advantages[mb_inds]
                 if self.args.norm_adv:
                     mb_advantages = (mb_advantages - mb_advantages.mean()) / (mb_advantages.std() + 1e-8)
                 
-                logratio = newlogprob - b_logprobs[mb_inds]
-                ratio = logratio.exp()
-
-                # 處理連續動作的形狀
-                if len(mb_advantages.shape) == 1:
-                    mb_advantages = mb_advantages.unsqueeze(1)
-                if len(ratio.shape) == 2 and ratio.shape[1] == 1:
-                    mb_advantages = mb_advantages.expand_as(ratio)
-
+                # 修正：處理連續動作的log_probs
+                logratio = new_log_probs - mb_log_probs
+                ratio = torch.exp(logratio)
+                
+                # 為每個動作維度計算優勢
+                mb_advantages_expanded = mb_advantages.unsqueeze(1).expand_as(ratio)
+                
                 # PPO 截斷
-                pg_loss1 = -mb_advantages * ratio
-                pg_loss2 = -mb_advantages * torch.clamp(
+                pg_loss1 = -mb_advantages_expanded * ratio
+                pg_loss2 = -mb_advantages_expanded * torch.clamp(
                     ratio, 1 - self.args.clip_coef, 1 + self.args.clip_coef
                 )
                 pg_loss = torch.max(pg_loss1, pg_loss2).mean()
                 
                 # 價值損失
-                v_loss = ((newvalue - b_returns[mb_inds]) ** 2).mean()
+                v_loss = ((new_values - mb_returns) ** 2).mean()
                 
                 # 熵損失
                 entropy_loss = entropy.mean()
@@ -418,7 +496,7 @@ class WebotsTrainer:
         
         return {
             'policy_loss': pg_loss.item(),
-            'value_loss': v_loss.item(),
+            'value_loss': v_loss.item(), 
             'entropy_loss': entropy_loss.item(),
             'clipfrac': np.mean(clipfracs),
             'learning_rate': lr,
@@ -513,42 +591,34 @@ class WebotsTrainer:
             done = False
             
             # 重置評估記憶體
-            eval_memory = torch.zeros(
-                (1, self.args.max_episode_steps, self.args.trxl_num_layers, self.args.trxl_dim)
+            eval_memory_manager = SingleEnvMemoryManager(
+                self.args.max_episode_steps,
+                self.args.trxl_memory_length,
+                self.args.trxl_num_layers,
+                self.args.trxl_dim
             )
-            eval_step = 0
             
             while not done and episode_length < self.args.max_episode_steps:
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
                 
-                # 準備記憶體窗口
-                memory_indices = torch.arange(
-                    max(0, eval_step - self.args.trxl_memory_length + 1),
-                    eval_step + 1
-                ).unsqueeze(0)
-                
-                if len(memory_indices[0]) < self.args.trxl_memory_length:
-                    padding = self.args.trxl_memory_length - len(memory_indices[0])
-                    memory_indices = torch.cat([
-                        torch.zeros(1, padding, dtype=torch.long),
-                        memory_indices
-                    ], dim=1)
-                
-                memory_window = eval_memory[:, memory_indices[0]]
-                memory_mask = torch.tril(torch.ones((self.args.trxl_memory_length, self.args.trxl_memory_length)), diagonal=-1)
-                memory_mask = memory_mask[min(eval_step, self.args.trxl_memory_length - 1)].unsqueeze(0)
+                # 獲取記憶體窗口
+                memory_window, memory_mask, memory_indices = eval_memory_manager.get_memory_window(
+                    eval_memory_manager.current_episode_step
+                )
                 
                 with torch.no_grad():
                     action, _, _, _, new_memory = self.agent.get_action_and_value(
                         obs_tensor, memory_window, memory_mask, memory_indices
                     )
-                    eval_memory[0, eval_step] = new_memory[0]
+                    eval_memory_manager.update_memory(
+                        eval_memory_manager.current_episode_step, new_memory
+                    )
                 
                 obs, reward, terminated, truncated, info = self.env.step(action[0].cpu().numpy())
                 done = terminated or truncated
                 episode_reward += reward
                 episode_length += 1
-                eval_step += 1
+                eval_memory_manager.current_episode_step += 1
             
             eval_rewards.append(episode_reward)
             eval_lengths.append(episode_length)

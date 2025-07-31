@@ -4,17 +4,12 @@ import time
 from collections import deque
 from dataclasses import dataclass
 
-#import gymnasium as gym
-#import memory_gym  # noqa
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import tyro
 from einops import rearrange
-#from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
-#from pom_env import PoMEnv  # noqa
-#from torch.distributions import Categorical
 from torch.distributions import Categorical, Normal
 from torch.utils.tensorboard import SummaryWriter
 
@@ -103,23 +98,6 @@ class Args:
     """the number of iterations (computed in runtime)"""
 
 
-""" def make_env(env_id, idx, capture_video, run_name, render_mode="debug_rgb_array"):
-    if "MiniGrid" in env_id:
-        if render_mode == "debug_rgb_array":
-            render_mode = "rgb_array"
-
-    def thunk():
-        if "MiniGrid" in env_id:
-            env = gym.make(env_id, agent_view_size=3, tile_size=28, render_mode=render_mode)
-            env = ImgObsWrapper(RGBImgPartialObsWrapper(env, tile_size=28))
-            env = gym.wrappers.TimeLimit(env, 96)
-        else:
-            env = gym.make(env_id, render_mode=render_mode)
-        if capture_video and idx == 0:
-            env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
-        return gym.wrappers.RecordEpisodeStatistics(env)
-
-    return thunk """
 def make_env(env_class, **env_kwargs):
     """創建環境的工廠函數"""
     def thunk():
@@ -129,7 +107,6 @@ def make_env(env_class, **env_kwargs):
 
 def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
     torch.nn.init.orthogonal_(layer.weight, std)
-    # torch.nn.init.constant_(layer.bias, bias_const)
     return layer
 
 
@@ -288,19 +265,22 @@ class Agent(nn.Module):
             nn.ReLU(),
         )
 
+        # 修正：統一動作處理
         if len(action_space_shape) == 1:  # 連續動作空間
             self.action_dim = action_space_shape[0]
             self.continuous_action = True
             self.actor_mean = layer_init(nn.Linear(args.trxl_dim, self.action_dim), np.sqrt(0.01))
             self.actor_logstd = nn.Parameter(torch.zeros(1, self.action_dim))
-        else:  # 離散動作空間 (保持原邏輯)
+        else:  # 離散動作空間
             self.continuous_action = False
+            self.action_dim = len(action_space_shape)  # 分支數量
             self.actor_branches = nn.ModuleList(
                 [
                     layer_init(nn.Linear(args.trxl_dim, out_features=num_actions), np.sqrt(0.01))
                     for num_actions in action_space_shape
                 ]
             )
+        
         self.critic = layer_init(nn.Linear(args.trxl_dim, 1), 1)
 
         if args.reconstruction_coef > 0.0:
@@ -335,7 +315,7 @@ class Agent(nn.Module):
         self.x = x
         
         if self.continuous_action:
-            # 連續動作處理
+            # 修正：連續動作處理
             action_mean = self.actor_mean(x)
             action_logstd = self.actor_logstd.expand_as(action_mean)
             action_std = torch.exp(action_logstd)
@@ -344,12 +324,13 @@ class Agent(nn.Module):
             if action is None:
                 action = probs.sample()
             
-            log_probs = probs.log_prob(action).sum(1)
-            entropy = probs.entropy().sum(1)
+            # 修正：保持原始維度，不進行sum
+            log_probs = probs.log_prob(action)  # [batch_size, action_dim]
+            entropy = probs.entropy().sum(1)   # [batch_size]
             
-            return action, log_probs.unsqueeze(1), entropy, self.critic(x).flatten(), memory
+            return action, log_probs, entropy, self.critic(x).flatten(), memory
         else:
-            # 離散動作處理 (保持原邏輯)
+            # 離散動作處理
             probs = [Categorical(logits=branch(x)) for branch in self.actor_branches]
             if action is None:
                 action = torch.stack([dist.sample() for dist in probs], dim=1)
@@ -362,351 +343,3 @@ class Agent(nn.Module):
     def reconstruct_observation(self):
         x = self.transposed_cnn(self.x)
         return x.permute((0, 2, 3, 1))
-
-
-if __name__ == "__main__":
-    args = tyro.cli(Args)   #用來讀取命令中的參數，如python script.py --seed 42 --cuda False --env_id "CartPole-v1"
-    args.batch_size = int(args.num_envs * args.num_steps)   #num_envs:環境並行數量，num_steps:收集資料(policy rollout)時step數量，batch_size:總資料量
-    args.minibatch_size = int(args.batch_size // args.num_minibatches)  #minibatch_size:在一個epochs中一個batch_size的資料會分成num_minibatches次minibatch_size訓練
-    args.num_iterations = args.total_timesteps // args.batch_size   #一次迭代包含Policy Rollout、訓練epochs
-    run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
-
-    if args.track:
-        import wandb
-
-        wandb.init(
-            project=args.wandb_project_name,
-            entity=args.wandb_entity,
-            sync_tensorboard=True,
-            config=vars(args),
-            name=run_name,
-            monitor_gym=True,
-            save_code=True,
-        )
-    writer = SummaryWriter(f"runs/{run_name}")
-    writer.add_text(
-        "hyperparameters",
-        "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
-    )
-
-    # TRY NOT TO MODIFY: seeding
-    random.seed(args.seed)
-    np.random.seed(args.seed)
-    torch.manual_seed(args.seed)
-    torch.backends.cudnn.deterministic = args.torch_deterministic
-
-    # Determine the device to be used for training and set the default tensor type
-    if args.cuda:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        torch.set_default_device(device)
-    else:
-        device = torch.device("cpu")
-
-    # Environment setup
-    envs = gym.vector.SyncVectorEnv(
-        [make_env(args.env_id, i, args.capture_video, run_name) for i in range(args.num_envs)],
-    )
-    observation_space = envs.single_observation_space
-    action_space_shape = (
-        (envs.single_action_space.n,)
-        if isinstance(envs.single_action_space, gym.spaces.Discrete)
-        else tuple(envs.single_action_space.nvec)
-    )
-    env_ids = range(args.num_envs)
-    env_current_episode_step = torch.zeros((args.num_envs,), dtype=torch.long)
-    # Determine maximum episode steps
-    max_episode_steps = envs.envs[0].spec.max_episode_steps
-    if not max_episode_steps:
-        envs.envs[0].reset()  # Memory Gym envs need to be reset before accessing max_episode_steps
-        max_episode_steps = envs.envs[0].max_episode_steps
-    if max_episode_steps <= 0:
-        max_episode_steps = 1024  # Memory Gym envs have max_episode_steps set to -1
-    # Set transformer memory length to max episode steps if greater than max episode steps
-    args.trxl_memory_length = min(args.trxl_memory_length, max_episode_steps)
-
-    agent = Agent(args, observation_space, action_space_shape, max_episode_steps).to(device)
-    optimizer = optim.AdamW(agent.parameters(), lr=args.init_lr)
-    bce_loss = nn.BCELoss()  # Binary cross entropy loss for observation reconstruction
-
-    # ALGO Logic: Storage setup
-    rewards = torch.zeros((args.num_steps, args.num_envs))
-    actions = torch.zeros((args.num_steps, args.num_envs, len(action_space_shape)), dtype=torch.long)
-    dones = torch.zeros((args.num_steps, args.num_envs))
-    obs = torch.zeros((args.num_steps, args.num_envs) + observation_space.shape)
-    log_probs = torch.zeros((args.num_steps, args.num_envs, len(action_space_shape)))
-    values = torch.zeros((args.num_steps, args.num_envs))
-    # The length of stored-memories is equal to the number of sampled episodes during training data sampling
-    # (num_episodes, max_episode_length, num_layers, embed_dim)
-    stored_memories = []
-    # Memory mask used during attention
-    stored_memory_masks = torch.zeros((args.num_steps, args.num_envs, args.trxl_memory_length), dtype=torch.bool)
-    # Index to select the correct episode memory from stored_memories
-    stored_memory_index = torch.zeros((args.num_steps, args.num_envs), dtype=torch.long)
-    # Indices to slice the episode memories into windows
-    stored_memory_indices = torch.zeros((args.num_steps, args.num_envs, args.trxl_memory_length), dtype=torch.long)
-
-    # TRY NOT TO MODIFY: start the game
-    global_step = 0
-    start_time = time.time()
-    episode_infos = deque(maxlen=100)  # Store episode results for monitoring statistics
-    next_obs, _ = envs.reset(seed=args.seed)
-    next_obs = torch.Tensor(next_obs).to(device)
-    next_done = torch.zeros(args.num_envs)
-    # Setup placeholders for each environments's current episodic memory
-    next_memory = torch.zeros((args.num_envs, max_episode_steps, args.trxl_num_layers, args.trxl_dim), dtype=torch.float32)
-    # Generate episodic memory mask used in attention
-    memory_mask = torch.tril(torch.ones((args.trxl_memory_length, args.trxl_memory_length)), diagonal=-1)
-    """ e.g. memory mask tensor looks like this if memory_length = 6
-    0, 0, 0, 0, 0, 0
-    1, 0, 0, 0, 0, 0
-    1, 1, 0, 0, 0, 0
-    1, 1, 1, 0, 0, 0
-    1, 1, 1, 1, 0, 0
-    1, 1, 1, 1, 1, 0
-    """
-    # Setup memory window indices to support a sliding window over the episodic memory
-    repetitions = torch.repeat_interleave(
-        torch.arange(0, args.trxl_memory_length).unsqueeze(0), args.trxl_memory_length - 1, dim=0
-    ).long()
-    memory_indices = torch.stack(
-        [torch.arange(i, i + args.trxl_memory_length) for i in range(max_episode_steps - args.trxl_memory_length + 1)]
-    ).long()
-    memory_indices = torch.cat((repetitions, memory_indices))
-    """ e.g. the memory window indices tensor looks like this if memory_length = 4 and max_episode_length = 7:
-    0, 1, 2, 3
-    0, 1, 2, 3
-    0, 1, 2, 3
-    0, 1, 2, 3
-    1, 2, 3, 4
-    2, 3, 4, 5
-    3, 4, 5, 6
-    """
-
-    for iteration in range(1, args.num_iterations + 1):
-        sampled_episode_infos = []
-
-        # Annealing the learning rate and entropy coefficient if instructed to do so
-        do_anneal = args.anneal_steps > 0 and global_step < args.anneal_steps
-        frac = 1 - global_step / args.anneal_steps if do_anneal else 0
-        lr = (args.init_lr - args.final_lr) * frac + args.final_lr
-        for param_group in optimizer.param_groups:
-            param_group["lr"] = lr
-        ent_coef = (args.init_ent_coef - args.final_ent_coef) * frac + args.final_ent_coef
-
-        # Init episodic memory buffer using each environments' current episodic memory
-        stored_memories = [next_memory[e] for e in range(args.num_envs)]
-        for e in range(args.num_envs):
-            stored_memory_index[:, e] = e
-
-        for step in range(args.num_steps):
-            global_step += args.num_envs
-
-            # ALGO LOGIC: action logic
-            with torch.no_grad():
-                obs[step] = next_obs
-                dones[step] = next_done
-                stored_memory_masks[step] = memory_mask[torch.clip(env_current_episode_step, 0, args.trxl_memory_length - 1)]
-                stored_memory_indices[step] = memory_indices[env_current_episode_step]
-                # Retrieve the memory window from the entire episodic memory
-                memory_window = batched_index_select(next_memory, 1, stored_memory_indices[step])
-                action, logprob, _, value, new_memory = agent.get_action_and_value(
-                    next_obs, memory_window, stored_memory_masks[step], stored_memory_indices[step]
-                )
-                next_memory[env_ids, env_current_episode_step] = new_memory
-                # Store the action, log_prob, and value in the buffer
-                actions[step], log_probs[step], values[step] = action, logprob, value
-
-            # TRY NOT TO MODIFY: execute the game and log data.
-            next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
-            next_done = np.logical_or(terminations, truncations)
-            rewards[step] = torch.tensor(reward).to(device).view(-1)
-            next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done).to(device)
-
-            # Reset and process episodic memory if done
-            for id, done in enumerate(next_done):
-                if done:
-                    # Reset the environment's current timestep
-                    env_current_episode_step[id] = 0
-                    # Break the reference to the environment's episodic memory
-                    mem_index = stored_memory_index[step, id]
-                    stored_memories[mem_index] = stored_memories[mem_index].clone()
-                    # Reset episodic memory
-                    next_memory[id] = torch.zeros(
-                        (max_episode_steps, args.trxl_num_layers, args.trxl_dim), dtype=torch.float32
-                    )
-                    if step < args.num_steps - 1:
-                        # Store memory inside the buffer
-                        stored_memories.append(next_memory[id])
-                        # Store the reference of to the current episodic memory inside the buffer
-                        stored_memory_index[step + 1 :, id] = len(stored_memories) - 1
-                else:
-                    # Increment environment timestep if not done
-                    env_current_episode_step[id] += 1
-
-            if "final_info" in infos:
-                for info in infos["final_info"]:
-                    if info and "episode" in info:
-                        sampled_episode_infos.append(info["episode"])
-
-        # Bootstrap value if not done
-        with torch.no_grad():
-            start = torch.clip(env_current_episode_step - args.trxl_memory_length, 0)
-            end = torch.clip(env_current_episode_step, args.trxl_memory_length)
-            indices = torch.stack([torch.arange(start[b], end[b]) for b in range(args.num_envs)]).long()
-            memory_window = batched_index_select(next_memory, 1, indices)  # Retrieve the memory window from the entire episode
-            next_value = agent.get_value(
-                next_obs,
-                memory_window,
-                memory_mask[torch.clip(env_current_episode_step, 0, args.trxl_memory_length - 1)],
-                stored_memory_indices[-1],
-            )
-            advantages = torch.zeros_like(rewards).to(device)
-            lastgaelam = 0
-            for t in reversed(range(args.num_steps)):
-                if t == args.num_steps - 1:
-                    nextnonterminal = 1.0 - next_done
-                    nextvalues = next_value
-                else:
-                    nextnonterminal = 1.0 - dones[t + 1]
-                    nextvalues = values[t + 1]
-                delta = rewards[t] + args.gamma * nextvalues * nextnonterminal - values[t]
-                advantages[t] = lastgaelam = delta + args.gamma * args.gae_lambda * nextnonterminal * lastgaelam
-            returns = advantages + values
-
-        # Flatten the batch
-        b_obs = obs.reshape(-1, *obs.shape[2:])
-        b_logprobs = log_probs.reshape(-1, *log_probs.shape[2:])
-        b_actions = actions.reshape(-1, *actions.shape[2:])
-        b_advantages = advantages.reshape(-1)
-        b_returns = returns.reshape(-1)
-        b_values = values.reshape(-1)
-        b_memory_index = stored_memory_index.reshape(-1)
-        b_memory_indices = stored_memory_indices.reshape(-1, *stored_memory_indices.shape[2:])
-        b_memory_mask = stored_memory_masks.reshape(-1, *stored_memory_masks.shape[2:])
-        stored_memories = torch.stack(stored_memories, dim=0)
-
-        # Remove unnecessary padding from TrXL memory, if applicable
-        actual_max_episode_steps = (stored_memory_indices * stored_memory_masks).max().item() + 1
-        if actual_max_episode_steps < args.trxl_memory_length:
-            b_memory_indices = b_memory_indices[:, :actual_max_episode_steps]
-            b_memory_mask = b_memory_mask[:, :actual_max_episode_steps]
-            stored_memories = stored_memories[:, :actual_max_episode_steps]
-
-        # Optimizing the policy and value network
-        clipfracs = []
-        for epoch in range(args.update_epochs):
-            b_inds = torch.randperm(args.batch_size)
-            for start in range(0, args.batch_size, args.minibatch_size):
-                end = start + args.minibatch_size
-                mb_inds = b_inds[start:end]
-                mb_memories = stored_memories[b_memory_index[mb_inds]]
-                mb_memory_windows = batched_index_select(mb_memories, 1, b_memory_indices[mb_inds])
-
-                _, newlogprob, entropy, newvalue, _ = agent.get_action_and_value(
-                    b_obs[mb_inds], mb_memory_windows, b_memory_mask[mb_inds], b_memory_indices[mb_inds], b_actions[mb_inds]
-                )
-
-                # Policy loss
-                mb_advantages = b_advantages[mb_inds]
-                if args.norm_adv:
-                    mb_advantages = (mb_advantages - mb_advantages.mean()) / (mb_advantages.std() + 1e-8)
-                mb_advantages = mb_advantages.unsqueeze(1).repeat(
-                    1, len(action_space_shape)
-                )  # Repeat is necessary for multi-discrete action spaces
-                logratio = newlogprob - b_logprobs[mb_inds]
-                ratio = torch.exp(logratio)
-                pgloss1 = -mb_advantages * ratio
-                pgloss2 = -mb_advantages * torch.clamp(ratio, 1.0 - args.clip_coef, 1.0 + args.clip_coef)
-                pg_loss = torch.max(pgloss1, pgloss2).mean()
-
-                # Value loss
-                v_loss_unclipped = (newvalue - b_returns[mb_inds]) ** 2
-                if args.clip_vloss:
-                    v_loss_clipped = b_values[mb_inds] + (newvalue - b_values[mb_inds]).clamp(
-                        min=-args.clip_coef, max=args.clip_coef
-                    )
-                    v_loss = torch.max(v_loss_unclipped, (v_loss_clipped - b_returns[mb_inds]) ** 2).mean()
-                else:
-                    v_loss = v_loss_unclipped.mean()
-
-                # Entropy loss
-                entropy_loss = entropy.mean()
-
-                # Combined losses
-                loss = pg_loss - ent_coef * entropy_loss + v_loss * args.vf_coef
-
-                # Add reconstruction loss if used
-                r_loss = torch.tensor(0.0)
-                if args.reconstruction_coef > 0.0:
-                    r_loss = bce_loss(agent.reconstruct_observation(), b_obs[mb_inds] / 255.0)
-                    loss += args.reconstruction_coef * r_loss
-
-                optimizer.zero_grad()
-                loss.backward()
-                torch.nn.utils.clip_grad_norm_(agent.parameters(), max_norm=args.max_grad_norm)
-                optimizer.step()
-
-                with torch.no_grad():
-                    # calculate approx_kl http://joschu.net/blog/kl-approx.html
-                    old_approx_kl = (-logratio).mean()
-                    approx_kl = ((ratio - 1) - logratio).mean()
-                    clipfracs += [((ratio - 1.0).abs() > args.clip_coef).float().mean().item()]
-
-            if args.target_kl is not None and approx_kl > args.target_kl:
-                break
-
-        y_pred, y_true = b_values.cpu().numpy(), b_returns.cpu().numpy()
-        var_y = np.var(y_true)
-        explained_var = np.nan if var_y == 0 else 1 - np.var(y_true - y_pred) / var_y
-
-        # Log and monitor training statistics
-        episode_infos.extend(sampled_episode_infos)
-        episode_result = {}
-        if len(episode_infos) > 0:
-            for key in episode_infos[0].keys():
-                episode_result[key + "_mean"] = np.mean([info[key] for info in episode_infos])
-
-        print(
-            "{:9} SPS={:4} return={:.2f} length={:.1f} pi_loss={:.3f} v_loss={:.3f} entropy={:.3f} r_loss={:.3f} value={:.3f} adv={:.3f}".format(
-                iteration,
-                int(global_step / (time.time() - start_time)),
-                episode_result["r_mean"],
-                episode_result["l_mean"],
-                pg_loss.item(),
-                v_loss.item(),
-                entropy_loss.item(),
-                r_loss.item(),
-                torch.mean(values),
-                torch.mean(advantages),
-            )
-        )
-
-        if episode_result:
-            for key in episode_result:
-                writer.add_scalar("episode/" + key, episode_result[key], global_step)
-        writer.add_scalar("episode/value_mean", torch.mean(values), global_step)
-        writer.add_scalar("episode/advantage_mean", torch.mean(advantages), global_step)
-        writer.add_scalar("charts/learning_rate", lr, global_step)
-        writer.add_scalar("charts/entropy_coefficient", ent_coef, global_step)
-        writer.add_scalar("losses/policy_loss", pg_loss.item(), global_step)
-        writer.add_scalar("losses/value_loss", v_loss.item(), global_step)
-        writer.add_scalar("losses/loss", loss.item(), global_step)
-        writer.add_scalar("losses/entropy", entropy_loss.item(), global_step)
-        writer.add_scalar("losses/reconstruction_loss", r_loss.item(), global_step)
-        writer.add_scalar("losses/old_approx_kl", old_approx_kl.item(), global_step)
-        writer.add_scalar("losses/approx_kl", approx_kl.item(), global_step)
-        writer.add_scalar("losses/clipfrac", np.mean(clipfracs), global_step)
-        writer.add_scalar("losses/explained_variance", explained_var, global_step)
-        writer.add_scalar("charts/SPS", int(global_step / (time.time() - start_time)), global_step)
-
-    if args.save_model:
-        model_path = f"runs/{run_name}/{args.exp_name}.cleanrl_model"
-        model_data = {
-            "model_weights": agent.state_dict(),
-            "args": vars(args),
-        }
-        torch.save(model_data, model_path)
-        print(f"model saved to {model_path}")
-
-    writer.close()
-    envs.close()
