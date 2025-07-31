@@ -21,8 +21,6 @@ n_layer = 3             # Transformer層數
 n_head = 2              # 單頭注意力
 dropout = 0.1           # Dropout率
 
-# 輸入序列結構
-input_sequence = [(state_t-n-1, action_t-n-1, reward_t-n-1), ..., (state_t, action_t, reward_t)]
 3. 混合控制系統
 
 控制架構: 固定角度訊號 + 強化學習
