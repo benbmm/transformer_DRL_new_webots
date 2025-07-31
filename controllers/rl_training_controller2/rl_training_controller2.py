@@ -64,10 +64,15 @@ class WebotsTrainer:
         self._validate_environment()
         
         # 創建智能體
+        if hasattr(self.env.action_space, 'shape'):
+            action_space_shape = self.env.action_space.shape
+        else:
+            action_space_shape = (self.env.action_space.n,)
+
         self.agent = Agent(
             args, 
             self.env.observation_space, 
-            (self.env.action_space.shape[0],),  # 轉換為 tuple
+            action_space_shape,
             args.max_episode_steps
         ).to(self.device)
         
@@ -129,47 +134,13 @@ class WebotsTrainer:
         log_probs = torch.zeros((self.args.num_steps, 1, self.env.action_space.shape[0]))
         values = torch.zeros((self.args.num_steps, 1))
         
-        # 記憶體相關
+        # 簡化的記憶體處理
         stored_memories = []
         stored_memory_masks = torch.zeros((self.args.num_steps, 1, self.args.trxl_memory_length), dtype=torch.bool)
         stored_memory_indices = torch.zeros((self.args.num_steps, 1, self.args.trxl_memory_length), dtype=torch.long)
         
-        # 生成記憶體遮罩和索引
+        # 生成簡化的記憶體遮罩 (只需要一次)
         memory_mask = torch.tril(torch.ones((self.args.trxl_memory_length, self.args.trxl_memory_length)), diagonal=-1)
-        
-        # 記憶體窗口索引 - 修復索引生成
-        max_steps = self.args.max_episode_steps
-        mem_len = self.args.trxl_memory_length
-        
-        # 為前面不足記憶長度的步驟創建重複索引
-        repetitions = []
-        for i in range(min(mem_len - 1, max_steps)):
-            indices = torch.arange(0, min(i + 1, mem_len))
-            # 如果不足記憶長度，用0填充
-            if len(indices) < mem_len:
-                padding = torch.zeros(mem_len - len(indices), dtype=torch.long)
-                indices = torch.cat([padding, indices])
-            repetitions.append(indices)
-        
-        # 為後面的步驟創建滑動窗口索引
-        sliding_indices = []
-        for i in range(mem_len - 1, max_steps):
-            indices = torch.arange(i - mem_len + 1, i + 1)
-            sliding_indices.append(indices)
-        
-        # 合併所有索引
-        if repetitions:
-            all_indices = repetitions + sliding_indices
-        else:
-            all_indices = sliding_indices
-        
-        # 確保有足夠的索引
-        while len(all_indices) < max_steps:
-            last_indices = all_indices[-1] if all_indices else torch.arange(mem_len)
-            all_indices.append(last_indices)
-        
-        memory_indices = torch.stack(all_indices[:max_steps])
-        
         # 獲取當前觀測
         if not hasattr(self, 'current_obs'):
             obs, info = self.env.reset()
@@ -286,7 +257,11 @@ class WebotsTrainer:
         # 計算下一個值
         with torch.no_grad():
             memory_window_indices = rollout_data['stored_memory_indices'][-1]
-            memory_window = self.current_memory[:, memory_window_indices[0]]
+            # 安全的記憶體索引提取
+            max_valid_idx = self.current_memory.shape[1] - 1
+            safe_indices = torch.clamp(memory_window_indices[0], 0, max_valid_idx)
+            memory_window = self.current_memory[:, safe_indices]
+            
             next_value = self.agent.get_value(
                 self.current_obs,
                 memory_window,
@@ -408,10 +383,16 @@ class WebotsTrainer:
                 
                 logratio = newlogprob - b_logprobs[mb_inds]
                 ratio = logratio.exp()
-                
+
+                # 處理連續動作的形狀
+                if len(mb_advantages.shape) == 1:
+                    mb_advantages = mb_advantages.unsqueeze(1)
+                if len(ratio.shape) == 2 and ratio.shape[1] == 1:
+                    mb_advantages = mb_advantages.expand_as(ratio)
+
                 # PPO 截斷
-                pg_loss1 = -mb_advantages.unsqueeze(1) * ratio
-                pg_loss2 = -mb_advantages.unsqueeze(1) * torch.clamp(
+                pg_loss1 = -mb_advantages * ratio
+                pg_loss2 = -mb_advantages * torch.clamp(
                     ratio, 1 - self.args.clip_coef, 1 + self.args.clip_coef
                 )
                 pg_loss = torch.max(pg_loss1, pg_loss2).mean()

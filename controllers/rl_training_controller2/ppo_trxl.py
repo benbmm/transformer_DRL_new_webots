@@ -14,7 +14,8 @@ import tyro
 from einops import rearrange
 #from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 #from pom_env import PoMEnv  # noqa
-from torch.distributions import Categorical
+#from torch.distributions import Categorical
+from torch.distributions import Categorical, Normal
 from torch.utils.tensorboard import SummaryWriter
 
 
@@ -287,12 +288,19 @@ class Agent(nn.Module):
             nn.ReLU(),
         )
 
-        self.actor_branches = nn.ModuleList(
-            [
-                layer_init(nn.Linear(args.trxl_dim, out_features=num_actions), np.sqrt(0.01))
-                for num_actions in action_space_shape
-            ]
-        )
+        if len(action_space_shape) == 1:  # 連續動作空間
+            self.action_dim = action_space_shape[0]
+            self.continuous_action = True
+            self.actor_mean = layer_init(nn.Linear(args.trxl_dim, self.action_dim), np.sqrt(0.01))
+            self.actor_logstd = nn.Parameter(torch.zeros(1, self.action_dim))
+        else:  # 離散動作空間 (保持原邏輯)
+            self.continuous_action = False
+            self.actor_branches = nn.ModuleList(
+                [
+                    layer_init(nn.Linear(args.trxl_dim, out_features=num_actions), np.sqrt(0.01))
+                    for num_actions in action_space_shape
+                ]
+            )
         self.critic = layer_init(nn.Linear(args.trxl_dim, 1), 1)
 
         if args.reconstruction_coef > 0.0:
@@ -325,14 +333,31 @@ class Agent(nn.Module):
         x, memory = self.transformer(x, memory, memory_mask, memory_indices)
         x = self.hidden_post_trxl(x)
         self.x = x
-        probs = [Categorical(logits=branch(x)) for branch in self.actor_branches]
-        if action is None:
-            action = torch.stack([dist.sample() for dist in probs], dim=1)
-        log_probs = []
-        for i, dist in enumerate(probs):
-            log_probs.append(dist.log_prob(action[:, i]))
-        entropies = torch.stack([dist.entropy() for dist in probs], dim=1).sum(1).reshape(-1)
-        return action, torch.stack(log_probs, dim=1), entropies, self.critic(x).flatten(), memory
+        
+        if self.continuous_action:
+            # 連續動作處理
+            action_mean = self.actor_mean(x)
+            action_logstd = self.actor_logstd.expand_as(action_mean)
+            action_std = torch.exp(action_logstd)
+            probs = Normal(action_mean, action_std)
+            
+            if action is None:
+                action = probs.sample()
+            
+            log_probs = probs.log_prob(action).sum(1)
+            entropy = probs.entropy().sum(1)
+            
+            return action, log_probs.unsqueeze(1), entropy, self.critic(x).flatten(), memory
+        else:
+            # 離散動作處理 (保持原邏輯)
+            probs = [Categorical(logits=branch(x)) for branch in self.actor_branches]
+            if action is None:
+                action = torch.stack([dist.sample() for dist in probs], dim=1)
+            log_probs = []
+            for i, dist in enumerate(probs):
+                log_probs.append(dist.log_prob(action[:, i]))
+            entropies = torch.stack([dist.entropy() for dist in probs], dim=1).sum(1).reshape(-1)
+            return action, torch.stack(log_probs, dim=1), entropies, self.critic(x).flatten(), memory
 
     def reconstruct_observation(self):
         x = self.transposed_cnn(self.x)
