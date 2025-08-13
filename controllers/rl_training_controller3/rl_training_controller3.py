@@ -59,24 +59,24 @@ class HexapodConfig:
     w_c: float = 0.05  # 控制量獎勵權重
     
     # === Transformer 架構參數 ===
-    transformer_features_dim: int = 256
-    transformer_n_heads: int = 4
+    transformer_features_dim: int = 6
+    transformer_n_heads: int = 2
     transformer_n_layers: int = 2
     transformer_dropout: float = 0.1
     
     # === PPO 超參數 ===
-    use_linear_learning_rate_decay: bool = False
+    use_linear_learning_rate_decay: bool = True
     learning_rate_start: float = 3e-4
     learning_rate_end: float = 1e-5
     fixed_learning_rate: float = 2.0633e-05
     n_steps: int = 2048
     batch_size: int = 1024
-    n_epochs: int = 20
+    n_epochs: int = 10
     gamma: float = 0.98
     gae_lambda: float = 0.95
     clip_range: float = 0.1
     ent_coef: float = 0.000401762
-    vf_coef: float = 0.58096
+    vf_coef: float = 0.5
     max_grad_norm: float = 0.5
     
     # === 訓練參數 ===
@@ -178,7 +178,7 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         print(f"observation_space.shape[0]={observation_space.shape[0]}\nsequence_length={self.sequence_length}\nstate_dim={self.state_dim}\nobservation_space.shape={observation_space.shape}")
         
         # 輸入投影層
-        self.input_projection = nn.Linear(self.state_dim, config.transformer_features_dim)
+        #self.input_projection = nn.Linear(self.state_dim, config.transformer_features_dim)
         
         # 位置編碼
         self.pos_encoding = PositionalEncoding(config.transformer_features_dim, config.sequence_length)
@@ -221,7 +221,7 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         # print(f"🔄 重塑後形狀: {x.shape}")
 
         # 投影到特徵空間: [batch_size, seq_len, features_dim]
-        x = self.input_projection(x)
+        #x = self.input_projection(x)
         # print(f"📍 輸入投影後形狀: {x.shape}")
 
         # 加入位置編碼
@@ -327,7 +327,7 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
 
     def _setup_spaces(self):
         """設置狀態和動作空間"""
-        # 動作空間：6個膝關節的修正量 [-1, 1]
+        # 動作空間：6個膝關節的修正量 [-1, 1]，使用[-1, 1]是官方推薦要對稱以0為中心
         self.action_space = spaces.Box(
             low=-1.0, 
             high=1.0, 
@@ -602,22 +602,21 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
                 if joint_idx not in self.motors[leg_idx]:
                     continue
                 
-                motor_angle = 0.0
+                
+                if joint_idx == 2:  # 膝關節
+                    motor_angle = 0.0 + rl_corrections[leg_idx - 1]
+                else:
+                    motor_angle = 0.0
                 motor_angle = self._replace_ankle_with_knee_signal(motor_angle, leg_idx, joint_idx, processed_signals)
                 motor_angle = self._process_special_joints(motor_angle, leg_idx, joint_idx)
                 motor_angle = self._adjust_signal_direction(motor_angle, leg_idx, joint_idx)
                 motor_angle = self._apply_height_offset(motor_angle, leg_idx, joint_idx)
-                
-                if joint_idx == 2:  # 膝關節
-                    final_motor_angle = motor_angle + rl_corrections[leg_idx - 1]
-                else:
-                    final_motor_angle = motor_angle
-                
-                processed_signals[leg_idx][joint_idx] = final_motor_angle
+
+                processed_signals[leg_idx][joint_idx] = motor_angle
                 
                 try:
                     if self.current_step >= self.control_start_step:
-                        limited_angle = max(-1.0, min(1.0, final_motor_angle))
+                        limited_angle = max(-1.0, min(1.0, motor_angle))
                         self.motors[leg_idx][joint_idx].setPosition(limited_angle)
                     else:
                         init_angle = self._replace_ankle_with_knee_signal(0.0, leg_idx, joint_idx, {})

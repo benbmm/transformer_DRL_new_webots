@@ -219,6 +219,10 @@ class WebotsTrainer:
             action_space_shape,
             args.max_episode_steps
         ).to(self.device)
+
+        print("🧠 模型架構:")
+        print("="*50)
+        print(self.agent)
         
         # 創建優化器
         self.optimizer = optim.AdamW(self.agent.parameters(), lr=args.init_lr)
