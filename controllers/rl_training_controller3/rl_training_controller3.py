@@ -195,7 +195,7 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=config.transformer_n_layers)
         
         # 輸出投影層
-        self.output_projection = nn.Linear(config.transformer_features_dim, config.transformer_features_dim)
+        #self.output_projection = nn.Linear(config.transformer_features_dim, config.transformer_features_dim)
 
         
         print(f"🤖 Transformer 特徵提取器初始化:")
@@ -235,7 +235,8 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         # print(f"🎯 最終輸出形狀: {x.shape}")
         
         # 最終投影
-        features = self.output_projection(x)
+        #features = self.output_projection(x)
+        features = x
         # print(f"✅ 特徵形狀: {features.shape}")
         # print("-" * 50)  # 分隔線
         
