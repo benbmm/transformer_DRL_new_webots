@@ -61,33 +61,42 @@ class HexapodConfig:
     # === Transformer 架構參數 ===
     transformer_features_dim: int = 6
     transformer_n_heads: int = 2
-    transformer_n_layers: int = 2
+    transformer_n_layers: int = 3
     transformer_dropout: float = 0.1
     
     # === PPO 超參數 ===
-    use_linear_learning_rate_decay: bool = True
+    use_linear_learning_rate_decay: bool = False
     learning_rate_start: float = 3e-4
     learning_rate_end: float = 1e-5
-    fixed_learning_rate: float = 2.0633e-05
+    #fixed_learning_rate: float = 2.0633e-05
+    fixed_learning_rate: float = 0.0003
     n_steps: int = 2048
     batch_size: int = 1024
     n_epochs: int = 10
     gamma: float = 0.98
     gae_lambda: float = 0.95
     clip_range: float = 0.1
-    ent_coef: float = 0.000401762
+    ent_coef: float = 0.05
     vf_coef: float = 0.5
     max_grad_norm: float = 0.5
     
     # === 訓練參數 ===
-    total_timesteps: int = 10000000
-    save_frequency_ratio: float = 0.1  # 總步數的比例
+    total_timesteps: int = 100000000
+    save_frequency_ratio: float = 0.05  # 總步數的比例
     random_seed: int = 42
     
     # === 系統參數 ===
     tensorboard_log_dir: str = "./tensorboard_logs"
     model_save_dir: str = "./models"
-    
+
+    # === 獎勵參數 ===
+    imbalance_threshold: float = 0.05  # 非平衡閾值 (roll/pitch abs > 此值)
+    response_bonus: float = 0.1  # 每隻正確回應腳的獎勵
+    response_penalty: float = -0.05  # 每隻未回應腳的懲罰
+
+    # === action噪音參數 ===
+    noise_probability: float = 0.05 # 加入噪音的機率，0.05=5%
+    noise_std: float = 0.1 # 加入的噪音值的高斯分布的寬(標準差)
     # === 計算屬性方法 ===
     def get_save_frequency(self) -> int:
         """計算儲存頻率"""
@@ -293,6 +302,19 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
 
         # 隨機平台旋轉相關
         self.random_platform_angle = 0.0  # 當前episode的隨機角度
+        # 平台擺動角度
+        self.platform_angle=0.0
+
+        self.prev_roll = 0.0  # 上一步 roll
+        self.prev_pitch = 0.0  # 上一步 pitch
+        self.prev_states = np.zeros(6, dtype=np.float32)  # 上一步 6 分量狀態
+        self.imbalance_threshold = config.imbalance_threshold
+        self.response_bonus = config.response_bonus
+        self.response_penalty = config.response_penalty
+
+        #action噪音相關
+        self.noise_probability=config.noise_probability
+        self.noise_std=config.noise_std
         
         # Episode統計（用於記錄平均值）
         self.episode_stats = {
@@ -478,6 +500,9 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
     def _calculate_single_state(self):
         """計算單步狀態"""
         roll, pitch = self._get_imu_data()
+
+        self.prev_roll = roll
+        self.prev_pitch = pitch
         
         sqrt_half = math.sqrt(0.5)
         
@@ -533,10 +558,19 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
         # 穩定性獎勵
         stability_term = (abs(pitch) + abs(roll)) / 2
         r_s = math.exp(-(stability_term ** 2) / (0.1 ** 2))
-        # 2. 控制量獎勵（直接在此計算）
-        control_magnitude = np.mean(np.abs(action))
-        r_c = math.exp(-(control_magnitude ** 2) / (0.9 ** 2))
-        
+
+        # 2. 控制量獎勵，當狀態中大於零的分量對應的腳的控制量也大於零，給予獎勵
+        r_c = 0.0
+        is_imbalanced = (abs(self.prev_roll) > self.imbalance_threshold) or (abs(self.prev_pitch) > self.imbalance_threshold)
+        if is_imbalanced:
+            positive_feet = np.where(self.prev_states > 0)[0]  # 分量 >0 的腳索引 (0-5)
+            for foot_idx in positive_feet:
+                if action[foot_idx] > 0:
+                    r_c += self.response_bonus  # 正獎勵
+                else:
+                    r_c += self.response_penalty  # 懲罰
+            if len(positive_feet) > 0:
+                r_c /= len(positive_feet)  # 平均化，避免過大
         # 3. 懲罰項
 
         p = 0
@@ -576,14 +610,14 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
         
         try:
             current_time = self.getTime()
-            target_angle = 0.2 * math.sin(1.0 * math.pi * current_time)
+            self.platform_angle = 0.2 * math.sin(1.0 * math.pi * current_time)
             
             joint_params_field = self.platform_motor_joint.getField("jointParameters")
             joint_params_node = joint_params_field.getSFNode()
             if joint_params_node:
                 position_field = joint_params_node.getField("position")
                 if position_field:
-                    position_field.setSFFloat(target_angle)
+                    position_field.setSFFloat(self.platform_angle)
                     
         except Exception as e:
             print(f"平台控制錯誤: {e}")
@@ -725,6 +759,10 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
         # 重置計數器和狀態序列
         self.current_step = 0
         self.state_sequence.clear()
+
+        self.prev_roll = 0.0
+        self.prev_pitch = 0.0
+        self.prev_states = np.zeros(6, dtype=np.float32)
         
         # 重置episode統計
         self._reset_episode_stats()
@@ -765,10 +803,15 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
         # 控制平台運動
         self._control_platform()
         
-        # 應用動作到機器人
+        # 應用動作到機器人，添加隨機噪音以增強探索
+        if np.random.random() < self.noise_probability:
+            #添加高斯噪音
+            action += np.random.normal(0, self.noise_std, size=action.shape)
+            action = np.clip(action, -1, 1)
         self._apply_actions(action)
         
         # 執行物理步驟
+        
         super().step(self.timestep)
         
         # 更新步數
@@ -777,6 +820,7 @@ class HexapodBalanceEnv(Supervisor, gym.Env):
         # 更新狀態序列
         current_state = self._calculate_single_state()
         self.state_sequence.append(current_state)
+        self.prev_states=current_state
         
         # 獲取新的序列觀察
         new_obs = self._get_sequence_observation()
